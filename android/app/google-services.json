@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "730527233229",
+    "project_id": "muna-global-d7d15",
+    "storage_bucket": "muna-global-d7d15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730527233229:android:b0391d33a646465b8ae584",
+        "android_client_info": {
+          "package_name": "com.example.muna_global"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "730527233229-snafhg36p62jcjssal7sa8ihdu99auca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.muna_global",
+            "certificate_hash": "cf8b05aabc1690fdf2704c4cfc563f65f64d1cc4"
+          }
+        },
+        {
+          "client_id": "730527233229-vnop4hkpnfph7n93ji5ltd5hnrklm95r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFR-5ZqN5PrsGe6-glqle4hGIPDteIAsE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "730527233229-vnop4hkpnfph7n93ji5ltd5hnrklm95r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
