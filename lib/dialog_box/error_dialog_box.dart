@@ -8,7 +8,12 @@ class ErrorAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       key: key,
-      content: Text(message),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(message),
+        ],
+      ),
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
@@ -16,7 +21,7 @@ class ErrorAlertDialog extends StatelessWidget {
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-              Colors.red,
+              Colors.blue,
             ),
           ),
           child: const Center(

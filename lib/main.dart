@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:muna_global/authentication/auththentication_exports.dart';
-import 'package:muna_global/home.dart';
+import 'package:muna_global/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:muna_global/screens/home_page.dart';
+import 'package:muna_global/screens/home.dart';
+import 'package:muna_global/screens/screens_exports.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 

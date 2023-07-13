@@ -23,21 +23,22 @@ class UploadPage extends StatefulWidget {
 class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(),
-              ),
-            );
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        centerTitle: true,
-        title: const Text('Upload'),
-      ),
-    );
+    return Container();
+    // Scaffold(
+    //   appBar: AppBar(
+    //     leading: IconButton(
+    //       onPressed: () {
+    //         Navigator.of(context).pushReplacement(
+    //           MaterialPageRoute(
+    //             builder: (context) => ProfilePage(),
+    //           ),
+    //         );
+    //       },
+    //       icon: const Icon(Icons.arrow_back),
+    //     ),
+    //     centerTitle: true,
+    //     title: const Text('Upload'),
+    //   ),
+    // );
   }
 }

@@ -25,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class UserResult extends StatelessWidget {
-  final UserModel user;
+  final User user;
   const UserResult({super.key, required this.user});
 
   @override

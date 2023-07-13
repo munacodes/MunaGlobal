@@ -12,8 +12,8 @@ class MyButton extends StatelessWidget {
         onTap();
       },
       child: Container(
-        padding: const EdgeInsets.all(25.0),
-        margin: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(15.0),
+        margin: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: Colors.blue,
           borderRadius: BorderRadius.circular(8),

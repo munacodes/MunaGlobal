@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "730527233229",
+    "firebase_url": "https://muna-global-d7d15-default-rtdb.firebaseio.com",
     "project_id": "muna-global-d7d15",
     "storage_bucket": "muna-global-d7d15.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "730527233229-vnop4hkpnfph7n93ji5ltd5hnrklm95r.apps.googleusercontent.com",
+          "client_id": "730527233229-thfnk18mq5or2ddevul7k2dl1h9dbf3j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "730527233229-vnop4hkpnfph7n93ji5ltd5hnrklm95r.apps.googleusercontent.com",
+              "client_id": "730527233229-du6g53n1g3bdf0aabh3a4e8lttmvm1i8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
