@@ -14,7 +14,6 @@ class _SalesState extends State<Sales> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      appBar: header(context, titleText: 'Sales', isAppTitle: false),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

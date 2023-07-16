@@ -16,7 +16,6 @@ class _NotificationFeedState extends State<NotificationFeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: header(context, titleText: "Notification"),
       body: SafeArea(
         child: Container(
           color: Colors.white54,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:muna_global/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:muna_global/screens/home.dart';
+import 'package:muna_global/home.dart';
 import 'package:muna_global/screens/screens_exports.dart';
 
 void main() async {
@@ -16,12 +16,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Muna Global',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: const Home(),
     );
   }
