@@ -13,18 +13,12 @@ class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: Colors.white,
         title: const Text(
           'Messeges',
           style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: SafeArea(
-        child: Container(
-          color: Colors.cyan,
         ),
       ),
     );

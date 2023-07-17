@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:muna_global/dialog_box/dialog_box_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image/image.dart' as Im;
@@ -25,18 +27,17 @@ class _UploadPageState extends State<UploadPage> {
   User? currentUser;
   String postId = const Uuid().v4();
 
-  handleTakePhoto() async {
-    Navigator.pop(context);
-    final picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-        source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
-    setState(() {
-      _imageFile = File(image!.path);
-    });
-  }
+  // handleTakePhoto() async {
+  //   Navigator.pop(context);
+  //   final picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(
+  //       source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
+  //   setState(() {
+  //     _imageFile = File(image!.path);
+  //   });
+  // }
 
   handleChooseFromGallery() async {
-    Navigator.pop(context);
     final picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -44,36 +45,36 @@ class _UploadPageState extends State<UploadPage> {
     });
   }
 
-  selectImage(parentContext) {
-    return showDialog(
-      context: parentContext,
-      builder: (context) {
-        return SimpleDialog(
-          title: const Text('Create Post'),
-          children: [
-            SimpleDialogOption(
-              onPressed: handleTakePhoto,
-              child: const Text('Photo with Camera'),
-            ),
-            SimpleDialogOption(
-              onPressed: handleChooseFromGallery,
-              child: const Text('Photo with Gallery'),
-            ),
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // selectImage(parentContext) {
+  //   return showDialog(
+  //     context: parentContext,
+  //     builder: (context) {
+  //       return SimpleDialog(
+  //         title: const Text('Create Post'),
+  //         children: [
+  //           SimpleDialogOption(
+  //             onPressed: handleTakePhoto,
+  //             child: const Text('Photo with Camera'),
+  //           ),
+  //           SimpleDialogOption(
+  //             onPressed: handleChooseFromGallery,
+  //             child: const Text('Photo with Gallery'),
+  //           ),
+  //           SimpleDialogOption(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Cancel'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  clearImage() {
-    setState(() {
-      _imageFile == null;
-    });
-  }
+  // clearImage() {
+  //   setState(() {
+  //     _imageFile == null;
+  //   });
+  // }
 
   compressImage() async {
     final tempDir = await getTemporaryDirectory();
@@ -104,9 +105,14 @@ class _UploadPageState extends State<UploadPage> {
     if (descriptionController.text.isNotEmpty ||
         locationController.text.isNotEmpty) {
       // store in firebase
-      FirebaseFirestore.instance.collection('User Posts').add({
+      User? user = FirebaseAuth.instance.currentUser;
+      FirebaseFirestore.instance
+          .collection('User Posts')
+          .doc(user!.email)
+          .collection('Posts')
+          .add({
         "postId": postId,
-        "UserEmail": currentUser!.email,
+        "UserEmail": user.email,
         "Description": descriptionController.text,
         "Location": locationController.text,
         "mediaUrl": mediaUrl,
@@ -121,99 +127,132 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   handleSubmit() async {
-    setState(() {
-      isUploading = true;
-    });
-    await compressImage();
-    String mediaUrl = await uploadImage(_imageFile);
-    // postMessage();
-    createPostInFirestore(
-      mediaUrl: mediaUrl,
-      location: locationController.text,
-      description: descriptionController.text,
+    if (descriptionController.text.isNotEmpty &&
+        locationController.text.isNotEmpty &&
+        _imageFile != null) {
+      setState(() {
+        isUploading = true;
+      });
+      await compressImage();
+      String mediaUrl = await uploadImage(_imageFile);
+      createPostInFirestore(
+        mediaUrl: mediaUrl,
+        location: locationController.text,
+        description: descriptionController.text,
+      );
+      descriptionController.clear();
+      locationController.clear();
+      setState(() {
+        _imageFile = null;
+        isUploading = false;
+        postId = const Uuid().v4();
+      });
+    } else {
+      displayMessage('Add Image, Description and Location');
+    }
+  }
+
+  // display a dialog message
+  void displayMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(message),
+      ),
     );
-    descriptionController.clear();
-    locationController.clear();
-    setState(() {
-      _imageFile = null;
-      isUploading = false;
-      postId = const Uuid().v4();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Product'),
-        actions: [
-          TextButton(
-            onPressed: isUploading ? null : () => handleSubmit(),
-            child: const Text(
-              "Post",
-              style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
-            ),
-          ),
-        ],
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: const Text(
+          'Create Product',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
+        child: ListView(
           children: [
-            isUploading ? linearProgress() : const Text(''),
-            GestureDetector(
-              onTap: selectImage(context),
-              child: Container(
-                height: 220.0,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: FileImage(_imageFile!),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                isUploading ? linearProgress() : const Text(''),
+                ListTile(
+                  // leading: CircleAvatar(
+                  //   backgroundImage:
+                  //       CachedNetworkImageProvider(widget.currentUser!.photoUrl),
+                  // ),
+                  title: Container(
+                    width: 250.0,
+                    child: TextFormField(
+                      controller: descriptionController,
+                      decoration: const InputDecoration(
+                        hintText: "Description...",
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                _imageFile != null
+                    ? Container(
+                        height: 220.0,
+                        width: double.infinity,
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: FileImage(_imageFile!)
+
+                                    //AssetImage('assets/images/Hood.png'),
+                                    // (_imageFile != null)
+                                    //     ? FileImage(_imageFile!) as ImageProvider
+                                    //     : const AssetImage(
+                                    //         'assets/images/no_content.jpg'),
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
+                const Divider(),
+                GestureDetector(
+                  onTap: handleChooseFromGallery,
+                  child: const ListTile(
+                    leading: Icon(Icons.image, color: Colors.blue, size: 35.0),
+                    title: Text('Add Image'),
+                  ),
+                ),
+                const Divider(),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.pin_drop,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextField(
+                        controller: locationController,
+                        decoration: const InputDecoration(
+                          hintText: "Location...",
+                          border: InputBorder.none,
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            ListTile(
-              // leading: CircleAvatar(
-              //   backgroundImage:
-              //       CachedNetworkImageProvider(widget.currentUser!.photoUrl),
-              // ),
-              title: Container(
-                width: 250.0,
-                child: TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    hintText: "Description...",
-                    border: InputBorder.none,
-                  ),
+                const Divider(),
+                MyButton(
+                  onTap: handleSubmit,
+                  text: 'Upload',
                 ),
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              leading:
-                  const Icon(Icons.pin_drop, color: Colors.blue, size: 35.0),
-              title: Container(
-                width: 250.0,
-                child: TextField(
-                  controller: locationController,
-                  decoration: const InputDecoration(
-                    hintText: "Location...",
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
+              ],
             ),
           ],
         ),

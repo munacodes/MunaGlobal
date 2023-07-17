@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _SalesProductState extends State<SalesProduct> {
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
 
-  final _commentTextController = TextEditingController();
+  // final _commentTextController = TextEditingController();
 
   @override
   void initState() {
@@ -61,66 +62,83 @@ class _SalesProductState extends State<SalesProduct> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // user
-          Row(
-            children: [
-              Text(
-                widget.user,
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-              Text(
-                '.',
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-              Text(
-                widget.time,
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-            ],
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // user
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.user,
+                      style: TextStyle(color: Colors.grey[700], fontSize: 18),
+                    ),
+                    Text(
+                      '.',
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
+                    Text(
+                      widget.time,
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
 
-          // product
-          Container(
-            decoration: const BoxDecoration(
-              // image: DecorationImage(),
-              color: Colors.blue,
+                // product
+                Container(
+                  height: 220.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(widget.image),
+                    ),
+                  ),
+                ),
+
+                // like button + like count + cart
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        // like button
+                        LikeButton(
+                          isLiked: isLiked,
+                          onTap: toggled,
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        // like count
+                        Text(
+                          widget.likes.length.toString(),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+
+                    // shopping cart
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.shopping_cart_outlined),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-
-          // like button + like count + cart
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  // like button
-                  LikeButton(
-                    isLiked: isLiked,
-                    onTap: toggled,
-                  ),
-
-                  const SizedBox(width: 10),
-
-                  // like count
-                  Text(
-                    widget.likes.length.toString(),
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-
-              // shopping cart
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.shopping_cart_outlined),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

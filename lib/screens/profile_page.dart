@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:muna_global/format_time/format_time.dart';
 import 'package:muna_global/models/models_exports.dart';
 import 'package:muna_global/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
@@ -67,10 +68,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Profile Page'),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        // centerTitle: true,
+        title: const Text(
+          'Profile Page',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -112,17 +117,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
 
                 // username
-                MyTextBox(
-                  text: userData['username'],
-                  sectionName: 'username',
-                  onPressed: () => editField('username'),
+                Card(
+                  child: MyTextBox(
+                    text: userData['username'],
+                    sectionName: 'username',
+                    onPressed: () => editField('username'),
+                  ),
                 ),
 
                 // bio
-                MyTextBox(
-                  text: userData['bio'],
-                  sectionName: 'bio',
-                  onPressed: () => editField('bio'),
+                Card(
+                  child: MyTextBox(
+                    text: userData['bio'],
+                    sectionName: 'bio',
+                    onPressed: () => editField('bio'),
+                  ),
                 ),
                 const SizedBox(height: 20),
 
@@ -131,6 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 20),
 
                 // user posts
+
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: Text(
@@ -143,6 +153,47 @@ class _ProfilePageState extends State<ProfilePage> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text('Error ${snapshot.error}'),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
+  }
+
+  profileDetails() {}
+
+  retrivePostsFromFirebase() {
+    return Expanded(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('User Posts')
+            .doc(currentUser!.email)
+            .collection('Posts')
+            .orderBy('TimeStamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                // get the message
+                final post = snapshot.data!.docs[index];
+                return SalesProduct(
+                  image: post['mediaUrl'],
+                  likes: List<String>.from(post['Likes'] ?? []),
+                  message: post['Description'],
+                  postId: post.id,
+                  time: formatDate(post['TimeStamp']),
+                  user: post['UserEmail'],
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
             );
           }
           return const Center(

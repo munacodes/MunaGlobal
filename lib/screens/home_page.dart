@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/widgets/widgets_exports.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,7 +32,9 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  logout() {}
+  logout() {
+    FirebaseAuth.instance.signOut();
+  }
 
   onPageChanged(int pageIndex) {
     setState(() {
@@ -54,16 +57,17 @@ class _HomePageState extends State<HomePage> {
         controller: pageController,
         onPageChanged: onPageChanged,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
-          // Sales(),
-          ElevatedButton(
-            onPressed: logout,
-            child: const Text('Logout'),
-          ),
-          const MessagesPage(), // Notifications
-          const UploadPage(), // Uploads
-          const SearchPage(), // Search
-          const ProfilePage(), // Profile
+        children: const [
+          Sales(),
+          // ElevatedButton(
+          //   onPressed: logout,
+          //   child: const Text('Logout'),
+          // ),
+          MessagesPage(), // Notifications
+          UploadPage(), // Uploads
+          SearchPage(), // Search
+          //const ProfilePage(), // Profile
+          ProfileImages(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -75,8 +79,8 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.white,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.whatshot_outlined),
-            label: 'Timeline',
+            icon: Icon(Icons.explore_outlined),
+            label: 'Explore',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications_active_outlined),
