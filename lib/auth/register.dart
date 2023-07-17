@@ -117,12 +117,23 @@ class _RegisterState extends State<Register> {
                     hintText: 'Password',
                     obscureText: true,
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 10),
 
                   MyTextField(
                     controller: _confirmPasswordController,
                     hintText: 'Confirm Password',
                     obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Text('Forgot Password'),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 25),
 

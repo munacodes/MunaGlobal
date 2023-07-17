@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final DateTime timestamp = DateTime.now();
-  User? currentUser;
+  // final currentUser = FirebaseAuth.instance.currentUser!;
 
   bool isAuth = false;
   PageController? pageController;
@@ -59,13 +59,10 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         children: const [
           Explore(),
-          // ElevatedButton(
-          //   onPressed: logout,
-          //   child: const Text('Logout'),
-          // ),
           MessagesPage(), // Notifications
           UploadPage(), // Uploads
           SearchPage(), // Search
+
           //const ProfilePage(), // Profile
           ProfileImages(),
         ],

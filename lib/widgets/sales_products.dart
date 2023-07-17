@@ -6,20 +6,24 @@ import 'package:muna_global/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class SalesProduct extends StatefulWidget {
-  final String message;
+  final String description;
+  final String name;
   final String image;
   final String user;
   final String time;
+  final double price;
   final String postId;
   final List<String> likes;
   const SalesProduct(
       {super.key,
-      required this.message,
+      required this.description,
       required this.user,
       required this.time,
       required this.postId,
       required this.likes,
-      required this.image});
+      required this.image,
+      required this.price,
+      required this.name});
 
   @override
   State<SalesProduct> createState() => _SalesProductState();
@@ -45,8 +49,11 @@ class _SalesProductState extends State<SalesProduct> {
     });
 
     // Access the document is Firebase
-    DocumentReference postRef =
-        FirebaseFirestore.instance.collection('User Posts').doc(widget.postId);
+    DocumentReference postRef = FirebaseFirestore.instance
+        .collection('User Posts')
+        // .doc(currentUser!.email)
+        // .collection('Posts')
+        .doc(widget.postId);
 
     if (isLiked) {
       // if the post is now liked, add the user's email to the 'Likes' field
@@ -90,6 +97,7 @@ class _SalesProductState extends State<SalesProduct> {
                       '.',
                       style: TextStyle(color: Colors.grey[400]),
                     ),
+                    // time
                     Text(
                       widget.time,
                       style: TextStyle(color: Colors.grey[500]),
@@ -98,7 +106,24 @@ class _SalesProductState extends State<SalesProduct> {
                 ),
                 const SizedBox(height: 20),
 
-                // product
+                // name of product
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          // color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // product image
                 Container(
                   height: 220.0,
                   width: double.infinity,
@@ -111,52 +136,66 @@ class _SalesProductState extends State<SalesProduct> {
                 ),
                 const SizedBox(height: 10),
 
-                // like button + like count + cart
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        // like button
-                        LikeButton(
-                          isLiked: isLiked,
-                          onTap: toggled,
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        // like count
-                        Text(
-                          widget.likes.length.toString(),
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-
-                    // shopping cart
-                    Card(
-                      color: Colors.grey[400],
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: IconButton(
-                        alignment: Alignment.center,
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const CartPage(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.shopping_cart_outlined,
-                          size: 35,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
+                // price
+                Text(
+                  '₦ ${widget.price.toDouble()}',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
+
                 const SizedBox(height: 10),
+
+                // like button + like count + cart
+                ListTile(
+                  leading: Column(
+                    children: [
+                      // like button
+                      LikeButton(
+                        isLiked: isLiked,
+                        onTap: toggled,
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      // like count
+                      Text(
+                        widget.likes.length.toString(),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  title: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.message_outlined,
+                      size: 35,
+                    ),
+                  ),
+                  trailing: // shopping cart
+                      IconButton(
+                    alignment: Alignment.center,
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => DetailsPage(
+                            name: widget.name,
+                            description: widget.description,
+                            price: widget.price,
+                            image: widget.image,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.shopping_cart_outlined,
+                      size: 35,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

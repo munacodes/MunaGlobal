@@ -172,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
             .collection('User Posts')
             .doc(currentUser!.email)
             .collection('Posts')
-            .orderBy('TimeStamp', descending: true)
+            .orderBy('Timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -182,11 +182,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 // get the message
                 final post = snapshot.data!.docs[index];
                 return SalesProduct(
+                  name: post['Name of Product'],
                   image: post['mediaUrl'],
                   likes: List<String>.from(post['Likes'] ?? []),
-                  message: post['Description'],
+                  description: post['Description'],
+                  price: post['Price'],
                   postId: post.id,
-                  time: formatDate(post['TimeStamp']),
+                  time: formatDate(post['Timestamp']),
                   user: post['UserEmail'],
                 );
               },

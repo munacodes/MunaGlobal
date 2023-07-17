@@ -13,6 +13,7 @@ class Explore extends StatefulWidget {
 
 class _ExploreState extends State<Explore> {
   final currentUser = FirebaseAuth.instance.currentUser!;
+  // final otherUser = FirebaseAuth.instance.u;
 
   logout() {
     FirebaseAuth.instance.signOut();
@@ -44,9 +45,9 @@ class _ExploreState extends State<Explore> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('User Posts')
-                  .doc(currentUser.email)
-                  .collection('Posts')
-                  .orderBy('TimeStamp', descending: true)
+                  // .doc(userId.email)
+                  // .collection('Posts')
+                  .orderBy('Timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -57,10 +58,12 @@ class _ExploreState extends State<Explore> {
                       final post = snapshot.data!.docs[index];
                       return SalesProduct(
                         image: post['mediaUrl'],
+                        name: post['Name of Product'],
                         likes: List<String>.from(post['Likes'] ?? []),
-                        message: post['Description'],
+                        description: post['Description'],
+                        price: post['Price'].toDouble(),
                         postId: post.id,
-                        time: formatDate(post['TimeStamp']),
+                        time: formatDate(post['Timestamp']),
                         user: post['UserEmail'],
                       );
                     },

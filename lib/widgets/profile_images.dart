@@ -144,7 +144,7 @@ class _ProfileImagesState extends State<ProfileImages> {
           .collection('User Posts')
           .doc(currentUser!.email)
           .collection('Posts')
-          .orderBy('TimeStamp', descending: true)
+          .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -154,11 +154,13 @@ class _ProfileImagesState extends State<ProfileImages> {
               // get the message
               final post = snapshot.data!.docs[index];
               return SalesProduct(
+                name: post['Name of Product'],
                 image: post['mediaUrl'],
                 likes: List<String>.from(post['Likes'] ?? []),
-                message: post['Description'],
+                description: post['Description'],
                 postId: post.id,
-                time: formatDate(post['TimeStamp']),
+                price: post['Price'],
+                time: formatDate(post['Timestamp']),
                 user: post['UserEmail'],
               );
             },

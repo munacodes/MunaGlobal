@@ -22,6 +22,8 @@ class UploadPage extends StatefulWidget {
 class _UploadPageState extends State<UploadPage> {
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   File? _imageFile;
   bool isUploading = false;
   User? currentUser;
@@ -99,30 +101,39 @@ class _UploadPageState extends State<UploadPage> {
 
   void createPostInFirestore(
       {required String mediaUrl,
+      required String name,
       required String location,
-      required String description}) {
+      required String description,
+      required double price}) {
     // only post if there is something in the textfield
     if (descriptionController.text.isNotEmpty ||
-        locationController.text.isNotEmpty) {
+        locationController.text.isNotEmpty ||
+        priceController.text.isNotEmpty ||
+        nameController.text.isNotEmpty) {
       // store in firebase
       User? user = FirebaseAuth.instance.currentUser;
       FirebaseFirestore.instance
           .collection('User Posts')
-          .doc(user!.email)
-          .collection('Posts')
+          // .doc(user!.email)
+          // .collection('Posts')
           .add({
         "postId": postId,
-        "UserEmail": user.email,
+        "Name of Product": nameController.text,
+        "UserEmail": user!.email,
         "Description": descriptionController.text,
         "Location": locationController.text,
+        "Price": double.parse(priceController.text),
         "mediaUrl": mediaUrl,
-        "TimeStamp": Timestamp.now(),
+        "Timestamp": Timestamp.now(),
         "Likes": [],
       });
     }
     // clear the textfield
     setState(() {
       descriptionController.clear();
+      priceController.clear();
+      locationController.clear();
+      nameController.clear();
     });
   }
 
@@ -137,18 +148,22 @@ class _UploadPageState extends State<UploadPage> {
       String mediaUrl = await uploadImage(_imageFile);
       createPostInFirestore(
         mediaUrl: mediaUrl,
+        name: nameController.text,
         location: locationController.text,
         description: descriptionController.text,
+        price: double.parse(priceController.text),
       );
       descriptionController.clear();
       locationController.clear();
+      priceController.clear();
+      nameController.clear();
       setState(() {
         _imageFile = null;
         isUploading = false;
         postId = const Uuid().v4();
       });
     } else {
-      displayMessage('Add Image, Description and Location');
+      displayMessage('Please add Image, Name, Description, Price and Location');
     }
   }
 
@@ -181,6 +196,19 @@ class _UploadPageState extends State<UploadPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 isUploading ? linearProgress() : const Text(''),
+                ListTile(
+                  title: Container(
+                    width: 250.0,
+                    child: TextFormField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        hintText: "Name of Product...",
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(),
                 ListTile(
                   // leading: CircleAvatar(
                   //   backgroundImage:
@@ -222,6 +250,23 @@ class _UploadPageState extends State<UploadPage> {
                         ),
                       )
                     : Container(),
+                const Divider(),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.monetization_on,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextField(
+                        controller: priceController,
+                        decoration: const InputDecoration(
+                          hintText: "Price",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 const Divider(),
                 GestureDetector(
                   onTap: handleChooseFromGallery,
