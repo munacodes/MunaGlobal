@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:muna_global/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class SalesProduct extends StatefulWidget {
@@ -65,6 +66,8 @@ class _SalesProductState extends State<SalesProduct> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
+        color: Colors.grey[300],
+        elevation: 5.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
@@ -74,6 +77,7 @@ class _SalesProductState extends State<SalesProduct> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 10),
                 // user
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +92,7 @@ class _SalesProductState extends State<SalesProduct> {
                     ),
                     Text(
                       widget.time,
-                      style: TextStyle(color: Colors.grey[400]),
+                      style: TextStyle(color: Colors.grey[500]),
                     ),
                   ],
                 ),
@@ -105,6 +109,7 @@ class _SalesProductState extends State<SalesProduct> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
 
                 // like button + like count + cart
                 Row(
@@ -129,12 +134,29 @@ class _SalesProductState extends State<SalesProduct> {
                     ),
 
                     // shopping cart
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.shopping_cart_outlined),
+                    Card(
+                      color: Colors.grey[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: IconButton(
+                        alignment: Alignment.center,
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const CartPage(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.shopping_cart_outlined,
+                          size: 35,
+                          color: Colors.blue,
+                        ),
+                      ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
               ],
             ),
           ),

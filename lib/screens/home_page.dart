@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: onPageChanged,
         physics: const NeverScrollableScrollPhysics(),
         children: const [
-          Sales(),
+          Explore(),
           // ElevatedButton(
           //   onPressed: logout,
           //   child: const Text('Logout'),

@@ -64,9 +64,23 @@ class _ProfileImagesState extends State<ProfileImages> {
 
   profileHeader() {
     // Profile pic
-    return const Icon(
-      Icons.person,
-      size: 52,
+    return Column(
+      children: [
+        const Icon(
+          Icons.person,
+          size: 52,
+        ),
+        const SizedBox(height: 10),
+
+        // user email
+        Text(
+          currentUser!.email!,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey[700]),
+        ),
+
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -81,6 +95,7 @@ class _ProfileImagesState extends State<ProfileImages> {
         if (snapshot.hasData) {
           final userData = snapshot.data!.data() as Map<String, dynamic>;
           return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // user details
               Padding(
@@ -124,41 +139,39 @@ class _ProfileImagesState extends State<ProfileImages> {
   }
 
   profilePosts() {
-    return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('User Posts')
-            .doc(currentUser!.email)
-            .collection('Posts')
-            .orderBy('TimeStamp', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                // get the message
-                final post = snapshot.data!.docs[index];
-                return SalesProduct(
-                  image: post['mediaUrl'],
-                  likes: List<String>.from(post['Likes'] ?? []),
-                  message: post['Description'],
-                  postId: post.id,
-                  time: formatDate(post['TimeStamp']),
-                  user: post['UserEmail'],
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('User Posts')
+          .doc(currentUser!.email)
+          .collection('Posts')
+          .orderBy('TimeStamp', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              // get the message
+              final post = snapshot.data!.docs[index];
+              return SalesProduct(
+                image: post['mediaUrl'],
+                likes: List<String>.from(post['Likes'] ?? []),
+                message: post['Description'],
+                postId: post.id,
+                time: formatDate(post['TimeStamp']),
+                user: post['UserEmail'],
+              );
+            },
           );
-        },
-      ),
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 

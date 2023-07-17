@@ -4,14 +4,14 @@ import 'package:muna_global/format_time/format_time.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Sales extends StatefulWidget {
-  const Sales({super.key});
+class Explore extends StatefulWidget {
+  const Explore({super.key});
 
   @override
-  State<Sales> createState() => _SalesState();
+  State<Explore> createState() => _ExploreState();
 }
 
-class _SalesState extends State<Sales> {
+class _ExploreState extends State<Explore> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   logout() {

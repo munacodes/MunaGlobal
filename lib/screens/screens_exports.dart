@@ -1,4 +1,4 @@
-export 'package:muna_global/screens/sales_page.dart';
+export 'package:muna_global/screens/explore_page.dart';
 export 'package:muna_global/screens/messeges_page.dart';
 export 'package:muna_global/screens/upload_page.dart';
 export 'package:muna_global/screens/search_page.dart';
