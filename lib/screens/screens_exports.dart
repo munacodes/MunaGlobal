@@ -7,3 +7,4 @@ export 'package:muna_global/screens/details_page.dart';
 export 'package:muna_global/screens/profile_page.dart';
 export 'package:muna_global/screens/home_page.dart';
 export 'package:muna_global/screens/cart_page.dart';
+export 'package:muna_global/screens/catergory.dart';

@@ -1,3 +1,4 @@
+import 'package:animator/animator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +34,7 @@ class _SalesProductState extends State<SalesProduct> {
   // user
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
+  bool showHeart = false;
 
   // final _commentTextController = TextEditingController();
 
@@ -124,14 +126,48 @@ class _SalesProductState extends State<SalesProduct> {
                 const SizedBox(height: 20),
 
                 // product image
-                Container(
-                  height: 220.0,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: CachedNetworkImageProvider(widget.image),
-                    ),
+                GestureDetector(
+                  onDoubleTap: toggled,
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => DetailsPage(
+                          name: widget.name,
+                          description: widget.description,
+                          price: widget.price,
+                          image: widget.image,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        height: 220.0,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: CachedNetworkImageProvider(widget.image),
+                          ),
+                        ),
+                      ),
+                      showHeart
+                          ? Animator(
+                              duration: const Duration(milliseconds: 300),
+                              tween: Tween(begin: 0.8, end: 1.4),
+                              curve: Curves.elasticOut,
+                              cycles: 0,
+                              builder: (context, animatorState, child) =>
+                                  Transform.scale(
+                                scale: animatorState.value,
+                                child: const Icon(Icons.favorite,
+                                    size: 80.0, color: Colors.red),
+                              ),
+                            )
+                          : const Text(''),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 10),

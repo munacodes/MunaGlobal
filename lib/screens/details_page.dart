@@ -43,7 +43,7 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
         title: const Text(
           'Details',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
       body: Padding(

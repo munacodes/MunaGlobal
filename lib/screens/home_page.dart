@@ -59,29 +59,27 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         children: const [
           Explore(),
-          MessagesPage(), // Notifications
-          UploadPage(), // Uploads
-          SearchPage(), // Search
-
-          //const ProfilePage(), // Profile
-          ProfileImages(),
+          CategoryPage(),
+          UploadPage(),
+          SearchPage(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blue,
+        //  backgroundColor: Colors.blue,
         type: BottomNavigationBarType.fixed,
         currentIndex: pageIndex,
         onTap: onTap,
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.blue,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.explore_outlined),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_active_outlined),
-            label: 'Notification',
+            icon: Icon(Icons.category_outlined),
+            label: 'Category',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.photo_camera_outlined, size: 35.0),

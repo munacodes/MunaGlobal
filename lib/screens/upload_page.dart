@@ -185,7 +185,7 @@ class _UploadPageState extends State<UploadPage> {
         elevation: 0.0,
         title: const Text(
           'Create Product',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
       body: Padding(

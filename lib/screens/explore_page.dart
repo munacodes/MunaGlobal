@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:muna_global/format_time/format_time.dart';
+import 'package:muna_global/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -27,9 +29,35 @@ class _ExploreState extends State<Explore> {
         elevation: 0.0,
         title: const Text(
           'Explore',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
         actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const MessagesPage(),
+                ),
+              );
+            },
+            child: const Icon(
+              Icons.mail_outline_outlined,
+              color: Colors.black,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const NotificationFeed(),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: Colors.black,
+            ),
+          ),
           IconButton(
             onPressed: logout,
             icon: const Icon(Icons.logout, color: Colors.black),

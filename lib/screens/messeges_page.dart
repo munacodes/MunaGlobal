@@ -14,11 +14,24 @@ class _MessagesPageState extends State<MessagesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: const Text(
           'Messeges',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
     );

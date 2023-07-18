@@ -16,6 +16,30 @@ class _NotificationFeedState extends State<NotificationFeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        title: const Text(
+          'Notification',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Container(
           color: Colors.white54,

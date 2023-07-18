@@ -21,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0.0,
         title: const Text(
           'Search',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
     );

@@ -47,7 +47,7 @@ class _CartPageState extends State<CartPage> {
         ),
         title: const Text(
           'My Cart',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
       body: SafeArea(
