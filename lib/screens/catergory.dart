@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:muna_global/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -12,8 +13,11 @@ class _CategoryPageState extends State<CategoryPage> {
   showDialogBox() {
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        content: CategoryListItems().merchant(),
+      builder: (context) => GestureDetector(
+        onTap: () {},
+        child: AlertDialog(
+          content: CategoryListItems().merchant(),
+        ),
       ),
     );
   }

@@ -17,6 +17,8 @@ class _ProfilePageState extends State<ProfilePage> {
   // all users
   final usersCollection = FirebaseFirestore.instance.collection('Users');
 
+  bool isCurrentUser = false;
+
   // edit field
   Future<void> editField(String field) async {
     String newValue = '';
@@ -80,7 +82,36 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
 
         const SizedBox(height: 20),
+        isCurrentUser ? buildButton() : Container(),
+
+        const SizedBox(height: 20),
       ],
+    );
+  }
+
+  buildButton() {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: 40,
+        width: 150,
+        child: Card(
+          elevation: 8.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          color: Colors.blue,
+          child: const Center(
+            child: Text(
+              'Message',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -95,31 +126,40 @@ class _ProfilePageState extends State<ProfilePage> {
         // get user data
         if (snapshot.hasData) {
           final userData = snapshot.data!.data() as Map<String, dynamic>;
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-            // user details
-            children: [
-              // username
-              Card(
-                child: MyTextBox(
-                  text: userData['username'],
-                  sectionName: 'username',
-                  onPressed: () => editField('username'),
+              // user details
+              children: [
+                // username
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  elevation: 9.0,
+                  child: MyTextBox(
+                    text: userData['username'],
+                    sectionName: 'username',
+                    onPressed: () => editField('username'),
+                  ),
                 ),
-              ),
 
-              // bio
-              Card(
-                child: MyTextBox(
-                  text: userData['bio'],
-                  sectionName: 'bio',
-                  onPressed: () => editField('bio'),
+                // bio
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  elevation: 9.0,
+                  child: MyTextBox(
+                    text: userData['bio'],
+                    sectionName: 'bio',
+                    onPressed: () => editField('bio'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           );
         } else if (snapshot.hasError) {
           return Center(
@@ -138,29 +178,45 @@ class _ProfilePageState extends State<ProfilePage> {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('User Posts')
-          .doc(currentUser!.email)
-          .collection('Posts')
+          // .doc(currentUser!.email)
+          // .collection('Posts')
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return ListView.builder(
+          return GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              // get the message
               final post = snapshot.data!.docs[index];
-              return SalesProduct(
-                name: post['Name of Product'],
-                image: post['mediaUrl'],
-                likes: List<String>.from(post['Likes'] ?? []),
-                description: post['Description'],
-                postId: post.id,
-                price: post['Price'],
-                time: formatDate(post['Timestamp']),
-                user: post['UserEmail'],
+              return Container(
+                height: 400,
+                child: GridTile(
+                  child: post['mediaUrl'],
+                ),
               );
             },
           );
+
+          // return ListView.builder(
+          //   itemCount: snapshot.data!.docs.length,
+          //   shrinkWrap: true,
+          //   itemBuilder: (context, index) {
+          //     // get the message
+          //     final post = snapshot.data!.docs[index];
+          //     return SalesProduct(
+          //       name: post['Name of Product'],
+          //       image: post['mediaUrl'],
+          //       likes: List<String>.from(post['Likes'] ?? []),
+          //       description: post['Description'],
+          //       postId: post.id,
+          //       price: post['Price'],
+          //       time: formatDate(post['Timestamp']),
+          //       user: post['UserEmail'],
+          //     );
+          //   },
+          // );
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Error: ${snapshot.error}'),
@@ -187,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           Container(
-            height: 335,
+            height: 380,
             // color: Colors.blue,
             width: double.infinity,
             child: Column(

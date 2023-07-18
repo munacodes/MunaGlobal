@@ -5,11 +5,13 @@ class CartListItem extends StatelessWidget {
   final String image;
   final String name;
   final double price;
+  final int quantity;
   const CartListItem({
     super.key,
     required this.image,
     required this.name,
     required this.price,
+    required this.quantity,
   });
 
   @override
@@ -25,10 +27,16 @@ class CartListItem extends StatelessWidget {
             title: Text(name),
             subtitle: Text('₦ ${price.toDouble()}'),
             trailing: Column(
-              children: const [
-                Text('-'),
-                Text('1'),
-                Text('+'),
+              children: [
+                GestureDetector(
+                  onTap: () {},
+                  child: const Icon(Icons.close),
+                ),
+                Row(
+                  children: [
+                    Text('Quantity: $quantity'),
+                  ],
+                ),
               ],
             ),
           ),

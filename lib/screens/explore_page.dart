@@ -92,7 +92,7 @@ class _ExploreState extends State<Explore> {
                         price: post['Price'].toDouble(),
                         postId: post.id,
                         time: formatDate(post['Timestamp']),
-                        user: post['UserEmail'],
+                        userEmail: post['UserEmail'],
                       );
                     },
                   );

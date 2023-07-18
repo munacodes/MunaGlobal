@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 
 class CategoryListItems {
   decorationContainer({required String name}) {
-    return Container(
-      height: 50,
-      child: Card(
-        color: Colors.grey[300],
-        child: Center(
-          child: Text(
-            name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: 50,
+        child: Card(
+          color: Colors.grey[300],
+          child: Center(
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),

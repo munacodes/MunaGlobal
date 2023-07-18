@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/widgets/widgets_exports.dart';
 
 class DetailsPage extends StatefulWidget {
   final String name;
@@ -21,6 +22,75 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  int count = 1;
+
+  Widget _buildQuantityPart({required int quantity}) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'Quantity',
+              style: TextStyle(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 40,
+              width: 130,
+              decoration: BoxDecoration(
+                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (count > 1) {
+                          count--;
+                        }
+                      });
+                    },
+                    child: const Icon(
+                      Icons.remove,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    count.toString(),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: const Card(
+                      color: Colors.grey,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        count++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +112,7 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
         ),
         title: const Text(
-          'Details',
+          'Detail',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
@@ -95,18 +165,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  children: const [
-                    Text(
-                      'Size: ',
-                      style: TextStyle(fontSize: 30),
-                    ),
-                    Text(
-                      '42',
-                      style: TextStyle(fontSize: 30),
-                    ),
-                  ],
-                ),
+                _buildQuantityPart(quantity: count),
               ],
             ),
           ],
@@ -137,9 +196,9 @@ class _DetailsPageState extends State<DetailsPage> {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => CartPage(
+                      builder: (context) => CartListItem(
                         name: widget.name,
-                        description: widget.description,
+                        quantity: count,
                         price: widget.price,
                         image: widget.image,
                       ),

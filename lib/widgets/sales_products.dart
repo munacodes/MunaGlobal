@@ -10,21 +10,22 @@ class SalesProduct extends StatefulWidget {
   final String description;
   final String name;
   final String image;
-  final String user;
+  final String userEmail;
   final String time;
   final double price;
   final String postId;
   final List<String> likes;
-  const SalesProduct(
-      {super.key,
-      required this.description,
-      required this.user,
-      required this.time,
-      required this.postId,
-      required this.likes,
-      required this.image,
-      required this.price,
-      required this.name});
+  const SalesProduct({
+    super.key,
+    required this.description,
+    required this.userEmail,
+    required this.time,
+    required this.postId,
+    required this.likes,
+    required this.image,
+    required this.price,
+    required this.name,
+  });
 
   @override
   State<SalesProduct> createState() => _SalesProductState();
@@ -92,7 +93,7 @@ class _SalesProductState extends State<SalesProduct> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.user,
+                      widget.userEmail,
                       style: TextStyle(color: Colors.grey[700], fontSize: 18),
                     ),
                     Text(
@@ -204,7 +205,13 @@ class _SalesProductState extends State<SalesProduct> {
                     ],
                   ),
                   title: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const ChatPage(),
+                        ),
+                      );
+                    },
                     icon: const Icon(
                       Icons.message_outlined,
                       size: 35,

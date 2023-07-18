@@ -1,15 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/screens/screens_exports.dart';
 
-class MessagesPage extends StatefulWidget {
-  const MessagesPage({super.key});
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
 
   @override
-  State<MessagesPage> createState() => _MessagesPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _MessagesPageState extends State<MessagesPage> {
+class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +17,7 @@ class _MessagesPageState extends State<MessagesPage> {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => const HomePage(),
+                builder: (context) => const MessagesPage(),
               ),
             );
           },
@@ -30,9 +29,12 @@ class _MessagesPageState extends State<MessagesPage> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: const Text(
-          'Messages',
+          'Chat',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
+      ),
+      body: SafeArea(
+        child: Container(),
       ),
     );
   }

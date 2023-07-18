@@ -7,12 +7,13 @@ class CartPage extends StatefulWidget {
   final String image;
   final String description;
   final double price;
-  const CartPage(
-      {super.key,
-      required this.name,
-      required this.image,
-      required this.description,
-      required this.price});
+  const CartPage({
+    super.key,
+    required this.name,
+    required this.image,
+    required this.description,
+    required this.price,
+  });
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -51,15 +52,19 @@ class _CartPageState extends State<CartPage> {
         ),
       ),
       body: SafeArea(
-        child: ListView.builder(
-          // itemCount: ,
-          itemBuilder: (context, index) {
-            return CartListItem(
-              price: widget.price,
-              image: widget.image,
-              name: widget.name,
-            );
-          },
+        child: Container(
+          height: 500,
+          child: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return CartListItem(
+                price: widget.price,
+                image: widget.image,
+                name: widget.name,
+                quantity: quantity,
+              );
+            },
+          ),
         ),
       ),
       bottomNavigationBar: Card(

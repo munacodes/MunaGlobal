@@ -127,6 +127,11 @@ class _UploadPageState extends State<UploadPage> {
         "Timestamp": Timestamp.now(),
         "Likes": [],
       });
+      FirebaseFirestore.instance.collection('Category').add({
+        "Name of Product": nameController.text,
+        "mediaUrl": mediaUrl,
+        "Price": double.parse(priceController.text),
+      });
     }
     // clear the textfield
     setState(() {
@@ -225,6 +230,7 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
                 ),
+                const Divider(),
                 _imageFile != null
                     ? Container(
                         height: 220.0,
@@ -251,6 +257,27 @@ class _UploadPageState extends State<UploadPage> {
                       )
                     : Container(),
                 const Divider(),
+                GestureDetector(
+                  onTap: handleChooseFromGallery,
+                  child: const Card(
+                    child: ListTile(
+                      leading:
+                          Icon(Icons.image, color: Colors.blue, size: 35.0),
+                      title: Text('Add Image'),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: const Card(
+                    child: ListTile(
+                      leading:
+                          Icon(Icons.image, color: Colors.blue, size: 35.0),
+                      title: Text('Select Category'),
+                    ),
+                  ),
+                ),
+                const Divider(),
                 Card(
                   child: ListTile(
                     leading: const Icon(Icons.monetization_on,
@@ -265,14 +292,6 @@ class _UploadPageState extends State<UploadPage> {
                         ),
                       ),
                     ),
-                  ),
-                ),
-                const Divider(),
-                GestureDetector(
-                  onTap: handleChooseFromGallery,
-                  child: const ListTile(
-                    leading: Icon(Icons.image, color: Colors.blue, size: 35.0),
-                    title: Text('Add Image'),
                   ),
                 ),
                 const Divider(),
