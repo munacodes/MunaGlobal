@@ -21,3 +21,23 @@ String formatDate(Timestamp timestamp) {
 
   return formattedData;
 }
+
+String formatTime(Timestamp timestamp) {
+  // Timestamp is the object we retrive from firestore
+  // so to display it, lets convert it to a string
+  DateTime dataTime = timestamp.toDate();
+
+  // get hour
+  String hour = dataTime.hour.toString();
+
+  // get minute
+  String minute = dataTime.minute.toString();
+
+  // get second
+  String second = dataTime.second.toString();
+
+  // final formatted time
+  String formattedTime = '$hour : $minute : $second';
+
+  return formattedTime;
+}

@@ -39,6 +39,16 @@ class _SalesProductState extends State<SalesProduct> {
 
   // final _commentTextController = TextEditingController();
 
+  qwert(userEmail) {
+    return Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => ChatPage(
+          userEmail: widget.userEmail,
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -205,13 +215,8 @@ class _SalesProductState extends State<SalesProduct> {
                     ],
                   ),
                   title: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const ChatPage(),
-                        ),
-                      );
-                    },
+                    onPressed: () {},
+                    // qwert(widget.userEmail),
                     icon: const Icon(
                       Icons.message_outlined,
                       size: 35,

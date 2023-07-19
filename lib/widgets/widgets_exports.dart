@@ -13,3 +13,4 @@ export 'package:muna_global/widgets/category_list_item.dart';
 export 'package:muna_global/widgets/pop_up_menu.dart';
 export 'package:muna_global/widgets/category_single_item.dart';
 export 'package:muna_global/widgets/message_tile.dart';
+export 'package:muna_global/widgets/chat_tile.dart';
