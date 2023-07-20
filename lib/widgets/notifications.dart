@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/format_time/format_time.dart';
 import 'package:muna_global/screens/screens_exports.dart';
@@ -14,6 +15,9 @@ class NotificationFeed extends StatefulWidget {
 }
 
 class _NotificationFeedState extends State<NotificationFeed> {
+  // user
+  final currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +52,7 @@ class _NotificationFeedState extends State<NotificationFeed> {
               .orderBy('Timestamp', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && currentUser == false) {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {

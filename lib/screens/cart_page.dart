@@ -53,7 +53,7 @@ class _CartPageState extends State<CartPage> {
       ),
       body: SafeArea(
         child: Container(
-          height: 500,
+          height: 900,
           child: ListView.builder(
             itemCount: 10,
             itemBuilder: (context, index) {
@@ -67,35 +67,38 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
       ),
-      bottomNavigationBar: Card(
-        color: Colors.white,
-        elevation: 4.0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '₦ ${widget.price.toDouble()}',
-                style: const TextStyle(fontSize: 30),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Order now'),
-              ),
-            ),
-          ],
-        ),
-      ),
+      // bottomNavigationBar: Card(
+      //   color: Colors.white,
+      //   elevation: 4.0,
+      //   shape: const RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.only(
+      //       topRight: Radius.circular(20),
+      //       topLeft: Radius.circular(20),
+      //     ),
+      //   ),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       Padding(
+      //         padding: const EdgeInsets.all(8.0),
+      //         child: Text(
+      //           '₦ ${widget.price.toDouble()}',
+      //           style: const TextStyle(fontSize: 30),
+      //         ),
+      //       ),
+      //       Padding(
+      //         padding: const EdgeInsets.all(8.0),
+      //         child: ElevatedButton(
+      //           onPressed: () {
+      // send to firebase and notifcation feed to notify the user of current order
+      //                NotificationFeed(),
+      // },
+      //           child: const Text('Order now'),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

@@ -34,55 +34,65 @@ class _DetailsPageState extends State<DetailsPage> {
               height: 10,
             ),
             const Text(
-              'Quantity',
-              style: TextStyle(),
+              'Q u a n t i t y',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10,
             ),
-            Container(
-              height: 40,
-              width: 130,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (count > 1) {
-                          count--;
-                        }
-                      });
-                    },
-                    child: const Icon(
-                      Icons.remove,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    count.toString(),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                  GestureDetector(
-                    child: const Card(
-                      color: Colors.grey,
-                      child: Icon(
-                        Icons.add,
+            Card(
+              elevation: 10,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Container(
+                height: 40,
+                width: 130,
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (count > 1) {
+                            count--;
+                          }
+                        });
+                      },
+                      child: const Icon(
+                        Icons.remove,
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () {
-                      setState(() {
-                        count++;
-                      });
-                    },
-                  ),
-                ],
+                    Text(
+                      count.toString(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GestureDetector(
+                      child: const Card(
+                        color: Colors.grey,
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          count++;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -121,7 +131,7 @@ class _DetailsPageState extends State<DetailsPage> {
         child: Column(
           children: [
             Container(
-              height: 320.0,
+              height: 280.0,
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -131,19 +141,40 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
             ),
             const SizedBox(height: 10),
-            Column(
+          ],
+        ),
+      ),
+      bottomNavigationBar: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        elevation: 10,
+        margin: const EdgeInsets.symmetric(horizontal: 0),
+        child: Container(
+          height: 350,
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(
-                        widget.name,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Row(
+                        children: [
+                          Text(
+                            widget.name,
+                            style: const TextStyle(
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -152,7 +183,6 @@ class _DetailsPageState extends State<DetailsPage> {
                 Container(
                   height: 100,
                   width: double.infinity,
-                  color: Colors.grey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -166,49 +196,74 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
                 const SizedBox(height: 10),
                 _buildQuantityPart(quantity: count),
-              ],
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Card(
-        color: Colors.white,
-        elevation: 4.0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '₦ ${widget.price.toDouble()}',
-                style: const TextStyle(fontSize: 30),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => CartListItem(
-                        name: widget.name,
-                        quantity: count,
-                        price: widget.price,
-                        image: widget.image,
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '₦ ${widget.price.toDouble()}',
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  );
-                },
-                child: const Text('Add to Cart'),
-              ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Card(
+                        color: Colors.blue,
+                        elevation: 10,
+                        child: Container(
+                          height: 40,
+                          width: 150,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => CartListItem(
+                                    name: widget.name,
+                                    quantity: count,
+                                    price: widget.price,
+                                    image: widget.image,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Center(
+                              child: Text(
+                                'Add to Cart',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // ElevatedButton(
+                      //   style: ButtonStyle(
+                      //     elevation: MaterialStateProperty(12),
+                      //   ),
+                      //   onPressed: () {
+                      //     Navigator.of(context).pushReplacement(
+                      //       MaterialPageRoute(
+                      //         builder: (context) => CartListItem(
+                      //           name: widget.name,
+                      //           quantity: count,
+                      //           price: widget.price,
+                      //           image: widget.image,
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text('Add to Cart'),
+                      // ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

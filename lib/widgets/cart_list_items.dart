@@ -18,27 +18,26 @@ class CartListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Card(
-          child: ListTile(
-            leading: Image(
-              fit: BoxFit.cover,
-              image: CachedNetworkImageProvider(image),
-            ),
-            title: Text(name),
-            subtitle: Text('₦ ${price.toDouble()}'),
-            trailing: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: const Icon(Icons.close),
-                ),
-                Row(
-                  children: [
-                    Text('Quantity: $quantity'),
-                  ],
-                ),
-              ],
-            ),
+        child: ListTile(
+          leading: Image(
+            height: 100,
+            fit: BoxFit.cover,
+            image: CachedNetworkImageProvider(image),
+          ),
+          title: Text(name),
+          subtitle: Text('₦ ${price.toDouble()}'),
+          trailing: Column(
+            children: [
+              GestureDetector(
+                onTap: () {},
+                child: const Icon(Icons.close),
+              ),
+              Row(
+                children: [
+                  Text('Quantity: $quantity'),
+                ],
+              ),
+            ],
           ),
         ),
       ),
