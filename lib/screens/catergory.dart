@@ -14,7 +14,13 @@ class _CategoryPageState extends State<CategoryPage> {
     return showDialog(
       context: context,
       builder: (context) => GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const CategoryList(),
+            ),
+          );
+        },
         child: AlertDialog(
           content: CategoryListItems().merchant(),
         ),

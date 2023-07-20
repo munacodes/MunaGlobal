@@ -28,6 +28,7 @@ class _UploadPageState extends State<UploadPage> {
   bool isUploading = false;
   User? currentUser;
   String postId = const Uuid().v4();
+  String? username;
 
   // handleTakePhoto() async {
   //   Navigator.pop(context);
@@ -99,12 +100,13 @@ class _UploadPageState extends State<UploadPage> {
     return downloadUrl;
   }
 
-  void createPostInFirestore(
-      {required String mediaUrl,
-      required String name,
-      required String location,
-      required String description,
-      required double price}) {
+  void createPostInFirestore({
+    required String mediaUrl,
+    required String name,
+    required String location,
+    required String description,
+    required double price,
+  }) {
     // only post if there is something in the textfield
     if (descriptionController.text.isNotEmpty ||
         locationController.text.isNotEmpty ||
@@ -119,6 +121,7 @@ class _UploadPageState extends State<UploadPage> {
           .add({
         "postId": postId,
         "Name of Product": nameController.text,
+        "UserName": username,
         "UserEmail": user!.email,
         "Description": descriptionController.text,
         "Location": locationController.text,
@@ -182,6 +185,26 @@ class _UploadPageState extends State<UploadPage> {
     );
   }
 
+  // showDialogBox() {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (context) => GestureDetector(
+  //       onTap: () {},
+  //       child: AlertDialog(
+  //         content: CategoryListItems().merchant(),
+  //       ),
+  //     ),
+  //   );
+  // }
+  Future showCategory() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: CategoryListItems().merchant(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,10 +238,6 @@ class _UploadPageState extends State<UploadPage> {
                 ),
                 const Divider(),
                 ListTile(
-                  // leading: CircleAvatar(
-                  //   backgroundImage:
-                  //       CachedNetworkImageProvider(widget.currentUser!.photoUrl),
-                  // ),
                   title: Container(
                     width: 250.0,
                     child: TextFormField(
@@ -242,14 +261,7 @@ class _UploadPageState extends State<UploadPage> {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: FileImage(_imageFile!)
-
-                                    //AssetImage('assets/images/Hood.png'),
-                                    // (_imageFile != null)
-                                    //     ? FileImage(_imageFile!) as ImageProvider
-                                    //     : const AssetImage(
-                                    //         'assets/images/no_content.jpg'),
-                                    ),
+                                    image: FileImage(_imageFile!)),
                               ),
                             ),
                           ),
@@ -268,11 +280,13 @@ class _UploadPageState extends State<UploadPage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    showCategory();
+                  },
                   child: const Card(
                     child: ListTile(
                       leading:
-                          Icon(Icons.image, color: Colors.blue, size: 35.0),
+                          Icon(Icons.category, color: Colors.blue, size: 35.0),
                       title: Text('Select Category'),
                     ),
                   ),
