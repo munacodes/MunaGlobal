@@ -185,22 +185,18 @@ class _UploadPageState extends State<UploadPage> {
     );
   }
 
-  // showDialogBox() {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (context) => GestureDetector(
-  //       onTap: () {},
-  //       child: AlertDialog(
-  //         content: CategoryListItems().merchant(),
-  //       ),
-  //     ),
-  //   );
-  // }
-  Future showCategory() async {
+  Future<void> showDialogBox() async {
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        content: CategoryListItems().merchant(),
+      builder: (context) => GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Category().categoryitem(context),
+        ),
       ),
     );
   }
@@ -279,9 +275,13 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
                 ),
+
+                /// TODO: Use pop up to pop category
+                /// TODO: showDialog to display category list
+                /// TODO: use navigator.pop to pop back list to upload page
                 GestureDetector(
                   onTap: () {
-                    showCategory();
+                    showDialogBox();
                   },
                   child: const Card(
                     child: ListTile(

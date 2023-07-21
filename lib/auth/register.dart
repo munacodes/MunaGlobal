@@ -50,8 +50,12 @@ class _RegisterState extends State<Register> {
           .set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username
-        'username': _emailController.text.split('@')[0], // initial username
+        'userName': _emailController.text.split('@')[0], // initial username
         'bio': 'Empty bio...' // initially empty bio
+      });
+
+      FirebaseFirestore.instance.collection('User Posts').add({
+        "userName": _emailController.text.split('@')[0],
       });
 
       // pop loading circle

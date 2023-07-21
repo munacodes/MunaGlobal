@@ -10,7 +10,7 @@ class SalesProduct extends StatefulWidget {
   final String description;
   final String name;
   final String image;
-  final String userEmail;
+  final String username;
   final String time;
   final double price;
   final String postId;
@@ -18,7 +18,7 @@ class SalesProduct extends StatefulWidget {
   const SalesProduct({
     super.key,
     required this.description,
-    required this.userEmail,
+    required this.username,
     required this.time,
     required this.postId,
     required this.likes,
@@ -39,11 +39,11 @@ class _SalesProductState extends State<SalesProduct> {
 
   // final _commentTextController = TextEditingController();
 
-  qwert(userEmail) {
+  qwert(username) {
     return Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => ChatPage(
-          userEmail: widget.userEmail,
+          userEmail: widget.username,
         ),
       ),
     );
@@ -81,6 +81,32 @@ class _SalesProductState extends State<SalesProduct> {
     }
   }
 
+  qwaszx() {
+    return // Username
+        StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final userData = snapshot.data!.data();
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                userData!['username'],
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+            ],
+          );
+        }
+        return circularProgress();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -102,8 +128,9 @@ class _SalesProductState extends State<SalesProduct> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // qwaszx(),
                     Text(
-                      widget.userEmail,
+                      widget.username,
                       style: TextStyle(color: Colors.grey[700], fontSize: 18),
                     ),
                     Text(

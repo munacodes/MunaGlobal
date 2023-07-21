@@ -61,6 +61,12 @@ class _ProfilePageState extends State<ProfilePage> {
     if (newValue.trim().length > 0) {
       // only update if there is something in the textfield
       await usersCollection.doc(currentUser!.email).update({field: newValue});
+      FirebaseFirestore.instance
+          .collection('User Posts')
+          .doc(currentUser!.uid)
+          .update({
+        "userName": newValue,
+      });
     }
   }
 
@@ -74,16 +80,31 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         const SizedBox(height: 10),
 
-        // user email
-        Text(
-          currentUser!.email!,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey[700]),
+        // Username
+        StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(currentUser!.email)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final userData = snapshot.data!.data();
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    userData!['username'],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                ],
+              );
+            }
+            return circularProgress();
+          },
         ),
-
         const SizedBox(height: 20),
         isCurrentUser ? buildButton() : Container(),
-
         const SizedBox(height: 20),
       ],
     );
@@ -140,9 +161,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 9.0,
                   child: MyTextBox(
-                    text: userData['username'],
+                    text: userData['userName'],
                     sectionName: 'username',
-                    onPressed: () => editField('username'),
+                    onPressed: () => editField('userName'),
                   ),
                 ),
 
@@ -243,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           Container(
-            height: 380,
+            height: 325,
             // color: Colors.blue,
             width: double.infinity,
             child: Column(

@@ -21,8 +21,8 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
           );
         },
-        child: AlertDialog(
-          content: CategoryListItems().merchant(),
+        child: Dialog(
+          child: CategoryListItems().merchant(),
         ),
       ),
     );

@@ -18,8 +18,7 @@ class MyTextBox extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: const EdgeInsets.only(left: 15, bottom: 15),
-      margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,6 +45,7 @@ class MyTextBox extends StatelessWidget {
           // text
           Text(
             text,
+            style: const TextStyle(color: Colors.black),
           ),
         ],
       ),
