@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class CartListItem extends StatelessWidget {
+class CartListItem extends StatefulWidget {
   final String image;
   final String name;
   final double price;
@@ -15,17 +15,24 @@ class CartListItem extends StatelessWidget {
   });
 
   @override
+  State<CartListItem> createState() => _CartListItemState();
+}
+
+class _CartListItemState extends State<CartListItem> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5.0,
         child: ListTile(
           leading: Image(
             height: 100,
             fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(image),
+            image: CachedNetworkImageProvider(widget.image),
           ),
-          title: Text(name),
-          subtitle: Text('₦ ${price.toDouble()}'),
+          title: Text(widget.name),
+          subtitle: Text('₦ ${widget.price.toDouble()}'),
           trailing: Column(
             children: [
               GestureDetector(
@@ -34,7 +41,7 @@ class CartListItem extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text('Quantity: $quantity'),
+                  Text('Quantity: ${widget.quantity}'),
                 ],
               ),
             ],

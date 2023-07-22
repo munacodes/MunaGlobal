@@ -37,22 +37,20 @@ class _NotificationFeedState extends State<NotificationFeed> {
             color: Colors.black,
           ),
         ),
-        centerTitle: true,
         title: const Text(
           'Notification',
-          style: TextStyle(
-            color: Colors.black,
-          ),
+          style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
       ),
       body: SafeArea(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('User Posts')
-              .orderBy('Timestamp', descending: true)
+              .orderBy('Likes')
+              .limit(10)
               .snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.hasData && currentUser == false) {
+            if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
@@ -64,9 +62,20 @@ class _NotificationFeedState extends State<NotificationFeed> {
                   );
                 },
               );
+            } else {
+              Text(
+                'No Notification',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey[300],
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 60.0,
+                ),
+              );
             }
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: circularProgress(),
             );
           },
         ),
@@ -92,46 +101,36 @@ class NotificationFeedItem extends StatelessWidget {
       child: Card(
         color: Colors.grey[400],
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    userEmail,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    'liked your product.',
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: ListTile(
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '$userEmail liked your product.',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                       color: Colors.grey[800],
                     ),
                   ),
-                  Container(
-                    // height: 30,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(mediaUrl),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+            subtitle: Text(
+              time,
+              style: const TextStyle(color: Colors.black),
+            ),
+            trailing: Container(
+              height: 100,
+              width: 80,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: CachedNetworkImageProvider(mediaUrl),
+                ),
               ),
-              const SizedBox(height: 10),
-              Text(
-                time,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
+            ),
           ),
         ),
       ),

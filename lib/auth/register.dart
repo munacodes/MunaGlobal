@@ -54,10 +54,6 @@ class _RegisterState extends State<Register> {
         'bio': 'Empty bio...' // initially empty bio
       });
 
-      FirebaseFirestore.instance.collection('User Posts').add({
-        "userName": _emailController.text.split('@')[0],
-      });
-
       // pop loading circle
       if (context.mounted) Navigator.pop(context);
     } on FirebaseAuthException catch (e) {

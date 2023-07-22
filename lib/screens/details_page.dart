@@ -222,9 +222,9 @@ class _DetailsPageState extends State<DetailsPage> {
                             onTap: () {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => CartListItem(
+                                  builder: (context) => CartPage(
                                     name: widget.name,
-                                    quantity: count,
+                                    description: widget.description,
                                     price: widget.price,
                                     image: widget.image,
                                   ),

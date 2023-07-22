@@ -86,13 +86,13 @@ class _ExploreState extends State<Explore> {
                       final post = snapshot.data!.docs[index];
                       return SalesProduct(
                         image: post['mediaUrl'],
-                        name: post['Name of Product'],
+                        title: post['Name of Product'],
                         likes: List<String>.from(post['Likes'] ?? []),
                         description: post['Description'],
                         price: post['Price'].toDouble(),
                         postId: post.id,
                         time: formatDate(post['Timestamp']),
-                        username: post['username'],
+                        userEmail: post['UserEmail'],
                       );
                     },
                   );

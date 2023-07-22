@@ -57,11 +57,14 @@ class _CartPageState extends State<CartPage> {
           child: ListView.builder(
             itemCount: 10,
             itemBuilder: (context, index) {
-              return CartListItem(
-                price: widget.price,
-                image: widget.image,
-                name: widget.name,
-                quantity: quantity,
+              return Container(
+                height: 500,
+                child: CartListItem(
+                  price: widget.price,
+                  image: widget.image,
+                  name: widget.name,
+                  quantity: quantity,
+                ),
               );
             },
           ),

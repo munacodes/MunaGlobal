@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -61,12 +62,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if (newValue.trim().length > 0) {
       // only update if there is something in the textfield
       await usersCollection.doc(currentUser!.email).update({field: newValue});
-      FirebaseFirestore.instance
-          .collection('User Posts')
-          .doc(currentUser!.uid)
-          .update({
-        "userName": newValue,
-      });
     }
   }
 
@@ -80,31 +75,16 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         const SizedBox(height: 10),
 
-        // Username
-        StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('Users')
-              .doc(currentUser!.email)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final userData = snapshot.data!.data();
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    userData!['username'],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                ],
-              );
-            }
-            return circularProgress();
-          },
+        // user email
+        Text(
+          currentUser!.email!,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey[700]),
         ),
+
         const SizedBox(height: 20),
         isCurrentUser ? buildButton() : Container(),
+
         const SizedBox(height: 20),
       ],
     );
@@ -194,6 +174,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // qazxsw(){
+  //   return
+  // }
+
   // retrive posts from firebase
   profilePosts() {
     return StreamBuilder<QuerySnapshot>(
@@ -205,19 +189,22 @@ class _ProfilePageState extends State<ProfilePage> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3),
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              final post = snapshot.data!.docs[index];
-              return Container(
-                height: 400,
-                child: GridTile(
-                  child: post['mediaUrl'],
-                ),
-              );
-            },
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Container(
+              height: 800,
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  final post = snapshot.data!.docs[index];
+                  return GridTiled(
+                    image: post['mediaUrl'],
+                  );
+                },
+              ),
+            ),
           );
 
           // return ListView.builder(
@@ -264,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           Container(
-            height: 325,
+            height: 330,
             // color: Colors.blue,
             width: double.infinity,
             child: Column(

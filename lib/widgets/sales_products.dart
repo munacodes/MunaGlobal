@@ -8,9 +8,9 @@ import 'package:muna_global/widgets/widgets_exports.dart';
 
 class SalesProduct extends StatefulWidget {
   final String description;
-  final String name;
+  final String title;
   final String image;
-  final String username;
+  final String userEmail;
   final String time;
   final double price;
   final String postId;
@@ -18,13 +18,13 @@ class SalesProduct extends StatefulWidget {
   const SalesProduct({
     super.key,
     required this.description,
-    required this.username,
+    required this.userEmail,
     required this.time,
     required this.postId,
     required this.likes,
     required this.image,
     required this.price,
-    required this.name,
+    required this.title,
   });
 
   @override
@@ -39,11 +39,11 @@ class _SalesProductState extends State<SalesProduct> {
 
   // final _commentTextController = TextEditingController();
 
-  qwert(username) {
+  qwert(userEmail) {
     return Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => ChatPage(
-          userEmail: widget.username,
+          userEmail: widget.userEmail,
         ),
       ),
     );
@@ -81,32 +81,6 @@ class _SalesProductState extends State<SalesProduct> {
     }
   }
 
-  qwaszx() {
-    return // Username
-        StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('Users')
-          .doc(currentUser!.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final userData = snapshot.data!.data();
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                userData!['username'],
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-            ],
-          );
-        }
-        return circularProgress();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -128,9 +102,8 @@ class _SalesProductState extends State<SalesProduct> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // qwaszx(),
                     Text(
-                      widget.username,
+                      widget.userEmail,
                       style: TextStyle(color: Colors.grey[700], fontSize: 18),
                     ),
                     Text(
@@ -151,7 +124,7 @@ class _SalesProductState extends State<SalesProduct> {
                   children: [
                     Expanded(
                       child: Text(
-                        widget.name,
+                        widget.title,
                         style: const TextStyle(
                           fontSize: 16,
                           // color: Colors.black,
@@ -170,7 +143,7 @@ class _SalesProductState extends State<SalesProduct> {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => DetailsPage(
-                          name: widget.name,
+                          name: widget.title,
                           description: widget.description,
                           price: widget.price,
                           image: widget.image,
@@ -242,7 +215,15 @@ class _SalesProductState extends State<SalesProduct> {
                     ],
                   ),
                   title: IconButton(
-                    onPressed: () {},
+                    alignment: Alignment.bottomLeft,
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ChatPage(userEmail: widget.userEmail),
+                        ),
+                      );
+                    },
                     // qwert(widget.userEmail),
                     icon: const Icon(
                       Icons.message_outlined,
@@ -256,7 +237,7 @@ class _SalesProductState extends State<SalesProduct> {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => DetailsPage(
-                            name: widget.name,
+                            name: widget.title,
                             description: widget.description,
                             price: widget.price,
                             image: widget.image,

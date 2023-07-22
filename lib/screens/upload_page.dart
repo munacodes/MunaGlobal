@@ -23,10 +23,10 @@ class _UploadPageState extends State<UploadPage> {
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
   File? _imageFile;
   bool isUploading = false;
-  User? currentUser;
+  User? currentUser = FirebaseAuth.instance.currentUser;
   String postId = const Uuid().v4();
   String? username;
 
@@ -102,7 +102,7 @@ class _UploadPageState extends State<UploadPage> {
 
   void createPostInFirestore({
     required String mediaUrl,
-    required String name,
+    required String title,
     required String location,
     required String description,
     required double price,
@@ -111,18 +111,17 @@ class _UploadPageState extends State<UploadPage> {
     if (descriptionController.text.isNotEmpty ||
         locationController.text.isNotEmpty ||
         priceController.text.isNotEmpty ||
-        nameController.text.isNotEmpty) {
+        titleController.text.isNotEmpty) {
       // store in firebase
-      User? user = FirebaseAuth.instance.currentUser;
       FirebaseFirestore.instance
           .collection('User Posts')
           // .doc(user!.email)
           // .collection('Posts')
           .add({
         "postId": postId,
-        "Name of Product": nameController.text,
-        "UserName": username,
-        "UserEmail": user!.email,
+        "Name of Product": titleController.text,
+        // "UserName": currentUser!.username,
+        "UserEmail": currentUser!.email,
         "Description": descriptionController.text,
         "Location": locationController.text,
         "Price": double.parse(priceController.text),
@@ -130,18 +129,13 @@ class _UploadPageState extends State<UploadPage> {
         "Timestamp": Timestamp.now(),
         "Likes": [],
       });
-      FirebaseFirestore.instance.collection('Category').add({
-        "Name of Product": nameController.text,
-        "mediaUrl": mediaUrl,
-        "Price": double.parse(priceController.text),
-      });
     }
     // clear the textfield
     setState(() {
       descriptionController.clear();
       priceController.clear();
       locationController.clear();
-      nameController.clear();
+      titleController.clear();
     });
   }
 
@@ -156,7 +150,7 @@ class _UploadPageState extends State<UploadPage> {
       String mediaUrl = await uploadImage(_imageFile);
       createPostInFirestore(
         mediaUrl: mediaUrl,
-        name: nameController.text,
+        title: titleController.text,
         location: locationController.text,
         description: descriptionController.text,
         price: double.parse(priceController.text),
@@ -164,7 +158,7 @@ class _UploadPageState extends State<UploadPage> {
       descriptionController.clear();
       locationController.clear();
       priceController.clear();
-      nameController.clear();
+      titleController.clear();
       setState(() {
         _imageFile = null;
         isUploading = false;
@@ -224,7 +218,7 @@ class _UploadPageState extends State<UploadPage> {
                   title: Container(
                     width: 250.0,
                     child: TextFormField(
-                      controller: nameController,
+                      controller: titleController,
                       decoration: const InputDecoration(
                         hintText: "Name of Product...",
                         border: InputBorder.none,
