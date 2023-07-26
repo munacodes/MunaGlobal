@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 
 class MessagesPage extends StatefulWidget {
   const MessagesPage({super.key});

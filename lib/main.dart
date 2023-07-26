@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:muna_global/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:muna_global/home.dart';
-import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 void main() async {

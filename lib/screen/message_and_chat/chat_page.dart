@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/chat/chat_service.dart';
-import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/screen/message_and_chat/message_export.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class ChatPage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/auth/auth_exports.dart';
-import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

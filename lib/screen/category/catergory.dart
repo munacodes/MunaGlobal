@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:muna_global/screens/screens_exports.dart';
+import 'package:muna_global/screen/category/category_exports.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class CategoryPage extends StatefulWidget {
