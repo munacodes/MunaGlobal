@@ -19,6 +19,80 @@ class CartListItem extends StatefulWidget {
 }
 
 class _CartListItemState extends State<CartListItem> {
+  int count = 1;
+
+  Widget _buildQuantityPart({required int quantity}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        const Text(
+          'Q u a n t i t y',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Card(
+          elevation: 10,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Container(
+            height: 40,
+            width: 130,
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (count > 1) {
+                        count--;
+                      }
+                    });
+                  },
+                  child: const Icon(
+                    Icons.remove,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  count.toString(),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  child: const Card(
+                    color: Colors.grey,
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      count++;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,22 +102,14 @@ class _CartListItemState extends State<CartListItem> {
         child: ListTile(
           leading: Image(
             height: 100,
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
             image: CachedNetworkImageProvider(widget.image),
           ),
           title: Text(widget.title),
           subtitle: Text('₦ ${widget.price.toDouble()}'),
           trailing: Column(
             children: [
-              GestureDetector(
-                onTap: () {},
-                child: const Icon(Icons.close),
-              ),
-              Row(
-                children: [
-                  Text('Quantity: ${widget.quantity}'),
-                ],
-              ),
+              _buildQuantityPart(quantity: count),
             ],
           ),
         ),

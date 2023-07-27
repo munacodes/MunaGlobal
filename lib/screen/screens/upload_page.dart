@@ -25,6 +25,8 @@ class _UploadPageState extends State<UploadPage> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController titleController = TextEditingController();
+  TextEditingController sizeController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
   File? _imageFile;
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
@@ -71,7 +73,8 @@ class _UploadPageState extends State<UploadPage> {
     if (descriptionController.text.isNotEmpty ||
         locationController.text.isNotEmpty ||
         priceController.text.isNotEmpty ||
-        titleController.text.isNotEmpty) {
+        titleController.text.isNotEmpty ||
+        quantityController.text.isNotEmpty) {
       // store in firebase
       FirebaseFirestore.instance
           .collection('Users')
@@ -85,6 +88,8 @@ class _UploadPageState extends State<UploadPage> {
         "Description": descriptionController.text,
         "Location": locationController.text,
         "Price": double.parse(priceController.text),
+        "Quantity": quantityController.text,
+        "Size": sizeController.text,
         "mediaUrl": mediaUrl,
         "Timestamp": Timestamp.now(),
         "Likes": [],
@@ -96,11 +101,15 @@ class _UploadPageState extends State<UploadPage> {
       priceController.clear();
       locationController.clear();
       titleController.clear();
+      sizeController.clear();
+      quantityController.clear();
     });
   }
 
   handleSubmit() async {
     if (descriptionController.text.isNotEmpty &&
+        titleController.text.isNotEmpty &&
+        priceController.text.isNotEmpty &&
         locationController.text.isNotEmpty &&
         _imageFile != null) {
       setState(() {
@@ -119,6 +128,8 @@ class _UploadPageState extends State<UploadPage> {
       locationController.clear();
       priceController.clear();
       titleController.clear();
+      sizeController.clear();
+      quantityController.clear();
       setState(() {
         _imageFile = null;
         isUploading = false;
@@ -229,6 +240,36 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
                 ),
+                ListTile(
+                  leading:
+                      const Icon(Icons.nature, color: Colors.blue, size: 35.0),
+                  title: Container(
+                    width: 250.0,
+                    child: TextFormField(
+                      controller: sizeController,
+                      decoration: const InputDecoration(
+                        hintText: "Size",
+                        border: InputBorder.none,
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.quora_outlined,
+                      color: Colors.blue, size: 35.0),
+                  title: Container(
+                    width: 250.0,
+                    child: TextFormField(
+                      controller: descriptionController,
+                      decoration: const InputDecoration(
+                        hintText: "Quantity",
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
 
                 /// TODO: Use pop up to pop category
                 /// TODO: showDialog to display category list
@@ -272,7 +313,7 @@ class _UploadPageState extends State<UploadPage> {
                       child: TextField(
                         controller: locationController,
                         decoration: const InputDecoration(
-                          hintText: "Location...",
+                          hintText: "Location",
                           border: InputBorder.none,
                         ),
                       ),

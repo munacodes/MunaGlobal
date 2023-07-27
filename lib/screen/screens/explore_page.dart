@@ -49,7 +49,7 @@ class _ExploreState extends State<Explore> {
                     );
                   },
                   child: const Icon(
-                    Icons.mail_outline_outlined,
+                    Icons.question_answer_outlined,
                     color: Colors.black,
                   ),
                 ),

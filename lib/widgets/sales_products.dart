@@ -17,6 +17,7 @@ class SalesProduct extends StatefulWidget {
   final String time;
   final double price;
   final String postId;
+
   final List<String> likes;
   const SalesProduct({
     super.key,
@@ -242,7 +243,7 @@ class _SalesProductState extends State<SalesProduct> {
                       // );
                     },
                     icon: const Icon(
-                      Icons.message_outlined,
+                      Icons.question_answer_outlined,
                       size: 35,
                     ),
                   ),

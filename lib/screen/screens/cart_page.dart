@@ -23,10 +23,10 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  double subTotal = 26;
-  int tax = 100;
-  int quantity = 3;
-  String totalPrice = 'subTotal * tax * quantity';
+  // double subTotal = 26;
+  // int tax = 100;
+  // int quantity = 3;
+  // String totalPrice = 'subTotal * tax * quantity';
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +53,15 @@ class _CartPageState extends State<CartPage> {
           'My Cart',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.delete_outline,
+              color: Colors.grey,
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(

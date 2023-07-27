@@ -26,86 +26,9 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  int count = 1;
+
   bool isTapped = false;
   String cartId = const Uuid().v4();
-
-  Widget _buildQuantityPart({required int quantity}) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              'Q u a n t i t y',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Card(
-              elevation: 10,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Container(
-                height: 40,
-                width: 130,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (count > 1) {
-                            count--;
-                          }
-                        });
-                      },
-                      child: const Icon(
-                        Icons.remove,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      count.toString(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      child: const Card(
-                        color: Colors.grey,
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          count++;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   void addToCart() {
     setState(() {
@@ -122,10 +45,19 @@ class _DetailsPageState extends State<DetailsPage> {
         "mediaUrl": widget.image,
         "Price": widget.price,
         "cartId": cartId,
-        // "Quantity": ,
         "Description": widget.description,
         "Timesatmp": Timestamp.now(),
       });
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => CartPage(
+            title: widget.title,
+            description: widget.description,
+            image: widget.image,
+            price: widget.price,
+          ),
+        ),
+      );
     }
   }
 
@@ -163,7 +95,7 @@ class _DetailsPageState extends State<DetailsPage> {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   image: CachedNetworkImageProvider(widget.image),
                 ),
               ),
@@ -223,7 +155,6 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                //  _buildQuantityPart(quantity: count),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
