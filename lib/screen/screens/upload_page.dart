@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:muna_global/dialog_box/dialog_box_exports.dart';
+import 'package:muna_global/screen/category/category_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image/image.dart' as Im;
@@ -27,7 +28,7 @@ class _UploadPageState extends State<UploadPage> {
   File? _imageFile;
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
-  String? currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  // String? currentUserId = FirebaseAuth.instance.currentUser!.uid;
   String postId = const Uuid().v4();
 
   handleChooseFromGallery() async {
@@ -73,9 +74,9 @@ class _UploadPageState extends State<UploadPage> {
         titleController.text.isNotEmpty) {
       // store in firebase
       FirebaseFirestore.instance
-          .collection('User Posts')
-          // .doc(user!.email)
-          // .collection('Posts')
+          .collection('Users')
+          .doc(currentUser!.email)
+          .collection('Posts')
           .add({
         "postId": postId,
         "Name of Product": titleController.text,

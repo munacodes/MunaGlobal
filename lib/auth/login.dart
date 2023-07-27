@@ -135,6 +135,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
 
                   // go to register page
                   Row(

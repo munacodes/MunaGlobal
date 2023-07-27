@@ -1,15 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class CartPage extends StatefulWidget {
-  final String name;
+  final String title;
   final String image;
   final String description;
   final double price;
   const CartPage({
     super.key,
-    required this.name,
+    required this.title,
     required this.image,
     required this.description,
     required this.price,
@@ -20,6 +22,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   double subTotal = 26;
   int tax = 100;
   int quantity = 3;
@@ -36,7 +39,7 @@ class _CartPageState extends State<CartPage> {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => DetailsPage(
-                  name: widget.name,
+                  title: widget.title,
                   description: widget.description,
                   price: widget.price,
                   image: widget.image,
@@ -53,55 +56,84 @@ class _CartPageState extends State<CartPage> {
       ),
       body: SafeArea(
         child: Container(
-          height: 900,
-          child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Container(
-                height: 500,
-                child: CartListItem(
-                  price: widget.price,
-                  image: widget.image,
-                  name: widget.name,
-                  quantity: quantity,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 430,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(currentUser!.email)
+                      .collection('Carts')
+                      .orderBy('Timestamp', descending: false)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final cartItem = snapshot.data!.docs[index];
+                            return CartListItem(
+                              title: cartItem['Name of Product'],
+                              image: cartItem['mediaUrl'],
+                              price: cartItem['Price'],
+                              quantity: cartItem[''],
+                            );
+                          });
+                    } else if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text(
+                          'No Cart Yet',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+            ],
           ),
         ),
       ),
-      // bottomNavigationBar: Card(
-      //   color: Colors.white,
-      //   elevation: 4.0,
-      //   shape: const RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.only(
-      //       topRight: Radius.circular(20),
-      //       topLeft: Radius.circular(20),
-      //     ),
-      //   ),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: Text(
-      //           '₦ ${widget.price.toDouble()}',
-      //           style: const TextStyle(fontSize: 30),
-      //         ),
-      //       ),
-      //       Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: ElevatedButton(
-      //           onPressed: () {
-      // send to firebase and notifcation feed to notify the user of current order
-      //                NotificationFeed(),
-      // },
-      //           child: const Text('Order now'),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+      bottomNavigationBar: Card(
+        color: Colors.white,
+        elevation: 4.0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            topLeft: Radius.circular(20),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '₦ ${widget.price.toDouble()}',
+                style: const TextStyle(fontSize: 30),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  // send to firebase and notifcation feed to notify the user of current order
+                },
+                child: const Text('Order now'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final DateTime timestamp = DateTime.now();
-  final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   bool isAuth = false;
   PageController? pageController;

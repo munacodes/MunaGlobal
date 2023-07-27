@@ -45,7 +45,9 @@ class _NotificationFeedState extends State<NotificationFeed> {
       body: SafeArea(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('User Posts')
+              .collection('Users')
+              .doc(currentUser!.email)
+              .collection('Posts')
               .orderBy('Likes')
               .limit(10)
               .snapshots(),
@@ -57,7 +59,7 @@ class _NotificationFeedState extends State<NotificationFeed> {
                   final notification = snapshot.data!.docs[index];
                   return NotificationFeedItem(
                     mediaUrl: notification['mediaUrl'],
-                    userEmail: notification['UserEmail'],
+                    userName: notification['UserName'],
                     time: formatTime(notification['Timestamp']),
                   );
                 },
@@ -86,12 +88,12 @@ class _NotificationFeedState extends State<NotificationFeed> {
 
 class NotificationFeedItem extends StatelessWidget {
   final String mediaUrl;
-  final String userEmail;
+  final String userName;
   final String time;
   const NotificationFeedItem(
       {super.key,
       required this.mediaUrl,
-      required this.userEmail,
+      required this.userName,
       required this.time});
 
   @override
@@ -107,7 +109,7 @@ class NotificationFeedItem extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '$userEmail liked your product.',
+                    '$userName liked your product.',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,

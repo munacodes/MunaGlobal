@@ -1,17 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
+import 'package:uuid/uuid.dart';
 
 class DetailsPage extends StatefulWidget {
-  final String name;
+  final String title;
   final String description;
   final String image;
   final double price;
 
   const DetailsPage({
     super.key,
-    required this.name,
+    required this.title,
     required this.description,
     required this.price,
     required this.image,
@@ -22,7 +25,10 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   int count = 1;
+  bool isTapped = false;
+  String cartId = const Uuid().v4();
 
   Widget _buildQuantityPart({required int quantity}) {
     return Row(
@@ -101,6 +107,28 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
+  void addToCart() {
+    setState(() {
+      isTapped = !isTapped;
+    });
+
+    if (isTapped) {
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.email)
+          .collection('Carts')
+          .add({
+        "Name of Product": widget.title,
+        "mediaUrl": widget.image,
+        "Price": widget.price,
+        "cartId": cartId,
+        // "Quantity": ,
+        "Description": widget.description,
+        "Timesatmp": Timestamp.now(),
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +196,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       child: Row(
                         children: [
                           Text(
-                            widget.name,
+                            widget.title,
                             style: const TextStyle(
                               fontSize: 30.0,
                               fontWeight: FontWeight.bold,
@@ -195,7 +223,28 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                _buildQuantityPart(quantity: count),
+                //  _buildQuantityPart(quantity: count),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'Size: ',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Text(
+                          '42 or XL',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,22 +268,14 @@ class _DetailsPageState extends State<DetailsPage> {
                           height: 40,
                           width: 150,
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => CartPage(
-                                    name: widget.name,
-                                    description: widget.description,
-                                    price: widget.price,
-                                    image: widget.image,
-                                  ),
-                                ),
-                              );
-                            },
+                            onTap: addToCart,
                             child: const Center(
                               child: Text(
                                 'Add to Cart',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

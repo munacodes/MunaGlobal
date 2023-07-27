@@ -17,8 +17,6 @@ class _RegisterState extends State<Register> {
   final _confirmPasswordController = TextEditingController();
   final DateTime timestamp = DateTime.now();
 
-  final usersCollection = FirebaseFirestore.instance.collection('Users');
-
   void signUp() async {
     // show loading circle
     showDialog(
@@ -48,7 +46,12 @@ class _RegisterState extends State<Register> {
 
       // after creating the user, create a new document in cloud firestore called Users
 
-      usersCollection.doc(userCredential.user!.email).set({
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userCredential.user!.email)
+          .collection('User Details')
+          .doc(userCredential.user!.email)
+          .set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username
         'userName': _emailController.text.split('@')[0], // initial username

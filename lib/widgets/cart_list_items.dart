@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class CartListItem extends StatefulWidget {
   final String image;
-  final String name;
+  final String title;
   final double price;
   final int quantity;
   const CartListItem({
     super.key,
     required this.image,
-    required this.name,
+    required this.title,
     required this.price,
     required this.quantity,
   });
@@ -31,7 +31,7 @@ class _CartListItemState extends State<CartListItem> {
             fit: BoxFit.cover,
             image: CachedNetworkImageProvider(widget.image),
           ),
-          title: Text(widget.name),
+          title: Text(widget.title),
           subtitle: Text('₦ ${widget.price.toDouble()}'),
           trailing: Column(
             children: [

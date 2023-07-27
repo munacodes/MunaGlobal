@@ -17,10 +17,6 @@ class Explore extends StatefulWidget {
 class _ExploreState extends State<Explore> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  logout() {
-    FirebaseAuth.instance.signOut();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,36 +28,47 @@ class _ExploreState extends State<Explore> {
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const MessagesPage(),
+          Container(
+            width: 150,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.shopping_cart_outlined,
+                    color: Colors.black,
+                  ),
                 ),
-              );
-            },
-            child: const Icon(
-              Icons.mail_outline_outlined,
-              color: Colors.black,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const MessagesPage(),
+                      ),
+                    );
+                  },
+                  child: const Icon(
+                    Icons.mail_outline_outlined,
+                    color: Colors.black,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationFeed(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.notifications_outlined,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const NotificationFeed(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: Colors.black,
-            ),
-          ),
-          IconButton(
-            onPressed: logout,
-            icon: const Icon(Icons.logout, color: Colors.black),
-          )
         ],
       ),
       body: Column(
@@ -72,9 +79,9 @@ class _ExploreState extends State<Explore> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('User Posts')
-                  // .doc(userId.email)
-                  // .collection('Posts')
+                  .collection('Users')
+                  .doc(currentUser.email)
+                  .collection('Posts')
                   .orderBy('Timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {

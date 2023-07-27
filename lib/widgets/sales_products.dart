@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
+import 'package:uuid/uuid.dart';
 
 class SalesProduct extends StatefulWidget {
   final String userName;
@@ -39,18 +40,8 @@ class _SalesProductState extends State<SalesProduct> {
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
   bool showHeart = false;
-
-  // final _commentTextController = TextEditingController();
-
-  // qwert(userEmail) {
-  //   return Navigator.of(context).pushReplacement(
-  //     MaterialPageRoute(
-  //       builder: (context) => ChatPage(
-  //         receiverUserName: widget.userName,
-  //       ),
-  //     ),
-  //   );
-  // }
+  String cartId = const Uuid().v4();
+  bool isTapped = false;
 
   @override
   void initState() {
@@ -67,8 +58,8 @@ class _SalesProductState extends State<SalesProduct> {
     // Access the document is Firebase
     DocumentReference postRef = FirebaseFirestore.instance
         .collection('User Posts')
-        // .doc(currentUser!.email)
-        // .collection('Posts')
+        .doc(currentUser!.email)
+        .collection('Posts')
         .doc(widget.postId);
 
     if (isLiked) {
@@ -80,6 +71,27 @@ class _SalesProductState extends State<SalesProduct> {
       // if the post is now unliked, remove the user's email from the 'likes' field
       postRef.update({
         'Likes': FieldValue.arrayRemove([currentUser!.displayName])
+      });
+    }
+  }
+
+  void addToCart() {
+    setState(() {
+      isTapped = !isTapped;
+    });
+
+    if (isTapped) {
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.email)
+          .collection('Carts')
+          .add({
+        "Name of Product": widget.title,
+        "mediaUrl": widget.image,
+        "Price": widget.price,
+        "cartId": cartId,
+        "Description": widget.description,
+        "Timestamp": Timestamp.now(),
       });
     }
   }
@@ -146,7 +158,7 @@ class _SalesProductState extends State<SalesProduct> {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => DetailsPage(
-                          name: widget.title,
+                          title: widget.title,
                           description: widget.description,
                           price: widget.price,
                           image: widget.image,
@@ -229,32 +241,15 @@ class _SalesProductState extends State<SalesProduct> {
                       //   ),
                       // );
                     },
-                    // qwert(widget.userEmail),
                     icon: const Icon(
                       Icons.message_outlined,
                       size: 35,
                     ),
                   ),
-                  trailing: // shopping cart
-                      IconButton(
-                    alignment: Alignment.center,
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => DetailsPage(
-                            name: widget.title,
-                            description: widget.description,
-                            price: widget.price,
-                            image: widget.image,
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.shopping_cart_outlined,
-                      size: 35,
-                      color: Colors.blue,
-                    ),
+                  // shopping cart
+                  trailing: CartButton(
+                    isTapped: isTapped,
+                    onTap: addToCart,
                   ),
                 ),
               ],

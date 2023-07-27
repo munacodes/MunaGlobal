@@ -36,6 +36,8 @@ class GoogleAuth {
       FirebaseFirestore.instance
           .collection('Users')
           .doc(googleCurrentUser.email)
+          .collection('User Details')
+          .doc(googleCurrentUser.email)
           .set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username

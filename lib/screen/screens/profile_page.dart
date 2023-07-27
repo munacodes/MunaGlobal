@@ -18,7 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
   // all users
   final usersCollection = FirebaseFirestore.instance.collection('Users');
 
-  bool isCurrentUser = false;
+  logout() {
+    FirebaseAuth.instance.signOut();
+  }
 
   // edit field
   Future<void> editField(String field) async {
@@ -68,14 +70,12 @@ class _ProfilePageState extends State<ProfilePage> {
   profileHeader() {
     // Profile pic
     return Column(
-      children: [
-        const Icon(
+      children: const [
+        Icon(
           Icons.person,
           size: 52,
         ),
-        const SizedBox(height: 20),
-        isCurrentUser ? buildButton() : Container(),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
       ],
     );
   }
@@ -111,6 +111,8 @@ class _ProfilePageState extends State<ProfilePage> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('Users')
+          .doc(currentUser!.email)
+          .collection('User Details')
           .doc(currentUser!.email)
           .snapshots(),
       builder: (context, snapshot) {
@@ -164,17 +166,13 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // qazxsw(){
-  //   return
-  // }
-
   // retrive posts from firebase
   profilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('User Posts')
-          // .doc(currentUser!.email)
-          // .collection('Posts')
+          .collection('Users')
+          .doc(currentUser!.email)
+          .collection('Posts')
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -196,25 +194,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           );
-
-          // return ListView.builder(
-          //   itemCount: snapshot.data!.docs.length,
-          //   shrinkWrap: true,
-          //   itemBuilder: (context, index) {
-          //     // get the message
-          //     final post = snapshot.data!.docs[index];
-          //     return SalesProduct(
-          //       name: post['Name of Product'],
-          //       image: post['mediaUrl'],
-          //       likes: List<String>.from(post['Likes'] ?? []),
-          //       description: post['Description'],
-          //       postId: post.id,
-          //       price: post['Price'],
-          //       time: formatDate(post['Timestamp']),
-          //       user: post['UserEmail'],
-          //     );
-          //   },
-          // );
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Error: ${snapshot.error}'),
@@ -234,14 +213,20 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         title: const Text(
-          'Profile Page',
+          'Profile',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
+        actions: [
+          IconButton(
+            onPressed: logout,
+            icon: const Icon(Icons.logout, color: Colors.black),
+          ),
+        ],
       ),
       body: ListView(
         children: [
           Container(
-            height: 330,
+            height: 278,
             // color: Colors.blue,
             width: double.infinity,
             child: Column(
