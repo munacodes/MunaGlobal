@@ -8,6 +8,7 @@ import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class SalesProduct extends StatefulWidget {
+  final String userName;
   final String description;
   final String title;
   final String image;
@@ -19,13 +20,14 @@ class SalesProduct extends StatefulWidget {
   const SalesProduct({
     super.key,
     required this.description,
-    required this.userEmail,
     required this.time,
     required this.postId,
     required this.likes,
     required this.image,
     required this.price,
     required this.title,
+    required this.userEmail,
+    required this.userName,
   });
 
   @override
@@ -40,20 +42,20 @@ class _SalesProductState extends State<SalesProduct> {
 
   // final _commentTextController = TextEditingController();
 
-  qwert(userEmail) {
-    return Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => ChatPage(
-          userEmail: widget.userEmail,
-        ),
-      ),
-    );
-  }
+  // qwert(userEmail) {
+  //   return Navigator.of(context).pushReplacement(
+  //     MaterialPageRoute(
+  //       builder: (context) => ChatPage(
+  //         receiverUserName: widget.userName,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   void initState() {
     super.initState();
-    isLiked = widget.likes.contains(currentUser!.email);
+    isLiked = widget.likes.contains(currentUser!.displayName);
   }
 
   // toggle like
@@ -72,12 +74,12 @@ class _SalesProductState extends State<SalesProduct> {
     if (isLiked) {
       // if the post is now liked, add the user's email to the 'Likes' field
       postRef.update({
-        'Likes': FieldValue.arrayUnion([currentUser!.email])
+        'Likes': FieldValue.arrayUnion([currentUser!.displayName])
       });
     } else {
       // if the post is now unliked, remove the user's email from the 'likes' field
       postRef.update({
-        'Likes': FieldValue.arrayRemove([currentUser!.email])
+        'Likes': FieldValue.arrayRemove([currentUser!.displayName])
       });
     }
   }
@@ -104,7 +106,7 @@ class _SalesProductState extends State<SalesProduct> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.userEmail,
+                      widget.userName.toString(),
                       style: TextStyle(color: Colors.grey[700], fontSize: 18),
                     ),
                     Text(
@@ -218,12 +220,14 @@ class _SalesProductState extends State<SalesProduct> {
                   title: IconButton(
                     alignment: Alignment.bottomLeft,
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ChatPage(userEmail: widget.userEmail),
-                        ),
-                      );
+                      // Navigator.of(context).pushReplacement(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ChatPage(
+                      //       receiverUserName: widget.userEmail,
+                      //       receiverUserID: widget.userId,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     // qwert(widget.userEmail),
                     icon: const Icon(

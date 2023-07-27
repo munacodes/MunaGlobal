@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 
 class MessagesPage extends StatefulWidget {
@@ -32,6 +33,19 @@ class _MessagesPageState extends State<MessagesPage> {
         title: const Text(
           'Messages',
           style: TextStyle(color: Colors.blue, fontSize: 30),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const SearchMessage(),
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.search,
+          size: 30,
         ),
       ),
     );

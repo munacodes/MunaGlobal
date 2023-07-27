@@ -15,6 +15,9 @@ class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final DateTime timestamp = DateTime.now();
+
+  final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   void signUp() async {
     // show loading circle
@@ -44,14 +47,17 @@ class _RegisterState extends State<Register> {
       );
 
       // after creating the user, create a new document in cloud firestore called Users
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(userCredential.user!.email)
-          .set({
+
+      usersCollection.doc(userCredential.user!.email).set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username
         'userName': _emailController.text.split('@')[0], // initial username
-        'bio': 'Empty bio...' // initially empty bio
+        'userEmail': userCredential.user!.email,
+        'bio': 'Empty bio...', // initially empty bio
+        "id": userCredential.user!.uid,
+        "photoUrl": userCredential.user!.photoURL,
+        "displayName": userCredential.user!.email!.split('@')[0],
+        "timestamp": timestamp,
       });
 
       // pop loading circle
@@ -126,17 +132,6 @@ class _RegisterState extends State<Register> {
                   ),
                   const SizedBox(height: 20),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text('Forgot Password'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 25),
-
                   // sign in button
                   MyButton(
                     onTap: signUp,
@@ -167,6 +162,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

@@ -27,18 +27,8 @@ class _UploadPageState extends State<UploadPage> {
   File? _imageFile;
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
+  String? currentUserId = FirebaseAuth.instance.currentUser!.uid;
   String postId = const Uuid().v4();
-  String? username;
-
-  // handleTakePhoto() async {
-  //   Navigator.pop(context);
-  //   final picker = ImagePicker();
-  //   final XFile? image = await picker.pickImage(
-  //       source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
-  //   setState(() {
-  //     _imageFile = File(image!.path);
-  //   });
-  // }
 
   handleChooseFromGallery() async {
     final picker = ImagePicker();
@@ -47,37 +37,6 @@ class _UploadPageState extends State<UploadPage> {
       _imageFile = File(image!.path);
     });
   }
-
-  // selectImage(parentContext) {
-  //   return showDialog(
-  //     context: parentContext,
-  //     builder: (context) {
-  //       return SimpleDialog(
-  //         title: const Text('Create Post'),
-  //         children: [
-  //           SimpleDialogOption(
-  //             onPressed: handleTakePhoto,
-  //             child: const Text('Photo with Camera'),
-  //           ),
-  //           SimpleDialogOption(
-  //             onPressed: handleChooseFromGallery,
-  //             child: const Text('Photo with Gallery'),
-  //           ),
-  //           SimpleDialogOption(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: const Text('Cancel'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  // clearImage() {
-  //   setState(() {
-  //     _imageFile == null;
-  //   });
-  // }
 
   compressImage() async {
     final tempDir = await getTemporaryDirectory();
@@ -120,7 +79,7 @@ class _UploadPageState extends State<UploadPage> {
           .add({
         "postId": postId,
         "Name of Product": titleController.text,
-        // "UserName": currentUser!.username,
+        "UserName": currentUser!.displayName,
         "UserEmail": currentUser!.email,
         "Description": descriptionController.text,
         "Location": locationController.text,
@@ -250,7 +209,7 @@ class _UploadPageState extends State<UploadPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                     image: FileImage(_imageFile!)),
                               ),
                             ),

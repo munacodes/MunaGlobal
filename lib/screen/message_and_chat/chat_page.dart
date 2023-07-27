@@ -7,14 +7,14 @@ import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class ChatPage extends StatefulWidget {
-  // final String receiverUserEmail;
-  // final String receiverUserID;
-  final String userEmail;
+  final String receiverUserName;
+  final String receiverUserID;
+  //final String userName;
   const ChatPage({
     super.key,
-    required this.userEmail,
-    // required this.receiverUserEmail,
-    // required this.receiverUserID,
+    // required this.userName,
+    required this.receiverUserName,
+    required this.receiverUserID,
   });
 
   @override
@@ -29,7 +29,8 @@ class _ChatPageState extends State<ChatPage> {
   void sendMessage() async {
     // only send message if there is something to send
     if (messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(widget.userEmail, messageController.text);
+      await _chatService.sendMessage(
+          widget.receiverUserName, messageController.text);
 
       // clear the text controller after sending the message
       messageController.clear();
@@ -40,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _buildMessageList() {
     return StreamBuilder(
       stream: _chatService.getMessage(
-          widget.userEmail, _firebaseAuth.currentUser!.uid),
+          widget.receiverUserName, _firebaseAuth.currentUser!.uid),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -118,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => const MessagesPage(),
+                builder: (context) => MessagesPage(),
               ),
             );
           },
@@ -130,7 +131,7 @@ class _ChatPageState extends State<ChatPage> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(
-          widget.userEmail,
+          widget.receiverUserName,
           style: const TextStyle(color: Colors.blue, fontSize: 20),
         ),
       ),

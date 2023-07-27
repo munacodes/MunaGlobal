@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     // update in firestore
-    if (newValue.trim().length > 0) {
+    if (newValue.trim().isNotEmpty) {
       // only update if there is something in the textfield
       await usersCollection.doc(currentUser!.email).update({field: newValue});
     }
@@ -73,18 +73,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Icons.person,
           size: 52,
         ),
-        const SizedBox(height: 10),
-
-        // user email
-        Text(
-          currentUser!.email!,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey[700]),
-        ),
-
         const SizedBox(height: 20),
         isCurrentUser ? buildButton() : Container(),
-
         const SizedBox(height: 20),
       ],
     );

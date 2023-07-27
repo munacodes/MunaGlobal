@@ -16,7 +16,6 @@ class Explore extends StatefulWidget {
 
 class _ExploreState extends State<Explore> {
   final currentUser = FirebaseAuth.instance.currentUser!;
-  // final otherUser = FirebaseAuth.instance.u;
 
   logout() {
     FirebaseAuth.instance.signOut();
@@ -94,6 +93,7 @@ class _ExploreState extends State<Explore> {
                         postId: post.id,
                         time: formatDate(post['Timestamp']),
                         userEmail: post['UserEmail'],
+                        userName: post['UserName'],
                       );
                     },
                   );
