@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
@@ -55,15 +56,6 @@ class _CartPageState extends State<CartPage> {
           'My Cart',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.delete_outline,
-              color: Colors.grey,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -81,26 +73,30 @@ class _CartPageState extends State<CartPage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final cartItem = snapshot.data!.docs[index];
-                      return Padding(
-                        padding: (index == 0)
-                            ? const EdgeInsets.all(8.0)
-                            : const EdgeInsets.only(bottom: 20),
-                        child: ItemCart(
-                          title: cartItem['Name of Product'],
-                          image: cartItem['ImageUrl'],
-                          price: cartItem['Price'],
-                          quantity: cartItem['Quantity'],
-                        ),
+                      return CartListItem(
+                        title: cartItem['Name of Product'],
+                        image: cartItem['ImageUrl'],
+                        price: cartItem['Price'],
+                        quantity: cartItem['Quantity'],
                       );
                     });
               } else if (!snapshot.hasData) {
-                return const Center(
-                  child: Text(
-                    'No Cart Yet',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
+                return Center(
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.blue,
+                      ),
+                      Text(
+                        'No Cart Yet',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }

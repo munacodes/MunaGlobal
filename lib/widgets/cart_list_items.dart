@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uuid/uuid.dart';
 
 class CartListItem extends StatefulWidget {
@@ -88,75 +89,31 @@ class _CartListItemState extends State<CartListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Card(
-        child: Container(
-          height: 120,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  height: 300,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(widget.image),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(widget.title),
-                        Text('₦ ${widget.price.toDouble()}'),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Order Now'),
-                        ),
-                      ],
-                    ),
-                    _buildQuantityPart(quantity: count),
-                  ],
-                ),
-              ],
-            ),
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: const StretchMotion(),
+        children: [
+          SlidableAction(
+            onPressed: ((context) {}),
+            icon: Icons.delete,
+            label: 'Delete',
+            backgroundColor: Colors.red,
           ),
-        ),
+        ],
       ),
-    );
-  }
-}
-
-class ItemCart extends StatefulWidget {
-  final String image;
-  final String title;
-  final double price;
-  final int quantity;
-  const ItemCart(
-      {super.key,
-      required this.image,
-      required this.title,
-      required this.price,
-      required this.quantity});
-
-  @override
-  State<ItemCart> createState() => _ItemCartState();
-}
-
-class _ItemCartState extends State<ItemCart> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        children: [
+          SlidableAction(
+            onPressed: ((context) {}),
+            icon: Icons.delete,
+            label: 'Delete',
+            backgroundColor: Colors.red,
+          ),
+        ],
+      ),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -187,11 +144,29 @@ class _ItemCartState extends State<ItemCart> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.title),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
+                ),
                 const SizedBox(height: 10),
-                Text('₦ ${widget.price.toDouble()}'),
+                Text(
+                  '₦ ${widget.price.toDouble()}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Order Now'),
+                ),
               ],
             ),
+            _buildQuantityPart(quantity: count),
           ],
         ),
       ),
