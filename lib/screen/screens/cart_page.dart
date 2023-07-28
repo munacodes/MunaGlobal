@@ -27,10 +27,6 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  // double subTotal = 26;
-  // int tax = 100;
-  // int quantity = 3;
-  // String totalPrice = 'subTotal * tax * quantity';
 
   @override
   Widget build(BuildContext context) {
@@ -70,59 +66,48 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                height: 470,
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Users')
-                      .doc(currentUser!.email)
-                      .collection('Carts')
-                      .orderBy('Timestamp', descending: false)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            final cartItem = snapshot.data!.docs[index];
-                            return CartListItem(
-                              title: cartItem['Name of Product'],
-                              image: cartItem['ImageUrl'],
-                              price: cartItem['Price'],
-                              quantity: cartItem['Quantity'],
-                            );
-                          });
-                    } else if (!snapshot.hasData) {
-                      return const Center(
-                        child: Text(
-                          'No Cart Yet',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('Users')
+                .doc(currentUser!.email)
+                .collection('Carts')
+                .orderBy('Timestamp', descending: false)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final cartItem = snapshot.data!.docs[index];
+                      return Padding(
+                        padding: (index == 0)
+                            ? const EdgeInsets.all(8.0)
+                            : const EdgeInsets.only(bottom: 20),
+                        child: ItemCart(
+                          title: cartItem['Name of Product'],
+                          image: cartItem['ImageUrl'],
+                          price: cartItem['Price'],
+                          quantity: cartItem['Quantity'],
                         ),
                       );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                height: 100,
-                width: double.infinity,
-                color: Colors.blue,
-                child: const Center(
-                  child: Text('SubTotal and tax'),
-                ),
-              ),
-            ],
+                    });
+              } else if (!snapshot.hasData) {
+                return const Center(
+                  child: Text(
+                    'No Cart Yet',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ),
       ),

@@ -32,6 +32,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
   bool isTapped = false;
   String cartId = const Uuid().v4();
+  bool hasSize = false;
 
   void addToCart() {
     setState(() {
@@ -162,27 +163,29 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Size: ',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Text(
-                          widget.size.toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                hasSize != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Size: ',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                widget.size.toString(),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                        ),
+                      )
+                    : Container(),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
