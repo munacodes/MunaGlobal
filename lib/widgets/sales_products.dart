@@ -17,7 +17,8 @@ class SalesProduct extends StatefulWidget {
   final String time;
   final double price;
   final String postId;
-
+  final String size;
+  final int quantity;
   final List<String> likes;
   const SalesProduct({
     super.key,
@@ -30,6 +31,8 @@ class SalesProduct extends StatefulWidget {
     required this.title,
     required this.userEmail,
     required this.userName,
+    required this.size,
+    required this.quantity,
   });
 
   @override
@@ -88,13 +91,31 @@ class _SalesProductState extends State<SalesProduct> {
           .collection('Carts')
           .add({
         "Name of Product": widget.title,
-        "mediaUrl": widget.image,
+        "ImageUrl": widget.image,
         "Price": widget.price,
         "cartId": cartId,
+        "Size": widget.size,
         "Description": widget.description,
+        "Quantity": widget.quantity,
         "Timestamp": Timestamp.now(),
       });
     }
+    // else {
+    //    FirebaseFirestore.instance
+    //       .collection('Users')
+    //       .doc(currentUser!.email)
+    //       .collection('Carts')
+    //       .doc()
+    //       .delete({
+    //     "Name of Product": widget.title,
+    //     "ImageUrl": widget.image,
+    //     "Price": widget.price,
+    //     "cartId": cartId,
+    //     "Size": widget.size,
+    //     "Description": widget.description,
+    //     "Timestamp": Timestamp.now(),
+    //   });
+    // }
   }
 
   @override
@@ -163,6 +184,8 @@ class _SalesProductState extends State<SalesProduct> {
                           description: widget.description,
                           price: widget.price,
                           image: widget.image,
+                          size: widget.size,
+                          quantity: widget.quantity,
                         ),
                       ),
                     );

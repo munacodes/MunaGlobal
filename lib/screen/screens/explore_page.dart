@@ -92,7 +92,7 @@ class _ExploreState extends State<Explore> {
                       // get the message
                       final post = snapshot.data!.docs[index];
                       return SalesProduct(
-                        image: post['mediaUrl'],
+                        image: post['ImageUrl'],
                         title: post['Name of Product'],
                         likes: List<String>.from(post['Likes'] ?? []),
                         description: post['Description'],
@@ -101,6 +101,8 @@ class _ExploreState extends State<Explore> {
                         time: formatDate(post['Timestamp']),
                         userEmail: post['UserEmail'],
                         userName: post['UserName'],
+                        size: post['Size'],
+                        quantity: int.parse(post['Quantity']),
                       );
                     },
                   );

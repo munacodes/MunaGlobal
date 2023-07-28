@@ -11,13 +11,16 @@ class DetailsPage extends StatefulWidget {
   final String description;
   final String image;
   final double price;
-
+  final String size;
+  final int quantity;
   const DetailsPage({
     super.key,
     required this.title,
     required this.description,
     required this.price,
     required this.image,
+    required this.size,
+    required this.quantity,
   });
 
   @override
@@ -42,11 +45,13 @@ class _DetailsPageState extends State<DetailsPage> {
           .collection('Carts')
           .add({
         "Name of Product": widget.title,
-        "mediaUrl": widget.image,
+        "ImageUrl": widget.image,
         "Price": widget.price,
         "cartId": cartId,
+        "Size": widget.size,
+        "Quantity": widget.quantity,
         "Description": widget.description,
-        "Timesatmp": Timestamp.now(),
+        "Timestamp": Timestamp.now(),
       });
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -55,6 +60,8 @@ class _DetailsPageState extends State<DetailsPage> {
             description: widget.description,
             image: widget.image,
             price: widget.price,
+            size: widget.size,
+            quantity: widget.quantity,
           ),
         ),
       );
@@ -160,18 +167,18 @@ class _DetailsPageState extends State<DetailsPage> {
                   child: Container(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Size: ',
                           style: TextStyle(fontSize: 20),
                         ),
                         Text(
-                          '42 or XL',
-                          style: TextStyle(
+                          widget.size.toString(),
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -212,24 +219,6 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                         ),
                       ),
-                      // ElevatedButton(
-                      //   style: ButtonStyle(
-                      //     elevation: MaterialStateProperty(12),
-                      //   ),
-                      //   onPressed: () {
-                      //     Navigator.of(context).pushReplacement(
-                      //       MaterialPageRoute(
-                      //         builder: (context) => CartListItem(
-                      //           name: widget.name,
-                      //           quantity: count,
-                      //           price: widget.price,
-                      //           image: widget.image,
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: const Text('Add to Cart'),
-                      // ),
                     ),
                   ],
                 ),

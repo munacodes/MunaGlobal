@@ -9,12 +9,16 @@ class CartPage extends StatefulWidget {
   final String image;
   final String description;
   final double price;
+  final String size;
+  final int quantity;
   const CartPage({
     super.key,
     required this.title,
     required this.image,
     required this.description,
     required this.price,
+    required this.size,
+    required this.quantity,
   });
 
   @override
@@ -43,6 +47,8 @@ class _CartPageState extends State<CartPage> {
                   description: widget.description,
                   price: widget.price,
                   image: widget.image,
+                  size: widget.size,
+                  quantity: widget.quantity,
                 ),
               ),
             );
@@ -70,7 +76,7 @@ class _CartPageState extends State<CartPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: 430,
+                height: 470,
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('Users')
@@ -86,9 +92,9 @@ class _CartPageState extends State<CartPage> {
                             final cartItem = snapshot.data!.docs[index];
                             return CartListItem(
                               title: cartItem['Name of Product'],
-                              image: cartItem['mediaUrl'],
+                              image: cartItem['ImageUrl'],
                               price: cartItem['Price'],
-                              quantity: cartItem[''],
+                              quantity: cartItem['Quantity'],
                             );
                           });
                     } else if (!snapshot.hasData) {
@@ -108,13 +114,21 @@ class _CartPageState extends State<CartPage> {
                   },
                 ),
               ),
+              Container(
+                height: 100,
+                width: double.infinity,
+                color: Colors.blue,
+                child: const Center(
+                  child: Text('SubTotal and tax'),
+                ),
+              ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: Card(
         color: Colors.white,
-        elevation: 4.0,
+        elevation: 8.0,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(20),
@@ -136,6 +150,8 @@ class _CartPageState extends State<CartPage> {
               child: ElevatedButton(
                 onPressed: () {
                   // send to firebase and notifcation feed to notify the user of current order
+                  // create a collection('order') and use streambuilder to stream order
+                  // and notifiy the owner of the post in notification feeds
                 },
                 child: const Text('Order now'),
               ),

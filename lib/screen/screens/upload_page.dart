@@ -63,7 +63,7 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void createPostInFirestore({
-    required String mediaUrl,
+    required String imageUrl,
     required String title,
     required String location,
     required String description,
@@ -90,7 +90,7 @@ class _UploadPageState extends State<UploadPage> {
         "Price": double.parse(priceController.text),
         "Quantity": quantityController.text,
         "Size": sizeController.text,
-        "mediaUrl": mediaUrl,
+        "ImageUrl": imageUrl,
         "Timestamp": Timestamp.now(),
         "Likes": [],
       });
@@ -116,9 +116,9 @@ class _UploadPageState extends State<UploadPage> {
         isUploading = true;
       });
       await compressImage();
-      String mediaUrl = await uploadImage(_imageFile);
+      String imageUrl = await uploadImage(_imageFile);
       createPostInFirestore(
-        mediaUrl: mediaUrl,
+        imageUrl: imageUrl,
         title: titleController.text,
         location: locationController.text,
         description: descriptionController.text,
@@ -136,7 +136,7 @@ class _UploadPageState extends State<UploadPage> {
         postId = const Uuid().v4();
       });
     } else {
-      displayMessage('Please add Image, Name, Description, Price and Location');
+      displayMessage('Please Fill Details');
     }
   }
 
@@ -185,31 +185,6 @@ class _UploadPageState extends State<UploadPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 isUploading ? linearProgress() : const Text(''),
-                ListTile(
-                  title: Container(
-                    width: 250.0,
-                    child: TextFormField(
-                      controller: titleController,
-                      decoration: const InputDecoration(
-                        hintText: "Name of Product...",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(),
-                ListTile(
-                  title: Container(
-                    width: 250.0,
-                    child: TextFormField(
-                      controller: descriptionController,
-                      decoration: const InputDecoration(
-                        hintText: "Description...",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
                 const Divider(),
                 _imageFile != null
                     ? Container(
@@ -240,36 +215,96 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
                 ),
-                ListTile(
-                  leading:
-                      const Icon(Icons.nature, color: Colors.blue, size: 35.0),
-                  title: Container(
-                    width: 250.0,
-                    child: TextFormField(
-                      controller: sizeController,
-                      decoration: const InputDecoration(
-                        hintText: "Size",
-                        border: InputBorder.none,
+                const Divider(),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.border_color,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextFormField(
+                        controller: titleController,
+                        decoration: const InputDecoration(
+                          hintText: "Name of Product...",
+                          border: InputBorder.none,
+                        ),
                       ),
-                      keyboardType: TextInputType.number,
                     ),
                   ),
                 ),
                 const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.quora_outlined,
-                      color: Colors.blue, size: 35.0),
-                  title: Container(
-                    width: 250.0,
-                    child: TextFormField(
-                      controller: descriptionController,
-                      decoration: const InputDecoration(
-                        hintText: "Quantity",
-                        border: InputBorder.none,
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.description_rounded,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextFormField(
+                        controller: descriptionController,
+                        decoration: const InputDecoration(
+                          hintText: "Description...",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
                 ),
+                const Divider(),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.monetization_on,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextField(
+                        controller: priceController,
+                        decoration: const InputDecoration(
+                          hintText: "Price",
+                          border: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(),
+
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.nature,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextFormField(
+                        controller: sizeController,
+                        decoration: const InputDecoration(
+                          hintText: "Size",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(),
+
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.quora_outlined,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextFormField(
+                        controller: quantityController,
+                        decoration: const InputDecoration(
+                          hintText: "Quantity",
+                          border: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(),
 
                 /// TODO: Use pop up to pop category
                 /// TODO: showDialog to display category list
@@ -287,23 +322,7 @@ class _UploadPageState extends State<UploadPage> {
                   ),
                 ),
                 const Divider(),
-                Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.monetization_on,
-                        color: Colors.blue, size: 35.0),
-                    title: Container(
-                      width: 250.0,
-                      child: TextField(
-                        controller: priceController,
-                        decoration: const InputDecoration(
-                          hintText: "Price",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(),
+
                 Card(
                   child: ListTile(
                     leading: const Icon(Icons.pin_drop,

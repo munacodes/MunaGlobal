@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 itemBuilder: (context, index) {
                   final post = snapshot.data!.docs[index];
                   return GridTiled(
-                    image: post['mediaUrl'],
+                    image: post['ImageUrl'],
                   );
                 },
               ),
