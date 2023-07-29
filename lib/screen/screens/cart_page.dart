@@ -29,6 +29,57 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
 
+  Future<void> _buildShowDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'P a y m e n t',
+          style: TextStyle(color: Colors.blue),
+        ),
+        content: Container(
+          height: 130,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 50,
+                  child: Card(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Text(
+                        'P a y   N o w',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 50,
+                  child: Card(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Text(
+                        'P a y   O n    D e l i v e r y',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,20 +172,30 @@ class _CartPageState extends State<CartPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '₦ ${widget.price.toDouble()}',
-                style: const TextStyle(fontSize: 30),
+              child: Row(
+                children: [
+                  const Text(
+                    'Total: ',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    '₦ ${widget.price.toDouble()}',
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: () {
+                  _buildShowDialog();
+
                   // send to firebase and notifcation feed to notify the user of current order
                   // create a collection('order') and use streambuilder to stream order
                   // and notifiy the owner of the post in notification feeds
                 },
-                child: const Text('Order now'),
+                child: const Text('Order  All  now'),
               ),
             ),
           ],

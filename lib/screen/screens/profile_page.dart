@@ -70,12 +70,34 @@ class _ProfilePageState extends State<ProfilePage> {
   profileHeader() {
     // Profile pic
     return Column(
-      children: const [
-        Icon(
-          Icons.person,
-          size: 52,
+      children: [
+        Stack(
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundColor: Colors.grey,
+              //  backgroundImage: CachedNetworkImageProvider(url),
+            ),
+            Positioned(
+              top: 60.0,
+              bottom: 5.0,
+              right: 5.0,
+              left: 80.0,
+              child: Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Icon(
+                      Icons.camera_alt_outlined,
+                      size: 35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -150,7 +172,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () => editField('bio'),
                   ),
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           );
@@ -226,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           Container(
-            height: 278,
+            height: 285,
             // color: Colors.blue,
             width: double.infinity,
             child: Column(
@@ -236,9 +257,17 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          const Divider(
-            thickness: 3.0,
-            color: Colors.grey,
+          Row(
+            children: const [
+              SizedBox(width: 10),
+              Expanded(
+                child: Divider(
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(width: 10),
+            ],
           ),
           profilePosts(),
         ],

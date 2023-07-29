@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/models/user_model.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
@@ -14,15 +15,20 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
+  final currentUser = FirebaseAuth.instance.currentUser!;
   Future<QuerySnapshot<Object>>? searchResultsFuture;
 
   handleSearch(String query) {
     Future<QuerySnapshot<Object>> product = FirebaseFirestore.instance
-        .collection('User Posts')
+        .collection('Users')
+        .doc(currentUser.email)
+        .collection('Posts')
         .where('Name of Product', isGreaterThanOrEqualTo: query)
         .get();
     Future<QuerySnapshot<Object>> users = FirebaseFirestore.instance
         .collection('Users')
+        .doc(currentUser.email)
+        .collection('User Details')
         .where('userName', isGreaterThanOrEqualTo: query)
         .get();
     setState(() {
@@ -61,10 +67,6 @@ class _SearchPageState extends State<SearchPage> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            // Image(
-            //   image: const AssetImage('assets/images/search.png'),
-            //   height: orientation == Orientation.portrait ? 300.0 : 150.0,
-            // ),
             Text(
               'Search',
               textAlign: TextAlign.center,

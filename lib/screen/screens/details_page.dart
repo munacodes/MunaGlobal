@@ -93,6 +93,28 @@ class _DetailsPageState extends State<DetailsPage> {
           'Detail',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => CartPage(
+                    title: widget.title,
+                    price: widget.price,
+                    image: widget.image,
+                    description: widget.description,
+                    quantity: widget.quantity,
+                    size: widget.size,
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

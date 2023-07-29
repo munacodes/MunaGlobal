@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +29,79 @@ class _CartListItemState extends State<CartListItem> {
   String cartId = const Uuid().v4();
   int count = 1;
 
+  Future<void> _buildShowDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'P a y m e n t',
+          style: TextStyle(color: Colors.blue),
+        ),
+        content: Container(
+          height: 130,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 50,
+                  child: Card(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Text(
+                        'P a y   N o w',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 50,
+                  child: Card(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Text(
+                        'P a y   O n    D e l i v e r y',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCount() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(currentUser!.email)
+            .collection('Carts')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(
+              widget.quantity.toString(),
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          }
+          return Text(widget.quantity.toString());
+        });
+  }
+
   Widget _buildQuantityPart({required int quantity}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -37,30 +112,27 @@ class _CartListItemState extends State<CartListItem> {
               if (count > 1) {
                 count--;
               }
-
               FirebaseFirestore.instance
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc('51wxceGUFmAS1I4yT2A1')
+                  .doc('7tYGal4siU0bqzNImGoA')
                   .update({
                 'Quantity': FieldValue.increment(-1),
               });
             });
           },
-          child: const Icon(
-            Icons.remove,
-            color: Colors.grey,
+          child: Card(
+            color: Colors.grey[400],
+            child: const Icon(
+              Icons.remove,
+              color: Colors.white,
+            ),
           ),
         ),
-        Text(
-          quantity.toString(),
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const SizedBox(height: 10),
+        _buildCount(),
+        const SizedBox(height: 10),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -69,7 +141,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc('51wxceGUFmAS1I4yT2A1')
+                  .doc('7tYGal4siU0bqzNImGoA')
                   .update({
                 'Quantity': FieldValue.increment(1),
               });
@@ -94,7 +166,15 @@ class _CartListItemState extends State<CartListItem> {
         motion: const StretchMotion(),
         children: [
           SlidableAction(
-            onPressed: ((context) {}),
+            onPressed: ((context) {
+              FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(currentUser!.email)
+                  .collection('Carts')
+                  .doc()
+                  .delete();
+              print('Cart deleted');
+            }),
             icon: Icons.delete,
             label: 'Delete',
             backgroundColor: Colors.red,
@@ -105,7 +185,15 @@ class _CartListItemState extends State<CartListItem> {
         motion: const StretchMotion(),
         children: [
           SlidableAction(
-            onPressed: ((context) {}),
+            onPressed: ((context) {
+              FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(currentUser!.email)
+                  .collection('Carts')
+                  .doc(cartId)
+                  .delete();
+              print('Cart deleted');
+            }),
             icon: Icons.delete,
             label: 'Delete',
             backgroundColor: Colors.red,
@@ -161,7 +249,7 @@ class _CartListItemState extends State<CartListItem> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _buildShowDialog,
                   child: const Text('Order Now'),
                 ),
               ],
