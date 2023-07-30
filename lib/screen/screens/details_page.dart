@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:uuid/uuid.dart';
@@ -54,6 +55,13 @@ class _DetailsPageState extends State<DetailsPage> {
         "Description": widget.description,
         "Timestamp": Timestamp.now(),
       });
+      Fluttertoast.showToast(
+        msg: 'Added  to  cart',
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => CartPage(

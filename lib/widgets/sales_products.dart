@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
@@ -99,22 +100,28 @@ class _SalesProductState extends State<SalesProduct> {
         "Quantity": widget.quantity,
         "Timestamp": Timestamp.now(),
       });
+      Fluttertoast.showToast(
+        msg: 'Added  to  cart',
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      );
     }
-    // else {
-    //    FirebaseFirestore.instance
+    // else if (!isTapped) {
+    //   FirebaseFirestore.instance
     //       .collection('Users')
     //       .doc(currentUser!.email)
     //       .collection('Carts')
     //       .doc()
-    //       .delete({
-    //     "Name of Product": widget.title,
-    //     "ImageUrl": widget.image,
-    //     "Price": widget.price,
-    //     "cartId": cartId,
-    //     "Size": widget.size,
-    //     "Description": widget.description,
-    //     "Timestamp": Timestamp.now(),
-    //   });
+    //       .delete();
+    //   Fluttertoast.showToast(
+    //     msg: 'Removed  from  cart',
+    //     toastLength: Toast.LENGTH_LONG,
+    //     backgroundColor: Colors.blue,
+    //     textColor: Colors.white,
+    //     gravity: ToastGravity.BOTTOM,
+    //   );
     // }
   }
 

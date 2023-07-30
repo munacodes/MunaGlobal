@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
@@ -28,6 +29,29 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
+
+  sendOrderToFirebase(String onDelivery) async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser!.email)
+        .collection('Orders')
+        .add({
+      "Name Of Product": widget.title,
+      "Image": widget.image,
+      "Price": widget.price,
+      "Size": widget.size,
+      "Quantity": widget.quantity,
+      "Payment Status": onDelivery,
+    });
+    Fluttertoast.showToast(
+      msg: 'Order  Successful',
+      toastLength: Toast.LENGTH_LONG,
+      backgroundColor: Colors.blue,
+      textColor: Colors.white,
+      gravity: ToastGravity.BOTTOM,
+    );
+    Navigator.pop(context);
+  }
 
   Future<void> _buildShowDialog() {
     return showDialog(
@@ -59,7 +83,7 @@ class _CartPageState extends State<CartPage> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () {},
+                onTap: sendOrderToFirebase('Pay on Delivery'),
                 child: Container(
                   height: 50,
                   child: Card(
@@ -134,10 +158,12 @@ class _CartPageState extends State<CartPage> {
               } else if (!snapshot.hasData) {
                 return Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Icon(
                         Icons.shopping_cart_outlined,
                         color: Colors.blue,
+                        size: 40,
                       ),
                       Text(
                         'No Cart Yet',

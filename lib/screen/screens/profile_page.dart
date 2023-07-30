@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/format_time/format_time.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -15,90 +16,38 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // user
   final currentUser = FirebaseAuth.instance.currentUser;
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
   // all users
   final usersCollection = FirebaseFirestore.instance.collection('Users');
+  int postCount = 0;
+  int followerCount = 0;
+  int followingCount = 0;
 
-  // edit field
-  Future<void> editField(String field) async {
-    String newValue = '';
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: Text(
-          "Edit $field",
-          style: const TextStyle(color: Colors.white),
-        ),
-        content: TextField(
-          autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: "Enter new $field",
-            hintStyle: const TextStyle(color: Colors.grey),
-          ),
-          onChanged: (value) {
-            newValue = value;
-          },
-        ),
-        actions: [
-          // cancel button
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-
-          // save button
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-
-    // update in firestore
-    if (newValue.trim().isNotEmpty) {
-      // only update if there is something in the textfield
-      await usersCollection.doc(currentUser!.email).update({field: newValue});
-    }
-  }
-
-  profileHeader() {
-    // Profile pic
+  Column buildCountColumn(String label, int count) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Stack(
-          children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.grey,
-              //  backgroundImage: CachedNetworkImageProvider(url),
-            ),
-            Positioned(
-              top: 60.0,
-              bottom: 5.0,
-              right: 5.0,
-              left: 80.0,
-              child: Stack(
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.camera_alt_outlined,
-                      size: 35,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        Text(
+          count.toString(),
+          style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 20),
+        Container(
+          margin: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 15.0,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
       ],
     );
   }
 
-  buildButton() {
+  Widget buildButton() {
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -137,38 +86,72 @@ class _ProfilePageState extends State<ProfilePage> {
         // get user data
         if (snapshot.hasData) {
           final userData = snapshot.data!.data() as Map<String, dynamic>;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              // user details
-              children: [
-                // username
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 9.0,
-                  child: MyTextBox(
-                    text: userData['userName'],
-                    sectionName: 'username',
-                    onPressed: () => editField('userName'),
-                  ),
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const EditProfile(),
                 ),
-
-                // bio
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 9.0,
-                  child: MyTextBox(
-                    text: userData['bio'],
-                    sectionName: 'bio',
-                    onPressed: () => editField('bio'),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image(
+                              height: 70,
+                              width: 80,
+                              fit: BoxFit.fill,
+                              image: CachedNetworkImageProvider(
+                                  userData['photoUrl']),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userData['userName'],
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                userData['bio'],
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.qr_code_outlined,
+                      color: Colors.blue,
+                      size: 30,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         } else if (snapshot.hasError) {
@@ -238,6 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final post = snapshot.data!.docs[index];
+                final postCounts = snapshot.data!.docs.length;
                 return ListTiled(
                   image: post['ImageUrl'],
                 );
@@ -309,26 +293,25 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           Container(
-            height: 285,
+            height: 180,
             width: double.infinity,
             child: Column(
               children: [
-                profileHeader(),
                 profileDetails(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildCountColumn("Post", postCount),
+                      buildCountColumn("Followers", followerCount),
+                      buildCountColumn("Following", followingCount),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-          Row(
-            children: const [
-              SizedBox(width: 10),
-              Expanded(
-                child: Divider(
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-              ),
-              SizedBox(width: 10),
-            ],
           ),
           Container(
             height: 500,

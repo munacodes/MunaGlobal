@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
 class CartListItem extends StatefulWidget {
@@ -28,6 +29,28 @@ class _CartListItemState extends State<CartListItem> {
   final currentUser = FirebaseAuth.instance.currentUser;
   String cartId = const Uuid().v4();
   int count = 1;
+
+  sendOrderToFirebase(String onDelivery) async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser!.email)
+        .collection('Orders')
+        .add({
+      "Name Of Product": widget.title,
+      "Image": widget.image,
+      "Price": widget.price,
+      "Quantity": widget.quantity,
+      "Payment Status": onDelivery,
+    });
+    Fluttertoast.showToast(
+      msg: 'Order  Successful',
+      toastLength: Toast.LENGTH_LONG,
+      backgroundColor: Colors.blue,
+      textColor: Colors.white,
+      gravity: ToastGravity.BOTTOM,
+    );
+    Navigator.pop(context);
+  }
 
   Future<void> _buildShowDialog() {
     return showDialog(
@@ -59,7 +82,7 @@ class _CartListItemState extends State<CartListItem> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () {},
+                onTap: sendOrderToFirebase('Pay On Delivery'),
                 child: Container(
                   height: 50,
                   child: Card(
@@ -173,7 +196,13 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Carts')
                   .doc()
                   .delete();
-              print('Cart deleted');
+              Fluttertoast.showToast(
+                msg: 'Cart  deleted',
+                toastLength: Toast.LENGTH_LONG,
+                backgroundColor: Colors.blue,
+                textColor: Colors.white,
+                gravity: ToastGravity.BOTTOM,
+              );
             }),
             icon: Icons.delete,
             label: 'Delete',
@@ -192,7 +221,13 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Carts')
                   .doc(cartId)
                   .delete();
-              print('Cart deleted');
+              Fluttertoast.showToast(
+                msg: 'Cart  deleted',
+                toastLength: Toast.LENGTH_LONG,
+                backgroundColor: Colors.blue,
+                textColor: Colors.white,
+                gravity: ToastGravity.BOTTOM,
+              );
             }),
             icon: Icons.delete,
             label: 'Delete',
@@ -200,62 +235,64 @@ class _CartListItemState extends State<CartListItem> {
           ),
         ],
       ),
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 1.0,
-              spreadRadius: 1.0,
-              color: Colors.grey[400]!,
-            ),
-          ],
+      child: Card(
+        color: Colors.grey[200],
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image(
-                height: 100,
-                width: 100,
-                fit: BoxFit.fill,
-                image: CachedNetworkImageProvider(widget.image),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image(
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.fill,
+                          image: CachedNetworkImageProvider(widget.image),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            '₦ ${widget.price.toDouble()}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: _buildShowDialog,
+                            child: const Text('Order Now'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '₦ ${widget.price.toDouble()}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: _buildShowDialog,
-                  child: const Text('Order Now'),
-                ),
-              ],
-            ),
-            _buildQuantityPart(quantity: count),
-          ],
+              _buildQuantityPart(quantity: count),
+            ],
+          ),
         ),
       ),
     );

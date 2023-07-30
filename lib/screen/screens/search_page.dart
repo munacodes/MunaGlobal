@@ -15,27 +15,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
-  final currentUser = FirebaseAuth.instance.currentUser!;
-  Future<QuerySnapshot<Object>>? searchResultsFuture;
-
-  handleSearch(String query) {
-    Future<QuerySnapshot<Object>> product = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(currentUser.email)
-        .collection('Posts')
-        .orderBy('Name of Product')
-        .startAt({query}).endAt({query}).get();
-    Future<QuerySnapshot<Object>> users = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(currentUser.email)
-        .collection('User Details')
-        .orderBy('userName')
-        .startAt({query}).endAt({query}).get();
-    setState(() {
-      searchResultsFuture = users;
-      searchResultsFuture = product;
-    });
-  }
+  final currentUser = FirebaseAuth.instance.currentUser;
+  String searchName = '';
 
   clearSearch() {
     searchController.clear();
@@ -46,6 +27,7 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: Colors.white,
       title: TextFormField(
         controller: searchController,
+        autofocus: true,
         decoration: InputDecoration(
           hintText: "Search",
           filled: true,
@@ -55,51 +37,13 @@ class _SearchPageState extends State<SearchPage> {
             icon: const Icon(Icons.clear),
           ),
         ),
-        onFieldSubmitted: handleSearch,
+        onChanged: (value) {
+          setState(() {
+            searchName = value;
+          });
+        },
+        //  onFieldSubmitted: handleSearch,
       ),
-    );
-  }
-
-  Container buildNoContent() {
-    // final Orientation orientation = MediaQuery.of(context).orientation;
-    return Container(
-      child: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Text(
-              'Search',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[300],
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w600,
-                fontSize: 60.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  buildSearchResults() {
-    FutureBuilder(
-      future: searchResultsFuture!,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return circularProgress();
-        }
-        List<UserResult> searchResults = [];
-        snapshot.data!.docs.forEach((doc) {
-          UserModel user = UserModel.fromDocument(doc);
-          UserResult searchResult = UserResult(user: user);
-          searchResults.add(searchResult);
-        });
-        return ListView(
-          children: searchResults,
-        );
-      },
     );
   }
 
@@ -107,37 +51,55 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildSearchField(),
-      body:
-          searchResultsFuture == null ? buildNoContent() : buildSearchResults(),
-    );
-  }
-}
-
-class UserResult extends StatelessWidget {
-  final UserModel user;
-  const UserResult({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {},
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey,
-                backgroundImage: CachedNetworkImageProvider(user.photoUrl),
-              ),
-              title: Text(
-                user.userName,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-          const Divider(height: 2.0, color: Colors.white54),
-        ],
-      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(currentUser!.email)
+              .collection('User Details')
+              .orderBy('userName')
+              .startAt([searchName]).endAt(["$searchName\uf8ff"]).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Column(
+                children: const [
+                  Text(
+                    'Something went wrong.',
+                  ),
+                  Text(
+                    'Check your internet Connection.',
+                  ),
+                ],
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data = snapshot.data!.docs[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.grey,
+                    backgroundImage:
+                        CachedNetworkImageProvider(data['photoUrl']),
+                  ),
+                  title: Text(data['userName']),
+                  subtitle: Text(data['userEmail']),
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          }),
     );
   }
 }

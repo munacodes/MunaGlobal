@@ -15,20 +15,24 @@ class MyTextBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Colors.grey[300],
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // section name
+          // text
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                sectionName,
-                style: TextStyle(color: Colors.grey[500]),
+                text,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
 
               // edit button
@@ -40,12 +44,6 @@ class MyTextBox extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-
-          // text
-          Text(
-            text,
-            style: const TextStyle(color: Colors.black),
           ),
         ],
       ),

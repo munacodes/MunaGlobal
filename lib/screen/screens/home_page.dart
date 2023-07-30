@@ -70,8 +70,8 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         currentIndex: pageIndex,
         onTap: onTap,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.blue,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.explore_outlined),
