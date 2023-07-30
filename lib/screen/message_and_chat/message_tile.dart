@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MessageTile extends StatelessWidget {
-  final String userEmail;
+  final String userName;
   final String time;
   final String message;
   final bool isOnline;
 
   const MessageTile({
     super.key,
-    required this.userEmail,
+    required this.userName,
     required this.time,
     required this.message,
     required this.isOnline,
@@ -17,7 +17,11 @@ class MessageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(userEmail),
+      leading: const CircleAvatar(
+        radius: 40,
+        backgroundColor: Colors.grey,
+      ),
+      title: Text(userName),
       subtitle: Text(message),
       trailing: Column(
         children: [

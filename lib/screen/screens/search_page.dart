@@ -23,14 +23,14 @@ class _SearchPageState extends State<SearchPage> {
         .collection('Users')
         .doc(currentUser.email)
         .collection('Posts')
-        .where('Name of Product', isGreaterThanOrEqualTo: query)
-        .get();
+        .orderBy('Name of Product')
+        .startAt({query}).endAt({query}).get();
     Future<QuerySnapshot<Object>> users = FirebaseFirestore.instance
         .collection('Users')
         .doc(currentUser.email)
         .collection('User Details')
-        .where('userName', isGreaterThanOrEqualTo: query)
-        .get();
+        .orderBy('userName')
+        .startAt({query}).endAt({query}).get();
     setState(() {
       searchResultsFuture = users;
       searchResultsFuture = product;

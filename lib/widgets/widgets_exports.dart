@@ -7,6 +7,6 @@ export 'package:muna_global/widgets/text_box.dart';
 export 'package:muna_global/widgets/sales_products.dart';
 export 'package:muna_global/widgets/like_button.dart';
 export 'package:muna_global/widgets/cart_list_items.dart';
-export 'package:muna_global/widgets/grid_tile.dart';
+export 'package:muna_global/widgets/gridTile_listTile.dart';
 export 'package:muna_global/widgets/pop_up_menu.dart';
 export 'package:muna_global/widgets/cart_button.dart';

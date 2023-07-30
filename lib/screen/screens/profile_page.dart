@@ -18,10 +18,6 @@ class _ProfilePageState extends State<ProfilePage> {
   // all users
   final usersCollection = FirebaseFirestore.instance.collection('Users');
 
-  logout() {
-    FirebaseAuth.instance.signOut();
-  }
-
   // edit field
   Future<void> editField(String field) async {
     String newValue = '';
@@ -187,8 +183,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // retrive posts from firebase
-  profilePosts() {
+  // retrive posts from firebase in grid form
+  gridProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('Users')
@@ -200,19 +196,17 @@ class _ProfilePageState extends State<ProfilePage> {
         if (snapshot.hasData) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Container(
-              height: 800,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final post = snapshot.data!.docs[index];
-                  return GridTiled(
-                    image: post['ImageUrl'],
-                  );
-                },
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
               ),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final post = snapshot.data!.docs[index];
+                return GridTiled(
+                  image: post['ImageUrl'],
+                );
+              },
             ),
           );
         } else if (snapshot.hasError) {
@@ -227,6 +221,77 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // retrive posts from firebase in list form
+  listProfilePosts() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.email)
+          .collection('Posts')
+          .orderBy('Timestamp', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final post = snapshot.data!.docs[index];
+                return ListTiled(
+                  image: post['ImageUrl'],
+                );
+              },
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  profilePost() {
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          Container(
+            child: const TabBar(
+              unselectedLabelColor: Colors.grey,
+              labelColor: Colors.blue,
+              tabs: [
+                Tab(
+                  icon: Icon(
+                    Icons.grid_view_outlined,
+                  ),
+                ),
+                Tab(
+                  icon: Icon(
+                    Icons.list_outlined,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                gridProfilePosts(),
+                listProfilePosts(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,18 +302,14 @@ class _ProfilePageState extends State<ProfilePage> {
           'Profile',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
-        actions: [
-          IconButton(
-            onPressed: logout,
-            icon: const Icon(Icons.logout, color: Colors.black),
-          ),
+        actions: const [
+          PopUpMenu(),
         ],
       ),
       body: ListView(
         children: [
           Container(
             height: 285,
-            // color: Colors.blue,
             width: double.infinity,
             child: Column(
               children: [
@@ -269,7 +330,10 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(width: 10),
             ],
           ),
-          profilePosts(),
+          Container(
+            height: 500,
+            child: profilePost(),
+          ),
         ],
       ),
     );

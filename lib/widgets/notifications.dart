@@ -48,7 +48,7 @@ class _NotificationFeedState extends State<NotificationFeed> {
               .collection('Users')
               .doc(currentUser!.email)
               .collection('Posts')
-              .orderBy('Likes')
+              .orderBy('Likes', descending: true)
               .limit(10)
               .snapshots(),
           builder: (context, snapshot) {

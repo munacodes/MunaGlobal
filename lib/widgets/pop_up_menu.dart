@@ -1,39 +1,72 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class PopUpMenu extends StatefulWidget {
+class PopUpMenu extends StatelessWidget {
   const PopUpMenu({super.key});
 
   @override
-  State<PopUpMenu> createState() => _PopUpMenuState();
-}
-
-class _PopUpMenuState extends State<PopUpMenu> {
-  String title = 'qwerty';
-
-  String item = 'asdfg';
-
-  String item1 = 'zxcvbb';
-
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      trailing: PopupMenuButton(
+    logout() {
+      FirebaseAuth.instance.signOut();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: PopupMenuButton(
+        child: const Icon(
+          Icons.more_vert,
+          color: Colors.black,
+        ),
         itemBuilder: (context) => [
           PopupMenuItem(
-            value: item,
-            child: Text(item),
+            child: GestureDetector(
+              onTap: () {},
+              child: const Text(
+                'Contact Us',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
           PopupMenuItem(
-            value: item1,
-            child: Text(item1),
+            child: GestureDetector(
+              onTap: () {},
+              child: const Text(
+                'Share',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            child: GestureDetector(
+              onTap: () {},
+              child: const Text(
+                'About Us',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            child: GestureDetector(
+              onTap: logout,
+              child: const Text(
+                'LogOut',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ],
-        onSelected: (String newValue) {
-          setState(() {
-            title = newValue;
-          });
-        },
       ),
     );
   }
