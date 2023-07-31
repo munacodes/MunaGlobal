@@ -27,7 +27,6 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: Colors.white,
       title: TextFormField(
         controller: searchController,
-        autofocus: true,
         decoration: InputDecoration(
           hintText: "Search",
           filled: true,
@@ -54,7 +53,7 @@ class _SearchPageState extends State<SearchPage> {
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('Users')
-              .doc(currentUser!.email)
+              .doc(currentUser!.uid)
               .collection('User Details')
               .orderBy('userName')
               .startAt([searchName]).endAt(["$searchName\uf8ff"]).snapshots(),

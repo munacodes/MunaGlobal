@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // user
   final currentUser = FirebaseAuth.instance.currentUser;
-  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
   // all users
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   int postCount = 0;
@@ -112,8 +112,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 70,
                               width: 80,
                               fit: BoxFit.fill,
-                              image: CachedNetworkImageProvider(
-                                  userData['photoUrl']),
+                              image: userData['PhotoUrl'] != null
+                                  ? CachedNetworkImageProvider(
+                                      userData['PhotoUrl'],
+                                    )
+                                  : const AssetImage(
+                                          'assets/images/User Image.png')
+                                      as ImageProvider,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -121,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                userData['userName'],
+                                userData['UserName'],
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -130,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                userData['bio'],
+                                userData['Bio'],
                                 style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.grey,
@@ -167,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // retrive posts from firebase in grid form
-  gridProfilePosts() {
+  Widget gridProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('Users')
@@ -176,7 +181,12 @@ class _ProfilePageState extends State<ProfilePage> {
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (!snapshot.hasData) {
+          return const Text(
+            'No Post yet',
+            style: TextStyle(color: Colors.black, fontSize: 20),
+          );
+        } else if (snapshot.hasData) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: GridView.builder(
@@ -205,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // retrive posts from firebase in list form
-  listProfilePosts() {
+  Widget listProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('Users')
@@ -214,19 +224,28 @@ class _ProfilePageState extends State<ProfilePage> {
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (!snapshot.hasData) {
+          return const Text(
+            'No Post yet',
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+          );
+        } else if (snapshot.hasData) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final post = snapshot.data!.docs[index];
-                final postCounts = snapshot.data!.docs.length;
                 return ListTiled(
                   image: post['ImageUrl'],
                 );
               },
             ),
+          );
+        } else if (!snapshot.hasData) {
+          return const Text(
+            'No Post yet',
+            style: TextStyle(color: Colors.grey, fontSize: 20),
           );
         } else if (snapshot.hasError) {
           return Center(

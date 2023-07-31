@@ -161,7 +161,7 @@ class _SalesProductState extends State<SalesProduct> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // name of product
                 Row(
@@ -178,7 +178,7 @@ class _SalesProductState extends State<SalesProduct> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // product image
                 GestureDetector(

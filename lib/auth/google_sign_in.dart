@@ -41,13 +41,13 @@ class GoogleAuth {
           .set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username
-        'userName': googleCurrentUser.email.split('@')[0], // initial username
-        'bio': 'Empty bio...', // initially empty bio
-        "id": googleCurrentUser.id,
-        "photoUrl": googleCurrentUser.photoUrl,
-        "userEmail": googleCurrentUser.email,
-        "displayName": googleCurrentUser.email.split('@')[0],
-        "timestamp": timestamp,
+        'UserName': googleCurrentUser.email.split('@')[0], // initial username
+        'Bio': 'Empty bio...', // initially empty bio
+        "UserId": googleCurrentUser.id,
+        "PhotoUrl": googleCurrentUser.photoUrl,
+        "UserEmail": googleCurrentUser.email,
+        "DisplayName": googleCurrentUser.email.split('@')[0],
+        "Timestamp": timestamp,
       });
 
       // finally, lets sign in

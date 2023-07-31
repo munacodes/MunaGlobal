@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:muna_global/screen/screens/profile_page.dart';
+import 'package:uuid/uuid.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -15,6 +19,121 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   final currentUser = FirebaseAuth.instance.currentUser;
   final usersCollection = FirebaseFirestore.instance.collection('Users');
+  File? _imageFile;
+  String? userImageUrl = '';
+  DateTime profilePhotoDate = DateTime.now();
+  Timestamp profilePhotoTime = Timestamp.now();
+
+  Future<void> _getImage({required ImageSource source}) async {
+    final picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: source);
+    setState(() {
+      _imageFile = File(image!.path);
+    });
+    uploadToStorage();
+  }
+
+  Future<void> myDialogBox() {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text(
+                    'Pick From Camera',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    _getImage(source: ImageSource.camera);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text(
+                    'Pick From Gallery',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    _getImage(source: ImageSource.gallery);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.close),
+                  title: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String? imageUrl;
+  uploadToStorage() async {
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child("user_profile_pic/${currentUser!.uid}");
+    UploadTask uploadTask = storageReference.putFile(_imageFile!);
+    TaskSnapshot snapshot = await uploadTask;
+    imageUrl = await snapshot.ref.getDownloadURL();
+    print('profile $imageUrl');
+
+    // showDialog(
+    //   context: context,
+    //   builder: (c) {
+    //     return const LoadingAlertDialog(
+    //       message: 'Registering, Please wait....',
+    //     );
+    //   },
+    // );
+
+    // String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    // Reference storageReference =
+    //     FirebaseStorage.instance.ref().child(imageFileName);
+    // UploadTask storageUploadTask = storageReference.putFile(_imageFile!);
+    // TaskSnapshot taskSnapshot = await storageUploadTask;
+    // await taskSnapshot.ref.getDownloadURL().then((urlImage) {
+    //   userImageUrl = urlImage;
+    // });
+    _userDetailUpdate();
+  }
+
+  _userDetailUpdate() {
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser!.email)
+        .collection('User Details')
+        .doc(currentUser!.email)
+        .update({
+      "PhotoUrl": _imageFile,
+    });
+  }
 
   // edit field
   Future<void> editField(String field) async {
@@ -64,7 +183,11 @@ class _EditProfileState extends State<EditProfile> {
     // update in firestore
     if (newValue.trim().isNotEmpty) {
       // only update if there is something in the textfield
-      await usersCollection.doc(currentUser!.email).update({field: newValue});
+      await usersCollection
+          .doc(currentUser!.uid)
+          .collection('User Details')
+          .doc(currentUser!.uid)
+          .update({field: newValue});
     }
   }
 
@@ -115,8 +238,15 @@ class _EditProfileState extends State<EditProfile> {
                                   CircleAvatar(
                                     radius: 80,
                                     backgroundColor: Colors.grey,
-                                    backgroundImage: CachedNetworkImageProvider(
-                                        userData['photoUrl']),
+                                    backgroundImage: _imageFile != null
+                                        ? userData['PhotoUrl'] == null
+                                            ? FileImage(_imageFile!)
+                                                as ImageProvider
+                                            : CachedNetworkImageProvider(
+                                                userData['PhotoUrl'],
+                                              )
+                                        : const AssetImage(
+                                            'assets/images/User Image.png'),
                                   ),
                                 ],
                               ),
@@ -130,7 +260,7 @@ class _EditProfileState extends State<EditProfile> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: GestureDetector(
-                                  onTap: () {},
+                                  onTap: () => myDialogBox(),
                                   child: const CircleAvatar(
                                     radius: 25,
                                     backgroundColor: Colors.blue,
@@ -155,16 +285,14 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
                           subtitle: Text(
-                            userData['userName'],
+                            userData['UserName'],
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,
                             ),
                           ),
                           trailing: IconButton(
-                            onPressed: () {
-                              // editField();
-                            },
+                            onPressed: () => editField('UserName'),
                             icon: const Icon(Icons.edit, color: Colors.blue),
                           ),
                         ),
@@ -179,16 +307,14 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
                           subtitle: Text(
-                            userData['bio'],
+                            userData['Bio'],
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,
                             ),
                           ),
                           trailing: IconButton(
-                            onPressed: () {
-                              // editField();
-                            },
+                            onPressed: () => editField('Bio'),
                             icon: const Icon(Icons.edit, color: Colors.blue),
                           ),
                         ),
@@ -202,7 +328,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
                           subtitle: Text(
-                            userData['userEmail'],
+                            userData['UserEmail'],
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,

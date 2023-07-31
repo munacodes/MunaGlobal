@@ -55,8 +55,10 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Future<String> uploadImage(file) async {
-    UploadTask uploadTask =
-        FirebaseStorage.instance.ref().child("post_$postId.jpg").putFile(file);
+    UploadTask uploadTask = FirebaseStorage.instance
+        .ref()
+        .child("user_post/${currentUser!.email}")
+        .putFile(file);
     TaskSnapshot storageSnap = await uploadTask;
     String downloadUrl = await storageSnap.ref.getDownloadURL();
     return downloadUrl;
@@ -81,7 +83,7 @@ class _UploadPageState extends State<UploadPage> {
           .doc(currentUser!.email)
           .collection('Posts')
           .add({
-        "postId": postId,
+        "PostId": postId,
         "Name of Product": titleController.text,
         "UserName": currentUser!.displayName,
         "UserEmail": currentUser!.email,

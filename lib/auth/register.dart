@@ -54,13 +54,13 @@ class _RegisterState extends State<Register> {
           .set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username
-        'userName': _emailController.text.split('@')[0], // initial username
-        'userEmail': userCredential.user!.email,
-        'bio': 'Empty bio...', // initially empty bio
-        "id": userCredential.user!.uid,
-        "photoUrl": userCredential.user!.photoURL,
-        "displayName": userCredential.user!.email!.split('@')[0],
-        "timestamp": timestamp,
+        'UserName': _emailController.text.split('@')[0], // initial username
+        'UserEmail': userCredential.user!.email,
+        'Bio': 'Empty bio...', // initially empty bio
+        "UserId": userCredential.user!.uid,
+        "PhotoUrl": userCredential.user!.photoURL,
+        "DisplayName": userCredential.user!.email!.split('@')[0],
+        "TimeStamp": timestamp,
       });
 
       // pop loading circle
