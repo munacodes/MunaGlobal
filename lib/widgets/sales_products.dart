@@ -10,6 +10,7 @@ import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:uuid/uuid.dart';
 
 class SalesProduct extends StatefulWidget {
+  final String photoUrl;
   final String userName;
   final String description;
   final String title;
@@ -34,6 +35,7 @@ class SalesProduct extends StatefulWidget {
     required this.userName,
     required this.size,
     required this.quantity,
+    required this.photoUrl,
   });
 
   @override
@@ -52,6 +54,7 @@ class _SalesProductState extends State<SalesProduct> {
   void initState() {
     super.initState();
     isLiked = widget.likes.contains(currentUser!.displayName);
+    isTapped;
   }
 
   // toggle like
@@ -146,13 +149,25 @@ class _SalesProductState extends State<SalesProduct> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.userName.toString(),
-                      style: TextStyle(color: Colors.grey[700], fontSize: 18),
-                    ),
-                    Text(
-                      '.',
-                      style: TextStyle(color: Colors.grey[400]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: widget.photoUrl != null
+                              ? CachedNetworkImageProvider(
+                                  widget.photoUrl.toString())
+                              : const AssetImage('assets/images/User Image.png')
+                                  as ImageProvider,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          widget.userName.toString(),
+                          style:
+                              TextStyle(color: Colors.grey[700], fontSize: 18),
+                        ),
+                      ],
                     ),
                     // time
                     Text(

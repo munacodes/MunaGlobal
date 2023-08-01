@@ -92,6 +92,7 @@ class _ExploreState extends State<Explore> {
                       // get the message
                       final post = snapshot.data!.docs[index];
                       return SalesProduct(
+                        photoUrl: post['PhotoUrl'],
                         image: post['ImageUrl'],
                         title: post['Name of Product'],
                         likes: List<String>.from(post['Likes'] ?? []),

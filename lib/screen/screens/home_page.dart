@@ -14,86 +14,128 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final DateTime timestamp = DateTime.now();
-
-  bool isAuth = false;
-  PageController? pageController;
   int pageIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    pageController!.dispose();
-    super.dispose();
-  }
 
   logout() {
     FirebaseAuth.instance.signOut();
   }
 
-  onPageChanged(int pageIndex) {
-    setState(() {
-      this.pageIndex = pageIndex;
-    });
-  }
-
-  onTap(int pageIndex) {
-    pageController!.animateToPage(
-      pageIndex,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
+  final pages = const [
+    Explore(),
+    CategoryPage(),
+    UploadPage(),
+    SearchPage(),
+    ProfilePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: pageController,
-        onPageChanged: onPageChanged,
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          Explore(),
-          CategoryPage(),
-          UploadPage(),
-          SearchPage(),
-          ProfilePage(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        //  backgroundColor: Colors.blue,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: pageIndex,
-        onTap: onTap,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            label: 'Explore',
+      body: pages[pageIndex],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 40, right: 10),
+        child: Container(
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.grey[500],
+            borderRadius: BorderRadius.circular(10),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category_outlined),
-            label: 'Category',
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 0;
+                  });
+                },
+                icon: pageIndex == 0
+                    ? const Icon(
+                        Icons.explore,
+                        color: Colors.blue,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.explore_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 1;
+                  });
+                },
+                icon: pageIndex == 1
+                    ? const Icon(
+                        Icons.category,
+                        color: Colors.blue,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.category_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 2;
+                  });
+                },
+                icon: pageIndex == 2
+                    ? const Icon(
+                        Icons.add_box,
+                        color: Colors.blue,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.add_box_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 3;
+                  });
+                },
+                icon: pageIndex == 3
+                    ? const Icon(
+                        Icons.search,
+                        color: Colors.blue,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.search_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 4;
+                  });
+                },
+                icon: pageIndex == 4
+                    ? const Icon(
+                        Icons.person,
+                        color: Colors.blue,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.person_outline_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.photo_camera_outlined, size: 35.0),
-            label: 'Camera',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: 'Profile',
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          count.toString(),
+          postCount.toString(),
           style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
         ),
         Container(
@@ -187,6 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(color: Colors.black, fontSize: 20),
           );
         } else if (snapshot.hasData) {
+          final postCount = snapshot.data!.docs.length;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: GridView.builder(
@@ -196,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final post = snapshot.data!.docs[index];
-                return GridTiled(
+                return GridFormView(
                   image: post['ImageUrl'],
                 );
               },
@@ -236,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final post = snapshot.data!.docs[index];
-                return ListTiled(
+                return ListFormView(
                   image: post['ImageUrl'],
                 );
               },

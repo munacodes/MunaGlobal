@@ -32,6 +32,7 @@ class _UploadPageState extends State<UploadPage> {
   User? currentUser = FirebaseAuth.instance.currentUser;
   // String? currentUserId = FirebaseAuth.instance.currentUser!.uid;
   String postId = const Uuid().v4();
+  String? userName;
 
   handleChooseFromGallery() async {
     final picker = ImagePicker();
@@ -57,7 +58,7 @@ class _UploadPageState extends State<UploadPage> {
   Future<String> uploadImage(file) async {
     UploadTask uploadTask = FirebaseStorage.instance
         .ref()
-        .child("user_post/${currentUser!.email}")
+        .child("users_posts/${currentUser!.email}")
         .putFile(file);
     TaskSnapshot storageSnap = await uploadTask;
     String downloadUrl = await storageSnap.ref.getDownloadURL();
@@ -83,9 +84,10 @@ class _UploadPageState extends State<UploadPage> {
           .doc(currentUser!.email)
           .collection('Posts')
           .add({
+        "PhotoUrl": currentUser!.photoURL,
         "PostId": postId,
         "Name of Product": titleController.text,
-        "UserName": currentUser!.displayName,
+        "UserName": userName,
         "UserEmail": currentUser!.email,
         "Description": descriptionController.text,
         "Location": locationController.text,

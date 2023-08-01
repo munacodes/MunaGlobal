@@ -139,7 +139,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc('7tYGal4siU0bqzNImGoA')
+                  .doc()
                   .update({
                 'Quantity': FieldValue.increment(-1),
               });
@@ -164,7 +164,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc('7tYGal4siU0bqzNImGoA')
+                  .doc()
                   .update({
                 'Quantity': FieldValue.increment(1),
               });
@@ -219,7 +219,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc(cartId)
+                  .doc()
                   .delete();
               Fluttertoast.showToast(
                 msg: 'Cart  deleted',

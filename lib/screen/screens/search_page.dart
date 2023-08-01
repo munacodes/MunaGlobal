@@ -56,7 +56,7 @@ class _SearchPageState extends State<SearchPage> {
               .doc(currentUser!.uid)
               .collection('User Details')
               .orderBy('userName')
-              .startAt([searchName]).endAt(["$searchName\uf8ff"]).snapshots(),
+              .startAt([searchName]).endAt([searchName]).snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Column(

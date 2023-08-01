@@ -103,40 +103,6 @@ class _LoginState extends State<Login> {
                   ),
                   const SizedBox(height: 25),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Divider(
-                                thickness: 0.5, color: Colors.grey[400])),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Text(
-                            'Or continue with',
-                            style: TextStyle(color: Colors.grey[700]),
-                          ),
-                        ),
-                        Expanded(
-                            child: Divider(
-                                thickness: 0.7, color: Colors.grey[400])),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () =>
-                        GoogleAuth().signInWithGoogle(context: context),
-                    child: Container(
-                      height: 40,
-                      child: const Image(
-                        image: AssetImage('assets/images/Google.png'),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
                   // go to register page
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

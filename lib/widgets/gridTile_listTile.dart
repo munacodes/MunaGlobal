@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class GridTiled extends StatelessWidget {
+class GridFormView extends StatelessWidget {
   final String image;
-  const GridTiled({super.key, required this.image});
+  const GridFormView({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,9 @@ class GridTiled extends StatelessWidget {
   }
 }
 
-class ListTiled extends StatelessWidget {
+class ListFormView extends StatelessWidget {
   final String image;
-  const ListTiled({super.key, required this.image});
+  const ListFormView({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {

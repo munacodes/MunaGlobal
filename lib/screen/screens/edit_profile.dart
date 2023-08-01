@@ -164,13 +164,6 @@ class _EditProfileState extends State<EditProfile> {
         ],
       ),
     );
-    Fluttertoast.showToast(
-      msg: 'Updated  Successfully',
-      toastLength: Toast.LENGTH_LONG,
-      backgroundColor: Colors.blue,
-      textColor: Colors.white,
-      gravity: ToastGravity.BOTTOM,
-    );
 
     // update in firestore
     if (newValue.trim().isNotEmpty) {
@@ -181,6 +174,13 @@ class _EditProfileState extends State<EditProfile> {
           .doc(currentUser!.uid)
           .update({field: newValue});
     }
+    // Fluttertoast.showToast(
+    //   msg: 'Profile Updated  Successfully',
+    //   toastLength: Toast.LENGTH_LONG,
+    //   backgroundColor: Colors.blue,
+    //   textColor: Colors.white,
+    //   gravity: ToastGravity.BOTTOM,
+    // );
   }
 
   @override
@@ -284,7 +284,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
                           trailing: IconButton(
-                            onPressed: () => editField('UserName'),
+                            onPressed: () => editField('Name'),
                             icon: const Icon(Icons.edit, color: Colors.blue),
                           ),
                         ),

@@ -12,6 +12,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -27,7 +28,31 @@ class _RegisterState extends State<Register> {
     );
 
     // make sure password match
-    if (_passwordController.text != _confirmPasswordController.text) {
+    if (_usernameController.text.isEmpty) {
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+      displayMessage('Username required');
+    } else if (_usernameController.text.length < 5) {
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+      displayMessage('username too short');
+    } else if (_emailController.text.isEmpty) {
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+      displayMessage('Email required');
+    } else if (_passwordController.text.isEmpty) {
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+      displayMessage('Password required');
+    } else if (_passwordController.text.length > 6) {
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+      displayMessage('Password too short');
+    } else if (_confirmPasswordController.text.isEmpty) {
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+      displayMessage('Please confirm your password');
+    } else if (_passwordController.text != _confirmPasswordController.text) {
       // pop loading circle
       if (context.mounted) Navigator.pop(context);
       // display error message
@@ -54,12 +79,11 @@ class _RegisterState extends State<Register> {
           .set({
         // Using split '@'[0] tells it to split the email where
         //there is '@' which is index [0] and use it as a username
-        'UserName': _emailController.text.split('@')[0], // initial username
+        'UserName': _usernameController.text, // initial username
         'UserEmail': userCredential.user!.email,
         'Bio': 'Empty bio...', // initially empty bio
         "UserId": userCredential.user!.uid,
         "PhotoUrl": userCredential.user!.photoURL,
-        "DisplayName": userCredential.user!.email!.split('@')[0],
         "TimeStamp": timestamp,
       });
 
@@ -111,6 +135,14 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   const SizedBox(height: 25),
+
+                  // email textfield
+                  MyTextField(
+                    controller: _usernameController,
+                    hintText: 'UserName',
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 10),
 
                   // email textfield
                   MyTextField(
