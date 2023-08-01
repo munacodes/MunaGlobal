@@ -13,6 +13,7 @@ class CartPage extends StatefulWidget {
   final double price;
   final String size;
   final int quantity;
+
   const CartPage({
     super.key,
     required this.title,
@@ -140,7 +141,7 @@ class _CartPageState extends State<CartPage> {
                 .collection('Users')
                 .doc(currentUser!.email)
                 .collection('Carts')
-                .orderBy('Timestamp', descending: false)
+                .orderBy('Timestamp', descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -153,6 +154,7 @@ class _CartPageState extends State<CartPage> {
                         image: cartItem['ImageUrl'],
                         price: cartItem['Price'],
                         quantity: cartItem['Quantity'],
+                        cartId: cartItem.id,
                       );
                     });
               } else if (!snapshot.hasData) {

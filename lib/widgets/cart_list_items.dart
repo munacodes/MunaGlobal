@@ -13,12 +13,14 @@ class CartListItem extends StatefulWidget {
   final String title;
   final double price;
   final int quantity;
+  final String cartId;
   const CartListItem({
     super.key,
     required this.image,
     required this.title,
     required this.price,
     required this.quantity,
+    required this.cartId,
   });
 
   @override
@@ -109,11 +111,12 @@ class _CartListItemState extends State<CartListItem> {
             .collection('Users')
             .doc(currentUser!.email)
             .collection('Carts')
+            .doc(widget.cartId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Text(
-              widget.quantity.toString(),
+              snapshot.data!['Quantity'].toString(),
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -134,15 +137,15 @@ class _CartListItemState extends State<CartListItem> {
             setState(() {
               if (count > 1) {
                 count--;
+                FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(currentUser!.email)
+                    .collection('Carts')
+                    .doc(widget.cartId)
+                    .update({
+                  'Quantity': FieldValue.increment(-1),
+                });
               }
-              FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(currentUser!.email)
-                  .collection('Carts')
-                  .doc()
-                  .update({
-                'Quantity': FieldValue.increment(-1),
-              });
             });
           },
           child: Card(
@@ -164,7 +167,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc()
+                  .doc(widget.cartId)
                   .update({
                 'Quantity': FieldValue.increment(1),
               });
@@ -194,7 +197,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc()
+                  .doc(widget.cartId)
                   .delete();
               Fluttertoast.showToast(
                 msg: 'Cart  deleted',
@@ -219,7 +222,7 @@ class _CartListItemState extends State<CartListItem> {
                   .collection('Users')
                   .doc(currentUser!.email)
                   .collection('Carts')
-                  .doc()
+                  .doc(widget.cartId)
                   .delete();
               Fluttertoast.showToast(
                 msg: 'Cart  deleted',

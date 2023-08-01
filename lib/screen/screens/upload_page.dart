@@ -79,6 +79,7 @@ class _UploadPageState extends State<UploadPage> {
         titleController.text.isNotEmpty ||
         quantityController.text.isNotEmpty) {
       // store in firebase
+      print(userName);
       FirebaseFirestore.instance
           .collection('Users')
           .doc(currentUser!.email)
@@ -99,6 +100,7 @@ class _UploadPageState extends State<UploadPage> {
         "Likes": [],
       });
     }
+
     // clear the textfield
     setState(() {
       descriptionController.clear();

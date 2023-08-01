@@ -318,6 +318,17 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               children: [
                 profileDetails(),
+                Row(
+                  children: const [
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Divider(
+                        thickness: 2,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(

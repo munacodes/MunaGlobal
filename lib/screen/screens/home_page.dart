@@ -33,11 +33,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: pages[pageIndex],
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 40, right: 10),
+        padding: const EdgeInsets.only(left: 40, right: 10, bottom: 100),
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-            color: Colors.grey[500],
+            color: Colors.blue,
+            //  color: Colors.grey[500],
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -52,12 +53,12 @@ class _HomePageState extends State<HomePage> {
                 icon: pageIndex == 0
                     ? const Icon(
                         Icons.explore,
-                        color: Colors.blue,
+                        color: Colors.black,
                         size: 30,
                       )
                     : const Icon(
                         Icons.explore_outlined,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 30,
                       ),
               ),
@@ -70,12 +71,12 @@ class _HomePageState extends State<HomePage> {
                 icon: pageIndex == 1
                     ? const Icon(
                         Icons.category,
-                        color: Colors.blue,
+                        color: Colors.black,
                         size: 30,
                       )
                     : const Icon(
                         Icons.category_outlined,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 30,
                       ),
               ),
@@ -88,12 +89,12 @@ class _HomePageState extends State<HomePage> {
                 icon: pageIndex == 2
                     ? const Icon(
                         Icons.add_box,
-                        color: Colors.blue,
+                        color: Colors.black,
                         size: 30,
                       )
                     : const Icon(
                         Icons.add_box_outlined,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 30,
                       ),
               ),
@@ -106,12 +107,12 @@ class _HomePageState extends State<HomePage> {
                 icon: pageIndex == 3
                     ? const Icon(
                         Icons.search,
-                        color: Colors.blue,
+                        color: Colors.black,
                         size: 30,
                       )
                     : const Icon(
                         Icons.search_outlined,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 30,
                       ),
               ),
@@ -124,12 +125,12 @@ class _HomePageState extends State<HomePage> {
                 icon: pageIndex == 4
                     ? const Icon(
                         Icons.person,
-                        color: Colors.blue,
+                        color: Colors.black,
                         size: 30,
                       )
                     : const Icon(
                         Icons.person_outline_outlined,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 30,
                       ),
               ),
