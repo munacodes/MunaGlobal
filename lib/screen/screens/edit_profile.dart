@@ -30,7 +30,7 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       _imageFile = File(image!.path);
     });
-    uploadToStorage();
+    uploadToFirebase();
   }
 
   Future<void> myDialogBox() {
@@ -95,7 +95,9 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   String? imageUrl;
-  uploadToStorage() async {
+  uploadToFirebase() async {
+    _userDetailUpdate();
+
     Reference storageReference = FirebaseStorage.instance
         .ref()
         .child("user_profile_pic/${currentUser!.uid}");
@@ -112,16 +114,6 @@ class _EditProfileState extends State<EditProfile> {
     //     );
     //   },
     // );
-
-    // String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
-    // Reference storageReference =
-    //     FirebaseStorage.instance.ref().child(imageFileName);
-    // UploadTask storageUploadTask = storageReference.putFile(_imageFile!);
-    // TaskSnapshot taskSnapshot = await storageUploadTask;
-    // await taskSnapshot.ref.getDownloadURL().then((urlImage) {
-    //   userImageUrl = urlImage;
-    // });
-    _userDetailUpdate();
   }
 
   _userDetailUpdate() {
@@ -131,7 +123,7 @@ class _EditProfileState extends State<EditProfile> {
         .collection('User Details')
         .doc(currentUser!.email)
         .update({
-      "PhotoUrl": _imageFile,
+      'PhotoUrl': FileImage(_imageFile!),
     });
   }
 
@@ -221,7 +213,7 @@ class _EditProfileState extends State<EditProfile> {
               .doc(currentUser!.email)
               .snapshots(),
           builder: (context, snapshot) {
-            final userData = snapshot.data!.data()!;
+            final userData = snapshot.data!;
             if (snapshot.hasData) {
               return ListView(
                 children: [

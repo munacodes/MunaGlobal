@@ -48,12 +48,12 @@ class UserModel {
 
   factory UserModel.fromDocument(DocumentSnapshot doc) {
     return UserModel(
-      uid: doc['uid'],
-      userEmail: doc['userEmail'],
-      userName: doc['userName'],
-      photoUrl: doc['photoUrl'],
-      displayName: doc['displayName'],
-      bio: doc['bio'],
+      uid: doc['UserId'],
+      userEmail: doc['UserEmail'],
+      userName: doc['UserName'],
+      photoUrl: doc['PhotoUrl'],
+      displayName: doc['DisplayName'],
+      bio: doc['Bio'],
     );
   }
 }
