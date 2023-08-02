@@ -119,9 +119,7 @@ class _EditProfileState extends State<EditProfile> {
   _userDetailUpdate() {
     FirebaseFirestore.instance
         .collection('Users')
-        .doc(currentUser!.email)
-        .collection('User Details')
-        .doc(currentUser!.email)
+        .doc(currentUser!.uid)
         .update({
       'PhotoUrl': FileImage(_imageFile!),
     });
@@ -168,11 +166,7 @@ class _EditProfileState extends State<EditProfile> {
     // update in firestore
     if (newValue.trim().isNotEmpty) {
       // only update if there is something in the textfield
-      await usersCollection
-          .doc(currentUser!.uid)
-          .collection('User Details')
-          .doc(currentUser!.uid)
-          .update({field: newValue});
+      await usersCollection.doc(currentUser!.uid).update({field: newValue});
     }
     // Fluttertoast.showToast(
     //   msg: 'Profile Updated  Successfully',
@@ -208,9 +202,7 @@ class _EditProfileState extends State<EditProfile> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Users')
-              .doc(currentUser!.email)
-              .collection('User Details')
-              .doc(currentUser!.email)
+              .doc(currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
             final userData = snapshot.data!;

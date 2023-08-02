@@ -41,11 +41,7 @@ class _DetailsPageState extends State<DetailsPage> {
     });
 
     if (isTapped) {
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(currentUser!.email)
-          .collection('Carts')
-          .add({
+      FirebaseFirestore.instance.collection('Carts').add({
         "Name of Product": widget.title,
         "ImageUrl": widget.image,
         "Price": widget.price,

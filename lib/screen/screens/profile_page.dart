@@ -78,9 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('Users')
-          .doc(currentUser!.email)
-          .collection('User Details')
-          .doc(currentUser!.email)
+          .doc(currentUser!.uid)
           .snapshots(),
       builder: (context, snapshot) {
         // get user data
@@ -160,8 +158,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error ${snapshot.error}'),
+          return const Center(
+            child: Text('Please check your network connection'),
           );
         }
         return const Center(
@@ -175,16 +173,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget gridProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('Users')
-          .doc(currentUser!.email)
           .collection('Posts')
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Text(
-            'No Post yet',
-            style: TextStyle(color: Colors.black, fontSize: 20),
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData) {
           final postCount = snapshot.data!.docs.length;
@@ -209,7 +204,10 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
         return const Center(
-          child: CircularProgressIndicator(),
+          child: Text(
+            'No Post yet',
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+          ),
         );
       },
     );
@@ -219,16 +217,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget listProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('Users')
-          .doc(currentUser!.email)
           .collection('Posts')
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Text(
-            'No Post yet',
-            style: TextStyle(color: Colors.grey, fontSize: 20),
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData) {
           return Padding(
@@ -243,18 +238,16 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
           );
-        } else if (!snapshot.hasData) {
-          return const Text(
-            'No Post yet',
-            style: TextStyle(color: Colors.grey, fontSize: 20),
-          );
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );
         }
         return const Center(
-          child: CircularProgressIndicator(),
+          child: Text(
+            'No Post yet',
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+          ),
         );
       },
     );

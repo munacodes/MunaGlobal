@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/models/models_exports.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
@@ -13,103 +14,102 @@ class SearchMessage extends StatefulWidget {
 }
 
 class _SearchMessageState extends State<SearchMessage> {
-  final searchController = TextEditingController();
-  Future<QuerySnapshot<Object>>? searchResultsFuture;
-
-  handleSearch(String query) {
-    Future<QuerySnapshot<Object>> users = FirebaseFirestore.instance
-        .collection('Users')
-        .where('userName', isGreaterThanOrEqualTo: query)
-        .get();
-    setState(() {
-      searchResultsFuture = users;
-    });
-  }
+  TextEditingController searchController = TextEditingController();
+  String searchName = '';
 
   clearSearch() {
     searchController.clear();
   }
 
-  Container buildNoContent() {
-    // final Orientation orientation = MediaQuery.of(context).orientation;
-    return Container(
-      child: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Text(
-              'Search',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[300],
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w600,
-                fontSize: 60.0,
-              ),
+  AppBar buildSearchField() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const MessagesPage(),
             ),
-          ],
+          );
+        },
+        icon: const Icon(
+          Icons.arrow_back,
+          color: Colors.black,
         ),
       ),
-    );
-  }
-
-  buildSearchResults() {
-    FutureBuilder(
-      future: searchResultsFuture!,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return circularProgress();
-        }
-        List<SearchResult> searchResults = [];
-        snapshot.data!.docs.forEach((doc) {
-          UserModel user = UserModel.fromDocument(doc);
-          SearchResult searchResult = SearchResult(user: user);
-          searchResults.add(searchResult);
-        });
-        return ListView(
-          children: searchResults,
-        );
-      },
+      title: TextFormField(
+        controller: searchController,
+        decoration: InputDecoration(
+          hintText: "Search",
+          filled: true,
+          prefixIcon: const Icon(Icons.search, size: 28.0),
+          suffixIcon: IconButton(
+            onPressed: clearSearch,
+            icon: const Icon(Icons.clear),
+          ),
+        ),
+        onChanged: (value) {
+          setState(() {
+            searchName = value;
+          });
+        },
+        //  onFieldSubmitted: handleSearch,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => const MessagesPage(),
-              ),
+      appBar: buildSearchField(),
+      // put stream builder in a or container column to call both users and posts
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .orderBy('userName')
+              .startAt([searchName]).endAt([searchName]).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Column(
+                children: const [
+                  Text(
+                    'Something went wrong.',
+                  ),
+                  Text(
+                    'Check your internet Connection.',
+                  ),
+                ],
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data = snapshot.data!.docs[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.grey,
+                    backgroundImage:
+                        CachedNetworkImageProvider(data['photoUrl']),
+                  ),
+                  title: Text(data['userName']),
+                  subtitle: Text(data['userEmail']),
+                  onTap: () {
+                    // Navigator.of(context).pushReplacement(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const ChatPage(),
+                    //   ),
+                    // );
+                  },
+                );
+              },
             );
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-        title: TextFormField(
-          controller: searchController,
-          decoration: InputDecoration(
-            hintText: "Search",
-            filled: true,
-            prefixIcon: const Icon(Icons.search, size: 28.0),
-            suffixIcon: IconButton(
-              onPressed: clearSearch,
-              icon: const Icon(Icons.clear),
-            ),
-          ),
-          onFieldSubmitted: handleSearch,
-        ),
-      ),
-      body: SafeArea(
-        child: searchResultsFuture == null
-            ? buildNoContent()
-            : buildSearchResults(),
-      ),
+          }),
     );
   }
 }

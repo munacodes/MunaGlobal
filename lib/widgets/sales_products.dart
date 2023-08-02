@@ -22,6 +22,7 @@ class SalesProduct extends StatefulWidget {
   final String size;
   final int quantity;
   final List<String> likes;
+  final String cartId;
   const SalesProduct({
     super.key,
     required this.description,
@@ -36,6 +37,7 @@ class SalesProduct extends StatefulWidget {
     required this.size,
     required this.quantity,
     required this.photoUrl,
+    required this.cartId,
   });
 
   @override
@@ -47,13 +49,12 @@ class _SalesProductState extends State<SalesProduct> {
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
   bool showHeart = false;
-  String cartId = const Uuid().v4();
   bool isTapped = false;
 
   @override
   void initState() {
     super.initState();
-    isLiked = widget.likes.contains(currentUser!.displayName);
+    isLiked = widget.likes.contains(currentUser!.email);
     isTapped;
   }
 
@@ -64,21 +65,18 @@ class _SalesProductState extends State<SalesProduct> {
     });
 
     // Access the document is Firebase
-    DocumentReference postRef = FirebaseFirestore.instance
-        .collection('User Posts')
-        .doc(currentUser!.email)
-        .collection('Posts')
-        .doc(widget.postId);
+    DocumentReference postRef =
+        FirebaseFirestore.instance.collection('Posts').doc(widget.postId);
 
     if (isLiked) {
       // if the post is now liked, add the user's email to the 'Likes' field
       postRef.update({
-        'Likes': FieldValue.arrayUnion([currentUser!.displayName])
+        'Likes': FieldValue.arrayUnion([currentUser!.email])
       });
     } else {
       // if the post is now unliked, remove the user's email from the 'likes' field
       postRef.update({
-        'Likes': FieldValue.arrayRemove([currentUser!.displayName])
+        'Likes': FieldValue.arrayRemove([currentUser!.email])
       });
     }
   }
@@ -89,15 +87,10 @@ class _SalesProductState extends State<SalesProduct> {
     });
 
     if (isTapped) {
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(currentUser!.email)
-          .collection('Carts')
-          .add({
+      FirebaseFirestore.instance.collection('Carts').add({
         "Name of Product": widget.title,
         "ImageUrl": widget.image,
         "Price": widget.price,
-        "cartId": cartId,
         "Size": widget.size,
         "Description": widget.description,
         "Quantity": widget.quantity,
@@ -110,22 +103,19 @@ class _SalesProductState extends State<SalesProduct> {
         textColor: Colors.white,
         gravity: ToastGravity.BOTTOM,
       );
+    } else if (!isTapped) {
+      FirebaseFirestore.instance
+          .collection('Carts')
+          .doc(widget.cartId)
+          .delete();
+      Fluttertoast.showToast(
+        msg: 'Removed  from  cart',
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM,
+      );
     }
-    // else if (!isTapped) {
-    //   FirebaseFirestore.instance
-    //       .collection('Users')
-    //       .doc(currentUser!.email)
-    //       .collection('Carts')
-    //       .doc()
-    //       .delete();
-    //   Fluttertoast.showToast(
-    //     msg: 'Removed  from  cart',
-    //     toastLength: Toast.LENGTH_LONG,
-    //     backgroundColor: Colors.blue,
-    //     textColor: Colors.white,
-    //     gravity: ToastGravity.BOTTOM,
-    //   );
-    // }
   }
 
   @override

@@ -5,7 +5,12 @@ import 'package:muna_global/widgets/widgets_exports.dart';
 
 class Register extends StatefulWidget {
   final Function()? onTap;
-  const Register({super.key, required this.onTap});
+  final String? userId;
+  const Register({
+    super.key,
+    required this.onTap,
+    this.userId,
+  });
 
   @override
   State<Register> createState() => _RegisterState();
@@ -44,7 +49,7 @@ class _RegisterState extends State<Register> {
       // pop loading circle
       if (context.mounted) Navigator.pop(context);
       displayMessage('Password required');
-    } else if (_passwordController.text.length > 6) {
+    } else if (_passwordController.text.length < 6) {
       // pop loading circle
       if (context.mounted) Navigator.pop(context);
       displayMessage('Password too short');
@@ -73,16 +78,12 @@ class _RegisterState extends State<Register> {
 
       FirebaseFirestore.instance
           .collection('Users')
-          .doc(userCredential.user!.email)
-          .collection('User Details')
-          .doc(userCredential.user!.email)
+          .doc(userCredential.user!.uid)
           .set({
-        // Using split '@'[0] tells it to split the email where
-        //there is '@' which is index [0] and use it as a username
-        'UserName': _usernameController.text, // initial username
+        'UserName': _usernameController.text,
         'UserEmail': userCredential.user!.email,
-        'Bio': 'Empty bio...', // initially empty bio
-        "UserId": userCredential.user!.uid,
+        'Bio': 'Empty bio...',
+        "UserUid": userCredential.user!.uid,
         "PhotoUrl": userCredential.user!.photoURL,
         "TimeStamp": timestamp,
       });

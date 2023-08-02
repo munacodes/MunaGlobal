@@ -14,6 +14,7 @@ class CartListItem extends StatefulWidget {
   final double price;
   final int quantity;
   final String cartId;
+  final String userId;
   const CartListItem({
     super.key,
     required this.image,
@@ -21,6 +22,7 @@ class CartListItem extends StatefulWidget {
     required this.price,
     required this.quantity,
     required this.cartId,
+    required this.userId,
   });
 
   @override
@@ -29,15 +31,10 @@ class CartListItem extends StatefulWidget {
 
 class _CartListItemState extends State<CartListItem> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  String cartId = const Uuid().v4();
   int count = 1;
 
   sendOrderToFirebase(String onDelivery) async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(currentUser!.email)
-        .collection('Orders')
-        .add({
+    await FirebaseFirestore.instance.collection('Orders').add({
       "Name Of Product": widget.title,
       "Image": widget.image,
       "Price": widget.price,
@@ -108,8 +105,6 @@ class _CartListItemState extends State<CartListItem> {
   Widget _buildCount() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(currentUser!.email)
             .collection('Carts')
             .doc(widget.cartId)
             .snapshots(),
@@ -138,8 +133,6 @@ class _CartListItemState extends State<CartListItem> {
               if (count > 1) {
                 count--;
                 FirebaseFirestore.instance
-                    .collection('Users')
-                    .doc(currentUser!.email)
                     .collection('Carts')
                     .doc(widget.cartId)
                     .update({
@@ -164,8 +157,6 @@ class _CartListItemState extends State<CartListItem> {
             setState(() {
               count++;
               FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(currentUser!.email)
                   .collection('Carts')
                   .doc(widget.cartId)
                   .update({
@@ -194,8 +185,6 @@ class _CartListItemState extends State<CartListItem> {
           SlidableAction(
             onPressed: ((context) {
               FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(currentUser!.email)
                   .collection('Carts')
                   .doc(widget.cartId)
                   .delete();
@@ -219,8 +208,6 @@ class _CartListItemState extends State<CartListItem> {
           SlidableAction(
             onPressed: ((context) {
               FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(currentUser!.email)
                   .collection('Carts')
                   .doc(widget.cartId)
                   .delete();

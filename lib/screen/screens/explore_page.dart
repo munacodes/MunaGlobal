@@ -79,8 +79,6 @@ class _ExploreState extends State<Explore> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(currentUser.email)
                   .collection('Posts')
                   .orderBy('Timestamp', descending: true)
                   .snapshots(),
@@ -99,6 +97,7 @@ class _ExploreState extends State<Explore> {
                         description: post['Description'],
                         price: post['Price'].toDouble(),
                         postId: post.id,
+                        cartId: post.id,
                         time: formatDate(post['Timestamp']),
                         userEmail: post['UserEmail'],
                         userName: post['UserName'],
@@ -107,9 +106,36 @@ class _ExploreState extends State<Explore> {
                       );
                     },
                   );
+                } else if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text(
+                      'No Product yet',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   return Center(
-                    child: Text('Error: ${snapshot.error}'),
+                    child: Column(
+                      children: const [
+                        Text(
+                          'Something went wrong',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          'Pleast try again later',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }
                 return const Center(

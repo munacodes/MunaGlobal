@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
@@ -46,7 +47,13 @@ class _MessagesPageState extends State<MessagesPage> {
         ],
       ),
       floatingActionButton: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const SearchMessage(),
+            ),
+          );
+        },
         child: Card(
           color: Colors.blue,
           shape: RoundedRectangleBorder(
@@ -90,7 +97,20 @@ class _MessagesPageState extends State<MessagesPage> {
         ),
       ),
       body: SafeArea(
-        child: Container(),
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(currentUser!.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final messageUser = snapshot.data!;
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

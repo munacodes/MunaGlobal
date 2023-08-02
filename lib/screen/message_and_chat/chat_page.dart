@@ -9,10 +9,9 @@ import 'package:muna_global/widgets/widgets_exports.dart';
 class ChatPage extends StatefulWidget {
   final String receiverUserName;
   final String receiverUserID;
-  //final String userName;
+
   const ChatPage({
     super.key,
-    // required this.userName,
     required this.receiverUserName,
     required this.receiverUserID,
   });
@@ -119,7 +118,7 @@ class _ChatPageState extends State<ChatPage> {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => MessagesPage(),
+                builder: (context) => const MessagesPage(),
               ),
             );
           },

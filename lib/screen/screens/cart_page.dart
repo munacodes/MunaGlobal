@@ -32,11 +32,7 @@ class _CartPageState extends State<CartPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
 
   sendOrderToFirebase(String onDelivery) async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(currentUser!.email)
-        .collection('Orders')
-        .add({
+    await FirebaseFirestore.instance.collection('Orders').add({
       "Name Of Product": widget.title,
       "Image": widget.image,
       "Price": widget.price,
@@ -138,8 +134,6 @@ class _CartPageState extends State<CartPage> {
           padding: const EdgeInsets.all(8.0),
           child: StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('Users')
-                .doc(currentUser!.email)
                 .collection('Carts')
                 .orderBy('Timestamp', descending: true)
                 .snapshots(),
@@ -155,6 +149,7 @@ class _CartPageState extends State<CartPage> {
                         price: cartItem['Price'],
                         quantity: cartItem['Quantity'],
                         cartId: cartItem.id,
+                        userId: cartItem.id,
                       );
                     });
               } else if (!snapshot.hasData) {

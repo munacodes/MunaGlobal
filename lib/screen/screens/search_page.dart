@@ -50,11 +50,10 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildSearchField(),
+      // put stream builder in a or container column to call both users and posts
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('Users')
-              .doc(currentUser!.uid)
-              .collection('User Details')
               .orderBy('userName')
               .startAt([searchName]).endAt([searchName]).snapshots(),
           builder: (context, snapshot) {
