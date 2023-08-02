@@ -12,7 +12,7 @@ class CartButton extends StatelessWidget {
       child: Icon(
         isTapped ? Icons.shopping_cart_outlined : Icons.shopping_cart_outlined,
         size: 30,
-        color: isTapped ? Colors.blue : Colors.grey,
+        color: isTapped ? Colors.blue : Colors.black,
       ),
     );
   }

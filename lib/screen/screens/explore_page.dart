@@ -90,17 +90,19 @@ class _ExploreState extends State<Explore> {
                       // get the message
                       final post = snapshot.data!.docs[index];
                       return SalesProduct(
+                        location: post['Location'],
                         photoUrl: post['PhotoUrl'],
                         image: post['ImageUrl'],
                         title: post['Name of Product'],
                         likes: List<String>.from(post['Likes'] ?? []),
                         description: post['Description'],
                         price: post['Price'].toDouble(),
+                        userId: currentUser.uid,
                         postId: post.id,
                         cartId: post.id,
                         time: formatDate(post['Timestamp']),
                         userEmail: post['UserEmail'],
-                        userName: post['UserName'],
+                        //  userName: post['UserName'],
                         size: post['Size'],
                         quantity: int.parse(post['Quantity']),
                       );

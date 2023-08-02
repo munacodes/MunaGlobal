@@ -31,7 +31,6 @@ class _UploadPageState extends State<UploadPage> {
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
   String postId = const Uuid().v4();
-  String? userName;
 
   handleChooseFromGallery() async {
     final picker = ImagePicker();
@@ -78,10 +77,10 @@ class _UploadPageState extends State<UploadPage> {
         titleController.text.isNotEmpty ||
         quantityController.text.isNotEmpty) {
       // store in firebase
+
       FirebaseFirestore.instance.collection('Posts').add({
         "PhotoUrl": currentUser!.photoURL,
         "Name of Product": titleController.text,
-        "UserName": userName,
         "UserEmail": currentUser!.email,
         "Description": descriptionController.text,
         "Location": locationController.text,

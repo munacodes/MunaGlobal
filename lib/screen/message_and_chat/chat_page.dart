@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/chat/chat_service.dart';
+import 'package:muna_global/format_time/format_time.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
@@ -130,7 +131,7 @@ class _ChatPageState extends State<ChatPage> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Text(
-          widget.receiverUserName,
+          widget.receiverUserName.toString(),
           style: const TextStyle(color: Colors.blue, fontSize: 20),
         ),
       ),

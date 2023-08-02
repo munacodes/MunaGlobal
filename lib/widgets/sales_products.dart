@@ -11,7 +11,7 @@ import 'package:uuid/uuid.dart';
 
 class SalesProduct extends StatefulWidget {
   final String photoUrl;
-  final String userName;
+  final String location;
   final String description;
   final String title;
   final String image;
@@ -23,6 +23,7 @@ class SalesProduct extends StatefulWidget {
   final int quantity;
   final List<String> likes;
   final String cartId;
+  final String userId;
   const SalesProduct({
     super.key,
     required this.description,
@@ -33,11 +34,12 @@ class SalesProduct extends StatefulWidget {
     required this.price,
     required this.title,
     required this.userEmail,
-    required this.userName,
+    required this.location,
     required this.size,
     required this.quantity,
     required this.photoUrl,
     required this.cartId,
+    required this.userId,
   });
 
   @override
@@ -130,166 +132,277 @@ class _SalesProductState extends State<SalesProduct> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                // user
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  // product image
+                  Container(
+                    height: 120,
+                    width: 130,
+                    child: GestureDetector(
+                      onDoubleTap: toggled,
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(
+                              title: widget.title,
+                              description: widget.description,
+                              price: widget.price,
+                              image: widget.image,
+                              size: widget.size,
+                              quantity: widget.quantity,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 100.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: CachedNetworkImageProvider(widget.image),
+                              ),
+                            ),
+                          ),
+                          showHeart
+                              ? Animator(
+                                  duration: const Duration(milliseconds: 300),
+                                  tween: Tween(begin: 0.8, end: 1.4),
+                                  curve: Curves.elasticOut,
+                                  cycles: 0,
+                                  builder: (context, animatorState, child) =>
+                                      Transform.scale(
+                                    scale: animatorState.value,
+                                    child: const Icon(Icons.favorite,
+                                        size: 80.0, color: Colors.red),
+                                  ),
+                                )
+                              : const Text(''),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: widget.photoUrl != null
-                              ? CachedNetworkImageProvider(
-                                  widget.photoUrl.toString())
-                              : const AssetImage('assets/images/User Image.png')
-                                  as ImageProvider,
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.grey,
+                              backgroundImage: widget.photoUrl != null
+                                  ? CachedNetworkImageProvider(
+                                      widget.photoUrl.toString())
+                                  : const AssetImage(
+                                          'assets/images/User Image.png')
+                                      as ImageProvider,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                widget.userEmail.toString(),
+                                style: TextStyle(
+                                    color: Colors.grey[700], fontSize: 18),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        Text(
-                          widget.userName.toString(),
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 18),
+
+                        // name of product
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  // color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: [
+                            Icon(Icons.location_on_outlined),
+                            Text(widget.location),
+                          ],
+                        ),
+
+                        // Row(
+                        //   children: [
+                        //     const Icon(
+                        //       Icons.location_on_outlined,
+                        //       color: Colors.grey,
+                        //     ),
+                        //     Text(widget.location),
+                        //   ],
+                        // ),
+
+                        // price
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '₦ ${widget.price.toDouble()}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            // time
+                            Text(
+                              widget.time,
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    // time
-                    Text(
-                      widget.time,
-                      style: TextStyle(color: Colors.grey[500]),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
+                  ),
+                ],
+              ),
+              const Divider(
+                thickness: 3,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            const Text(
+                              '.',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            // like button
+                            LikeButton(
+                              isLiked: isLiked,
+                              onTap: toggled,
+                            ),
+                            const Text(
+                              '.',
+                              style: TextStyle(fontSize: 10),
+                            ),
 
-                // name of product
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          // color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                // product image
-                GestureDetector(
-                  onDoubleTap: toggled,
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => DetailsPage(
-                          title: widget.title,
-                          description: widget.description,
-                          price: widget.price,
-                          image: widget.image,
-                          size: widget.size,
-                          quantity: widget.quantity,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        height: 220.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: CachedNetworkImageProvider(widget.image),
-                          ),
-                        ),
-                      ),
-                      showHeart
-                          ? Animator(
-                              duration: const Duration(milliseconds: 300),
-                              tween: Tween(begin: 0.8, end: 1.4),
-                              curve: Curves.elasticOut,
-                              cycles: 0,
-                              builder: (context, animatorState, child) =>
-                                  Transform.scale(
-                                scale: animatorState.value,
-                                child: const Icon(Icons.favorite,
-                                    size: 80.0, color: Colors.red),
+                            // like count
+                            Text(
+                              widget.likes.length.toString(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
-                            )
-                          : const Text(''),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // price
-                Text(
-                  '₦ ${widget.price.toDouble()}',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                // like button + like count + cart
-                ListTile(
-                  leading: Column(
-                    children: [
-                      // like button
-                      LikeButton(
-                        isLiked: isLiked,
-                        onTap: toggled,
-                      ),
-
-                      const SizedBox(width: 10),
-
-                      // like count
-                      Text(
-                        widget.likes.length.toString(),
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  title: IconButton(
-                    alignment: Alignment.bottomLeft,
-                    onPressed: () {
-                      // Navigator.of(context).pushReplacement(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ChatPage(
-                      //       receiverUserName: widget.userEmail,
-                      //       receiverUserID: widget.userId,
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                    icon: const Icon(
-                      Icons.question_answer_outlined,
-                      size: 35,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  // shopping cart
-                  trailing: CartButton(
-                    isTapped: isTapped,
-                    onTap: addToCart,
+                  Container(
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            IconButton(
+                              alignment: Alignment.bottomLeft,
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                      receiverUserName: widget.userEmail,
+                                      receiverUserID: widget.userId,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.question_answer_outlined,
+                                size: 35,
+                              ),
+                            ),
+                            const Text(
+                              'Chat',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  Container(
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            const Text(
+                              '.',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            CartButton(
+                              isTapped: isTapped,
+                              onTap: addToCart,
+                            ),
+                            const Text(
+                              '.',
+                              style: TextStyle(fontSize: 5),
+                            ),
+                            const Text(
+                              'Add to cart',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.phone_outlined),
+                            ),
+                            const Text(
+                              'Call',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

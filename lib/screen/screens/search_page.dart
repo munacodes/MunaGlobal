@@ -54,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('Users')
-              .orderBy('userName')
+              .orderBy('UserName')
               .startAt([searchName]).endAt([searchName]).snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -83,10 +83,10 @@ class _SearchPageState extends State<SearchPage> {
                     radius: 24,
                     backgroundColor: Colors.grey,
                     backgroundImage:
-                        CachedNetworkImageProvider(data['photoUrl']),
+                        CachedNetworkImageProvider(data['PhotoUrl']),
                   ),
-                  title: Text(data['userName']),
-                  subtitle: Text(data['userEmail']),
+                  title: Text(data['UserName']),
+                  subtitle: Text(data['UserEmail']),
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
