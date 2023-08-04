@@ -29,44 +29,22 @@ class _ExploreState extends State<Explore> {
         ),
         actions: [
           Container(
-            width: 150,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.black,
-                  ),
+            width: 80,
+            child: Center(
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const SearchPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.search_outlined,
+                  color: Colors.black,
+                  size: 30,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const MessagesPage(),
-                      ),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.question_answer_outlined,
-                    color: Colors.black,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationFeed(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.notifications_outlined,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],
@@ -102,7 +80,6 @@ class _ExploreState extends State<Explore> {
                         cartId: post.id,
                         time: formatDate(post['Timestamp']),
                         userEmail: post['UserEmail'],
-                        //  userName: post['UserName'],
                         size: post['Size'],
                         quantity: int.parse(post['Quantity']),
                       );

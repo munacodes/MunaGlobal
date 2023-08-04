@@ -19,10 +19,10 @@ class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
 
   final pages = const [
+    MyHomeScreen(),
     Explore(),
-    CategoryPage(),
     UploadPage(),
-    SearchPage(),
+    CategoryPage(),
     ProfilePage(),
   ];
 
@@ -43,12 +43,12 @@ class _HomePageState extends State<HomePage> {
               },
               icon: pageIndex == 0
                   ? const Icon(
-                      Icons.explore,
+                      Icons.home,
                       color: Colors.blue,
                       size: 30,
                     )
                   : const Icon(
-                      Icons.explore_outlined,
+                      Icons.home_outlined,
                       color: Colors.black,
                       size: 30,
                     ),
@@ -61,12 +61,12 @@ class _HomePageState extends State<HomePage> {
               },
               icon: pageIndex == 1
                   ? const Icon(
-                      Icons.category,
+                      Icons.explore,
                       color: Colors.blue,
                       size: 30,
                     )
                   : const Icon(
-                      Icons.category_outlined,
+                      Icons.explore_outlined,
                       color: Colors.black,
                       size: 30,
                     ),
@@ -97,12 +97,12 @@ class _HomePageState extends State<HomePage> {
               },
               icon: pageIndex == 3
                   ? const Icon(
-                      Icons.search,
+                      Icons.category,
                       color: Colors.blue,
                       size: 30,
                     )
                   : const Icon(
-                      Icons.search_outlined,
+                      Icons.category_outlined,
                       color: Colors.black,
                       size: 30,
                     ),

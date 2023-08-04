@@ -164,6 +164,21 @@ class _UploadPageState extends State<UploadPage> {
     );
   }
 
+  clearAllFormField() {
+    if (descriptionController.text.isNotEmpty ||
+        titleController.text.isNotEmpty ||
+        priceController.text.isNotEmpty ||
+        locationController.text.isNotEmpty ||
+        _imageFile != null) {}
+    descriptionController.clear();
+    locationController.clear();
+    priceController.clear();
+    titleController.clear();
+    sizeController.clear();
+    quantityController.clear();
+    _imageFile == null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,6 +189,18 @@ class _UploadPageState extends State<UploadPage> {
           'Create Product',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
+        actions: [
+          TextButton(
+            onPressed: () => clearAllFormField(),
+            child: const Text(
+              'Clear',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -340,7 +367,7 @@ class _UploadPageState extends State<UploadPage> {
                 const Divider(),
                 MyButton(
                   onTap: handleSubmit,
-                  text: 'Upload',
+                  text: 'Sell',
                 ),
               ],
             ),

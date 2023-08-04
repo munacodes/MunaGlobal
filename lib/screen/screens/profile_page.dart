@@ -30,16 +30,20 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text(
           postCount.toString(),
-          style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         Container(
           margin: const EdgeInsets.only(top: 4.0),
           child: Text(
             label,
             style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 15.0,
-              fontWeight: FontWeight.w400,
+              color: Colors.black,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -48,28 +52,58 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget buildButton() {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 40,
-        width: 150,
-        child: Card(
-          elevation: 8.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          color: Colors.blue,
-          child: const Center(
-            child: Text(
-              'Message',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {},
+          child: Container(
+            height: 50,
+            width: 150,
+            child: Card(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Colors.blue,
+              child: const Center(
+                child: Text(
+                  'Message',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+        GestureDetector(
+          onTap: () {},
+          child: Container(
+            height: 50,
+            width: 150,
+            child: Card(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Colors.blue,
+              child: const Center(
+                child: Text(
+                  'Follow',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -306,7 +340,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           Container(
-            height: 180,
+            height: 250,
             width: double.infinity,
             child: Column(
               children: [
@@ -322,13 +356,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(width: 20),
                   ],
                 ),
+                const SizedBox(height: 10),
+                buildButton(),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      buildCountColumn("Post", postCount),
+                      buildCountColumn("Shop items", postCount),
                       buildCountColumn("Followers", followerCount),
                       buildCountColumn("Following", followingCount),
                     ],

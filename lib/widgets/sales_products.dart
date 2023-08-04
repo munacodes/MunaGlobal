@@ -138,8 +138,8 @@ class _SalesProductState extends State<SalesProduct> {
                 children: [
                   // product image
                   Container(
-                    height: 120,
-                    width: 130,
+                    height: 130,
+                    width: 140,
                     child: GestureDetector(
                       onDoubleTap: toggled,
                       onTap: () {
@@ -160,7 +160,7 @@ class _SalesProductState extends State<SalesProduct> {
                         alignment: Alignment.center,
                         children: [
                           Container(
-                            height: 100.0,
+                            height: double.infinity,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               image: DecorationImage(
@@ -214,6 +214,7 @@ class _SalesProductState extends State<SalesProduct> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 5),
 
                         // name of product
                         Row(
@@ -230,23 +231,20 @@ class _SalesProductState extends State<SalesProduct> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 5),
 
                         Row(
                           children: [
-                            Icon(Icons.location_on_outlined),
-                            Text(widget.location),
+                            const Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.grey,
+                            ),
+                            Expanded(
+                              child: Text(widget.location),
+                            ),
                           ],
                         ),
-
-                        // Row(
-                        //   children: [
-                        //     const Icon(
-                        //       Icons.location_on_outlined,
-                        //       color: Colors.grey,
-                        //     ),
-                        //     Text(widget.location),
-                        //   ],
-                        // ),
+                        const SizedBox(height: 5),
 
                         // price
                         Row(
@@ -353,20 +351,12 @@ class _SalesProductState extends State<SalesProduct> {
                       children: [
                         Column(
                           children: [
-                            const Text(
-                              '.',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            CartButton(
-                              isTapped: isTapped,
-                              onTap: addToCart,
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.phone_outlined),
                             ),
                             const Text(
-                              '.',
-                              style: TextStyle(fontSize: 5),
-                            ),
-                            const Text(
-                              'Add to cart',
+                              'Call',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -383,12 +373,20 @@ class _SalesProductState extends State<SalesProduct> {
                       children: [
                         Column(
                           children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.phone_outlined),
+                            const Text(
+                              '.',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            CartButton(
+                              isTapped: isTapped,
+                              onTap: addToCart,
                             ),
                             const Text(
-                              'Call',
+                              '.',
+                              style: TextStyle(fontSize: 5),
+                            ),
+                            const Text(
+                              'Add to cart',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,

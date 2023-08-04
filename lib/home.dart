@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
         builder: (context, snapshot) {
           // user logged in
           if (snapshot.hasData) {
-            return const HomePage();
+            return const SplashScreen();
           }
           // user is NOT logged in
           else {
