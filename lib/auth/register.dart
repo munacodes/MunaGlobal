@@ -1,16 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:muna_global/auth/auth_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class Register extends StatefulWidget {
-  final Function()? onTap;
-  final String? userId;
-  const Register({
-    super.key,
-    required this.onTap,
-    this.userId,
-  });
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -187,7 +182,13 @@ class _RegisterState extends State<Register> {
                       ),
                       const SizedBox(width: 10),
                       GestureDetector(
-                        onTap: widget.onTap,
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const Login(),
+                            ),
+                          );
+                        },
                         child: const Text(
                           'Login Now',
                           style: TextStyle(

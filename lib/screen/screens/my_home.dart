@@ -1,7 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:muna_global/format_time/format_time.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
+import 'package:muna_global/screen/screens/details_page.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class MyHomeScreen extends StatefulWidget {
@@ -12,6 +17,8 @@ class MyHomeScreen extends StatefulWidget {
 }
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
   _buildTrendingImageSlider() {
     return Container(
       decoration: BoxDecoration(
@@ -31,6 +38,259 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
           AssetImage('assets/images/Man Watch 2.jpg'),
           AssetImage('assets/images/Shoe 1.jpg'),
           AssetImage('assets/images/Suits.jpg'),
+        ],
+      ),
+    );
+  }
+
+  hotDealsItems({required String image}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: AssetImage(image),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHotDealsImageSlider() {
+    return Container(
+      height: 120,
+      width: 250,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: 120,
+          aspectRatio: 6.5,
+          autoPlay: true,
+          pauseAutoPlayOnTouch: true,
+          scrollDirection: Axis.horizontal,
+        ),
+        items: [
+          hotDealsItems(image: 'assets/images/Shoe 4.jpg'),
+          hotDealsItems(image: 'assets/images/image 18.png'),
+          hotDealsItems(image: 'assets/images/Suits.jpg'),
+          hotDealsItems(image: 'assets/images/Hood.png'),
+          hotDealsItems(image: 'assets/images/image 20.png'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNewArrivalsImageSlider() {
+    return Container(
+      height: 380,
+      width: double.infinity,
+      child: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('Posts')
+                  .orderBy('Timestamp', descending: true)
+                  .limit(4)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      // get the message
+                      final post = snapshot.data!.docs[index];
+                      return GestureDetector(
+                        onTap: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        post['ImageUrl']),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      post['Name of Product'],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      post['Description'],
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 3),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '₦ ${post['Price'].toDouble()}',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+
+                      //  SalesProduct(
+                      //   location: post['Location'],
+                      //   photoUrl: post['PhotoUrl'],
+                      //   image: post['ImageUrl'],
+                      //   title: post['Name of Product'],
+                      //   likes: List<String>.from(post['Likes'] ?? []),
+                      //   description: post['Description'],
+                      //   price: post['Price'].toDouble(),
+                      //   userId: currentUser.uid,
+                      //   postId: post.id,
+                      //   cartId: post.id,
+                      //   time: formatDate(post['Timestamp']),
+                      //   userEmail: post['UserEmail'],
+                      //   size: post['Size'],
+                      //   quantity: int.parse(post['Quantity']),
+                      // );
+                    },
+                  );
+                } else if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text(
+                      'No Product yet',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      children: const [
+                        Text(
+                          'Something went wrong',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          'Pleast try again later',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategorySection({required String text, required IconData icon}) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          color: Colors.black,
+          size: 40,
+        ),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  otherDealsItems({required String image}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: AssetImage(image),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOtherDealsImageSlider() {
+    return Container(
+      height: 120,
+      width: 120,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: CarouselSlider(
+        options: CarouselOptions(
+          aspectRatio: 6.5,
+          autoPlay: true,
+          pauseAutoPlayOnTouch: true,
+          scrollDirection: Axis.vertical,
+        ),
+        items: [
+          otherDealsItems(
+            image: 'assets/images/image 3.png',
+          ),
+          otherDealsItems(
+            image: 'assets/images/image 10.png',
+          ),
+          otherDealsItems(
+            image: 'assets/images/image 15.png',
+          ),
+          otherDealsItems(
+            image: 'assets/images/image 18.png',
+          ),
+          otherDealsItems(
+            image: 'assets/images/image 20.png',
+          ),
         ],
       ),
     );
@@ -101,148 +361,8 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        height: 120,
-                        width: 250,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            height: 120,
-                            aspectRatio: 6.5,
-                            autoPlay: true,
-                            pauseAutoPlayOnTouch: true,
-                            scrollDirection: Axis.horizontal,
-                          ),
-                          items: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage('assets/images/Shoe 4.jpg'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 18.png'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage('assets/images/Suits.jpg'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage('assets/images/Hood.png'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 20.png'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 120,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            aspectRatio: 6.5,
-                            autoPlay: true,
-                            pauseAutoPlayOnTouch: true,
-                            scrollDirection: Axis.vertical,
-                          ),
-                          items: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 3.png'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 10.png'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 15.png'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 18.png'),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/images/image 20.png'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // child: const Center(
-                        //   child: Text(
-                        //     '-20% OFF',
-                        //     style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        // ),
-                      ),
+                      _buildHotDealsImageSlider(),
+                      _buildOtherDealsImageSlider(),
                     ],
                   ),
                   Card(
@@ -277,86 +397,25 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  children: const [
-                                    Icon(
-                                      Icons.card_giftcard_outlined,
-                                      color: Colors.black,
-                                      size: 40,
-                                    ),
-                                    Text(
-                                      'Fashion',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                _buildCategorySection(
+                                  text: 'Fashion',
+                                  icon: Icons.class_outlined,
                                 ),
-                                Column(
-                                  children: const [
-                                    Icon(
-                                      Icons.computer_outlined,
-                                      color: Colors.black,
-                                      size: 40,
-                                    ),
-                                    Text(
-                                      'Computer',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                _buildCategorySection(
+                                  text: 'Computer',
+                                  icon: Icons.computer_outlined,
                                 ),
-                                Column(
-                                  children: const [
-                                    Icon(
-                                      Icons.phone_android_outlined,
-                                      color: Colors.black,
-                                      size: 40,
-                                    ),
-                                    Text(
-                                      'Phones',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                _buildCategorySection(
+                                  text: 'Phones',
+                                  icon: Icons.phone_android_outlined,
                                 ),
-                                Column(
-                                  children: const [
-                                    Icon(
-                                      Icons.chair_outlined,
-                                      color: Colors.black,
-                                      size: 40,
-                                    ),
-                                    Text(
-                                      'Funitures',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                _buildCategorySection(
+                                  text: 'Funitures',
+                                  icon: Icons.chair_outlined,
                                 ),
-                                Column(
-                                  children: const [
-                                    Icon(
-                                      Icons.directions_car_outlined,
-                                      // color: Colors.grey,
-                                      size: 40,
-                                    ),
-                                    Text(
-                                      'Motors',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                _buildCategorySection(
+                                  text: 'Motors',
+                                  icon: Icons.directions_car_outlined,
                                 ),
                               ],
                             ),
@@ -365,7 +424,6 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 10),
                   const Text(
                     'Trending',
@@ -376,20 +434,12 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   _buildTrendingImageSlider(),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     color: Colors.pink,
-                  //   ),
-                  //   height: 150,
-                  //   width: double.infinity,
-                  // ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
                       Text(
-                        'New Products',
+                        'New Arrivals',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -405,11 +455,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    color: Colors.yellow,
-                  ),
+                  _buildNewArrivalsImageSlider(),
                 ],
               ),
             ),

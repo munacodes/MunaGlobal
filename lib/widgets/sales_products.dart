@@ -143,7 +143,7 @@ class _SalesProductState extends State<SalesProduct> {
                     child: GestureDetector(
                       onDoubleTap: toggled,
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => DetailsPage(
                               title: widget.title,

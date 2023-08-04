@@ -203,6 +203,7 @@ class _CartPageState extends State<CartPage> {
                   ),
                   Text(
                     '₦ ${widget.price.toDouble()}',
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 30),
                   ),
                 ],

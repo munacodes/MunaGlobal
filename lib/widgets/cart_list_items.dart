@@ -256,6 +256,7 @@ class _CartListItemState extends State<CartListItem> {
                         children: [
                           Text(
                             widget.title,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 15,
                               color: Colors.black,
@@ -264,6 +265,7 @@ class _CartListItemState extends State<CartListItem> {
                           const SizedBox(height: 10),
                           Text(
                             '₦ ${widget.price.toDouble()}',
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,

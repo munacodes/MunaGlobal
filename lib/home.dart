@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
           }
           // user is NOT logged in
           else {
-            return const LoginOrRegister();
+            return const WelcomePage();
           }
         },
       ),

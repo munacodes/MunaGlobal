@@ -184,7 +184,7 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).pop(
               MaterialPageRoute(
                 builder: (context) => const ProfilePage(),
               ),
@@ -270,6 +270,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                           subtitle: Text(
                             userData['UserName'],
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,
@@ -292,6 +293,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                           subtitle: Text(
                             userData['Bio'],
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,
@@ -313,6 +315,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                           subtitle: Text(
                             userData['UserEmail'],
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,

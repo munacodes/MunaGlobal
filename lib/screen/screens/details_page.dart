@@ -82,9 +82,9 @@ class _DetailsPageState extends State<DetailsPage> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).pop(
               MaterialPageRoute(
-                builder: (context) => const HomePage(),
+                builder: (context) => const Explore(),
               ),
             );
           },
@@ -163,6 +163,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         children: [
                           Text(
                             widget.title,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 30.0,
                               fontWeight: FontWeight.bold,
@@ -183,6 +184,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       Expanded(
                         child: Text(
                           widget.description,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -198,6 +200,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             children: [
                               const Text(
                                 'Size: ',
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 20),
                               ),
                               Text(
@@ -220,6 +223,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         '₦ ${widget.price.toDouble()}',
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,

@@ -120,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
           final userData = snapshot.data!.data() as Map<String, dynamic>;
           return GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const EditProfile(),
                 ),
@@ -157,21 +157,31 @@ class _ProfilePageState extends State<ProfilePage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                userData['UserName'],
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    userData['UserName'],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 10),
-                              Text(
-                                userData['Bio'],
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    userData['Bio'],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

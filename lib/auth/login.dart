@@ -4,8 +4,7 @@ import 'package:muna_global/auth/auth_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class Login extends StatefulWidget {
-  final Function()? onTap;
-  const Login({super.key, required this.onTap});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -115,7 +114,13 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(width: 10),
                       GestureDetector(
-                        onTap: widget.onTap,
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const Register(),
+                            ),
+                          );
+                        },
                         child: const Text(
                           'Register Now',
                           style: TextStyle(

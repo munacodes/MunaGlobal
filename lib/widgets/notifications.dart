@@ -46,9 +46,8 @@ class _NotificationFeedState extends State<NotificationFeed> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Users')
-              .doc(currentUser!.email)
-              .collection('Posts')
-              .orderBy('Likes', descending: true)
+              //.collection('Posts')
+              //   .orderBy('Likes', descending: true)
               .limit(10)
               .snapshots(),
           builder: (context, snapshot) {
@@ -58,7 +57,7 @@ class _NotificationFeedState extends State<NotificationFeed> {
                 itemBuilder: (context, index) {
                   final notification = snapshot.data!.docs[index];
                   return NotificationFeedItem(
-                    mediaUrl: notification['mediaUrl'],
+                    mediaUrl: notification['PhotoUrl'],
                     userName: notification['UserName'],
                     time: formatTime(notification['Timestamp']),
                   );
@@ -110,6 +109,7 @@ class NotificationFeedItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     '$userName liked your product.',
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
