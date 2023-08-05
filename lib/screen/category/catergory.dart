@@ -1,61 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:muna_global/screen/category/category_exports.dart';
-import 'package:muna_global/screen/screens/screens_exports.dart';
-import 'package:muna_global/widgets/widgets_exports.dart';
+import 'package:muna_global/models/models_exports.dart';
 
-class CategoryPage extends StatefulWidget {
+class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
-
-  @override
-  State<CategoryPage> createState() => _CategoryPageState();
-}
-
-class _CategoryPageState extends State<CategoryPage> {
-  showDialogBox() {
-    return showDialog(
-      context: context,
-      builder: (context) => GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const CategoryList(),
-            ),
-          );
-        },
-        child: Dialog(
-          child: CategoryListItems().merchant(),
-        ),
-      ),
-    );
-  }
-
-  categoryLists({required String image, required String name}) {
-    return GestureDetector(
-      onTap: showDialogBox,
-      child: Container(
-        child: Column(
-          children: [
-            Card(
-              color: Colors.grey[400],
-              elevation: 7.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Image(
-                height: 150,
-                width: 150,
-                alignment: Alignment.center,
-                image: AssetImage(image),
-              ),
-            ),
-            Text(
-              name,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,76 +16,256 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      categoryLists(
-                          image: 'assets/images/Hood.png', name: 'Merchant'),
-                      categoryLists(
-                          image: 'assets/images/Hood.png', name: 'Automotive'),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      categoryLists(
-                        image: 'assets/images/Hood.png',
-                        name: 'Computer & Electronics',
-                      ),
-                      categoryLists(
-                          image: 'assets/images/Hood.png',
-                          name: 'Food & Dining'),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      categoryLists(
-                          image: 'assets/images/Hood.png',
-                          name: 'Construction & Contractors'),
-                      categoryLists(
-                          image: 'assets/images/Hood.png', name: 'Real Estate'),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      categoryLists(
-                        image: 'assets/images/Hood.png',
-                        name: 'Personal Care & Services',
-                      ),
-                      categoryLists(
-                          image: 'assets/images/Hood.png',
-                          name: 'Home & Garden'),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      categoryLists(
-                          image: 'assets/images/Hood.png',
-                          name: 'Travel & Transport'),
-                      categoryLists(
-                          image: 'assets/images/Hood.png', name: 'Cloth'),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
+            Expanded(
+              child: ListView.builder(
+                itemCount: demoCategories.length,
+                itemBuilder: (context, index) => ExpansionCategoryTile(
+                  title: demoCategories[index].title,
+                  subCategories: demoCategories[index].subCategories,
+                ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+final demoCategories = [
+  CategoryModel(
+    title: 'Health & Beauty',
+    subCategories: [
+      CategoryModel(
+        title: 'Skin Care',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'Hair & Scalp ',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'Nail & Cuticle',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'Oral Hygiene',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Grocery',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Computers',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Electronics',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Phones & tablets',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Fashion',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Automobile',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Sporting Goods',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+  CategoryModel(
+    title: 'Home & Garden',
+    subCategories: [
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+      CategoryModel(
+        title: 'all clothing',
+        onTap: () {},
+      ),
+    ],
+  ),
+];
+
+class ExpansionCategoryTile extends StatelessWidget {
+  final String title;
+  final List<CategoryModel>? subCategories;
+  const ExpansionCategoryTile(
+      {super.key, required this.title, required this.subCategories});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5.0,
+        child: ExpansionTile(
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          children: List.generate(
+            subCategories!.length,
+            (index) => Column(
+              children: [
+                ListTile(
+                  title: Text(
+                    subCategories![index].title,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                const Divider(height: 3),
+              ],
+            ),
+          ),
         ),
       ),
     );

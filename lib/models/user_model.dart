@@ -34,7 +34,6 @@ class UserModel {
   final String userName;
   final String userEmail;
   final String photoUrl;
-  final String displayName;
   final String bio;
 
   const UserModel({
@@ -42,7 +41,6 @@ class UserModel {
     required this.userName,
     required this.userEmail,
     required this.photoUrl,
-    required this.displayName,
     required this.bio,
   });
 
@@ -52,7 +50,6 @@ class UserModel {
       userEmail: doc['UserEmail'],
       userName: doc['UserName'],
       photoUrl: doc['PhotoUrl'],
-      displayName: doc['DisplayName'],
       bio: doc['Bio'],
     );
   }
