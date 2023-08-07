@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
@@ -14,6 +15,8 @@ class DetailsPage extends StatefulWidget {
   final double price;
   final String size;
   final int quantity;
+  final double rating;
+  final String postId;
   const DetailsPage({
     super.key,
     required this.title,
@@ -22,6 +25,8 @@ class DetailsPage extends StatefulWidget {
     required this.image,
     required this.size,
     required this.quantity,
+    required this.rating,
+    required this.postId,
   });
 
   @override
@@ -31,16 +36,25 @@ class DetailsPage extends StatefulWidget {
 class _DetailsPageState extends State<DetailsPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
 
-  bool isTapped = false;
+  bool _isTapped = false;
   String cartId = const Uuid().v4();
-  bool hasSize = false;
+  final bool _hasSize = false;
+  bool _isRated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _hasSize;
+    _isTapped;
+    _isRated;
+  }
 
   void addToCart() {
     setState(() {
-      isTapped = !isTapped;
+      _isTapped = !_isTapped;
     });
 
-    if (isTapped) {
+    if (_isTapped) {
       FirebaseFirestore.instance.collection('Carts').add({
         "Name of Product": widget.title,
         "ImageUrl": widget.image,
@@ -61,6 +75,8 @@ class _DetailsPageState extends State<DetailsPage> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => CartPage(
+            postId: widget.postId,
+            rating: widget.rating,
             title: widget.title,
             description: widget.description,
             image: widget.image,
@@ -70,6 +86,28 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
         ),
       );
+    }
+  }
+
+  rateUpdate() {
+    setState(() {
+      _isRated = !_isRated;
+    });
+
+    // Access the document is Firebase
+    DocumentReference postRef =
+        FirebaseFirestore.instance.collection('Posts').doc(widget.postId);
+
+    if (_isRated) {
+      // if the post is now liked, add the user's email to the 'Likes' field
+      postRef.update({
+        'Rating': _isRated,
+      });
+    } else {
+      // if the post is now unliked, remove the user's email from the 'likes' field
+      postRef.update({
+        'Rating': _isRated,
+      });
     }
   }
 
@@ -94,7 +132,7 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
         ),
         title: const Text(
-          'Detail',
+          'Details',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
         actions: [
@@ -103,6 +141,8 @@ class _DetailsPageState extends State<DetailsPage> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => CartPage(
+                    postId: widget.postId,
+                    rating: widget.rating,
                     title: widget.title,
                     price: widget.price,
                     image: widget.image,
@@ -148,7 +188,7 @@ class _DetailsPageState extends State<DetailsPage> {
         elevation: 10,
         margin: const EdgeInsets.symmetric(horizontal: 0),
         child: Container(
-          height: 350,
+          height: 300,
           width: double.infinity,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -165,7 +205,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             widget.title,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 30.0,
+                              fontSize: 35.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -176,7 +216,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
                 const SizedBox(height: 10),
                 Container(
-                  height: 100,
+                  height: 50,
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,13 +225,34 @@ class _DetailsPageState extends State<DetailsPage> {
                         child: Text(
                           widget.description,
                           overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
-                hasSize != null
+                RatingBar.builder(
+                  maxRating: 5,
+                  minRating: 0,
+                  initialRating: 4,
+                  allowHalfRating: true,
+                  itemSize: 40,
+                  updateOnDrag: true,
+                  itemPadding: const EdgeInsets.all(5.0),
+                  itemCount: 5,
+                  itemBuilder: (context, index) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (value) {
+                    rateUpdate();
+                  },
+                ),
+                const SizedBox(height: 10),
+                _hasSize != null
                     ? Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Container(
@@ -215,7 +276,6 @@ class _DetailsPageState extends State<DetailsPage> {
                         ),
                       )
                     : Container(),
-                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

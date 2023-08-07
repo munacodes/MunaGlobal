@@ -33,7 +33,7 @@ class _ExploreState extends State<Explore> {
             child: Center(
               child: IconButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const SearchPage(),
                     ),
@@ -68,6 +68,7 @@ class _ExploreState extends State<Explore> {
                       // get the message
                       final post = snapshot.data!.docs[index];
                       return SalesProduct(
+                        rating: post['Rating'].toDouble(),
                         location: post['Location'],
                         photoUrl: post['PhotoUrl'],
                         image: post['ImageUrl'],

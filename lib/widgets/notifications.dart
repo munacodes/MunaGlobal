@@ -26,7 +26,7 @@ class _NotificationFeedState extends State<NotificationFeed> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).pop(
               MaterialPageRoute(
                 builder: (context) => const HomePage(),
               ),

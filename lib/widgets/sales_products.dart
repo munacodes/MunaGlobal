@@ -24,6 +24,7 @@ class SalesProduct extends StatefulWidget {
   final List<String> likes;
   final String cartId;
   final String userId;
+  final double rating;
   const SalesProduct({
     super.key,
     required this.description,
@@ -40,6 +41,7 @@ class SalesProduct extends StatefulWidget {
     required this.photoUrl,
     required this.cartId,
     required this.userId,
+    required this.rating,
   });
 
   @override
@@ -146,6 +148,8 @@ class _SalesProductState extends State<SalesProduct> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => DetailsPage(
+                              postId: widget.postId,
+                              rating: widget.rating,
                               title: widget.title,
                               description: widget.description,
                               price: widget.price,

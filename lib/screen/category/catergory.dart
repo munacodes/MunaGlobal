@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:muna_global/models/models_exports.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 
 class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
@@ -10,6 +11,19 @@ class CategoryPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
+        // leading: IconButton(
+        //   onPressed: () {
+        //     Navigator.of(context).pop(
+        //       MaterialPageRoute(
+        //         builder: (context) => const MyHomeScreen(),
+        //       ),
+        //     );
+        //   },
+        //   icon: Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.black,
+        //   ),
+        // ),
         title: const Text(
           'Category',
           style: TextStyle(color: Colors.blue, fontSize: 30),

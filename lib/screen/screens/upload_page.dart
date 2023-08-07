@@ -90,6 +90,7 @@ class _UploadPageState extends State<UploadPage> {
         "ImageUrl": imageUrl,
         "Timestamp": Timestamp.now(),
         "Likes": [],
+        "Rating": double.parse('0.0'),
       });
     }
 
@@ -210,7 +211,6 @@ class _UploadPageState extends State<UploadPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 isUploading ? linearProgress() : const Text(''),
-                const Divider(),
                 _imageFile != null
                     ? Container(
                         height: 220.0,
@@ -220,9 +220,11 @@ class _UploadPageState extends State<UploadPage> {
                             aspectRatio: 16 / 9,
                             child: Container(
                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: FileImage(_imageFile!)),
+                                  fit: BoxFit.fill,
+                                  image: FileImage(_imageFile!),
+                                ),
                               ),
                             ),
                           ),

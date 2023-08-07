@@ -18,7 +18,7 @@ class _MessagesPageState extends State<MessagesPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).pop(
               MaterialPageRoute(
                 builder: (context) => const HomePage(),
               ),

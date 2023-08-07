@@ -13,7 +13,8 @@ class CartPage extends StatefulWidget {
   final double price;
   final String size;
   final int quantity;
-
+  final double rating;
+  final String postId;
   const CartPage({
     super.key,
     required this.title,
@@ -22,6 +23,8 @@ class CartPage extends StatefulWidget {
     required this.price,
     required this.size,
     required this.quantity,
+    required this.rating,
+    required this.postId,
   });
 
   @override
@@ -112,6 +115,8 @@ class _CartPageState extends State<CartPage> {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => DetailsPage(
+                  postId: widget.postId,
+                  rating: widget.rating,
                   title: widget.title,
                   description: widget.description,
                   price: widget.price,

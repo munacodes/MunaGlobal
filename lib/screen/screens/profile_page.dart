@@ -23,6 +23,20 @@ class _ProfilePageState extends State<ProfilePage> {
   int followerCount = 0;
   int followingCount = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    getProfilePosts();
+  }
+
+  getProfilePosts() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('Posts').get();
+    setState(() {
+      postCount = snapshot.docs.length;
+    });
+  }
+
   Column buildCountColumn(String label, int count) {
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/format_time/format_time.dart';
+import 'package:muna_global/screen/category/catergory.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/screen/screens/details_page.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
@@ -321,7 +322,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const MessagesPage(),
                       ),
@@ -334,7 +335,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const NotificationFeed(),
                       ),
@@ -368,7 +369,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                   Card(
                     elevation: 3,
                     child: Container(
-                      height: 120,
+                      height: 140,
                       width: double.infinity,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -376,19 +377,29 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   'Category',
                                   style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text(
-                                  'View All',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CategoryPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'View All',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
