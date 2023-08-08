@@ -20,7 +20,7 @@ class _MessagesPageState extends State<MessagesPage> {
           onPressed: () {
             Navigator.of(context).pop(
               MaterialPageRoute(
-                builder: (context) => const HomePage(),
+                builder: (context) => const MyHomeScreen(),
               ),
             );
           },
@@ -50,7 +50,7 @@ class _MessagesPageState extends State<MessagesPage> {
         onTap: () {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const SearchMessage(),
+              builder: (context) => const SearchMessages(),
             ),
           );
         },

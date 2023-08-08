@@ -25,10 +25,23 @@ class _SearchPageState extends State<SearchPage> {
   AppBar buildSearchField() {
     return AppBar(
       backgroundColor: Colors.white,
-      title: TextFormField(
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop(
+            MaterialPageRoute(
+              builder: (context) => const ProfilePage(),
+            ),
+          );
+        },
+        icon: const Icon(
+          Icons.arrow_back,
+          color: Colors.black,
+        ),
+      ),
+      title: TextField(
         controller: searchController,
         decoration: InputDecoration(
-          hintText: "Search",
+          hintText: "Search...",
           filled: true,
           prefixIcon: const Icon(Icons.search, size: 28.0),
           suffixIcon: IconButton(
@@ -41,7 +54,6 @@ class _SearchPageState extends State<SearchPage> {
             searchName = value;
           });
         },
-        //  onFieldSubmitted: handleSearch,
       ),
     );
   }
@@ -50,53 +62,87 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildSearchField(),
-      // put stream builder in a or container column to call both users and posts
+      // put stream builder in a  container or column to call both users and their recent posts
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('Users')
-              .orderBy('UserName')
-              .startAt([searchName]).endAt([searchName]).snapshots(),
+          stream: FirebaseFirestore.instance.collection('Users').snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Column(
-                children: const [
-                  Text(
-                    'Something went wrong.',
-                  ),
-                  Text(
-                    'Check your internet Connection.',
-                  ),
-                ],
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final data = snapshot.data!.docs[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.grey,
-                    backgroundImage:
-                        CachedNetworkImageProvider(data['PhotoUrl']),
-                  ),
-                  title: Text(data['UserName']),
-                  subtitle: Text(data['UserEmail']),
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
+            return (snapshot.connectionState == ConnectionState.waiting)
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data!.docs[index];
+                      if (searchName.isEmpty) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: data['PhotoUrl'] != null
+                                ? CachedNetworkImageProvider(data['PhotoUrl'])
+                                : const AssetImage(
+                                        'assets/images/User Image.png')
+                                    as ImageProvider,
+                          ),
+                          title: Text(
+                            data['UserName'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            data['UserEmail'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {},
+                        );
+                      }
+                      if (data['UserName']
+                          .toString()
+                          .toLowerCase()
+                          .startsWith(searchName.toLowerCase())) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage:
+                                CachedNetworkImageProvider(data['PhotoUrl']),
+                          ),
+                          title: Text(
+                            data['UserName'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            data['UserEmail'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {},
+                        );
+                      }
+                      return Container();
+                    },
+                  );
           }),
     );
   }

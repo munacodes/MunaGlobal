@@ -79,6 +79,7 @@ class _UploadPageState extends State<UploadPage> {
       // store in firebase
 
       FirebaseFirestore.instance.collection('Posts').add({
+        "PostId": postId,
         "PhotoUrl": currentUser!.photoURL,
         "Name of Product": titleController.text,
         "UserEmail": currentUser!.email,

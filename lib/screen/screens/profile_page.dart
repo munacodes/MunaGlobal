@@ -357,8 +357,27 @@ class _ProfilePageState extends State<ProfilePage> {
           'Profile',
           style: TextStyle(color: Colors.blue, fontSize: 30),
         ),
-        actions: const [
-          PopUpMenu(),
+        actions: [
+          Container(
+            width: 80,
+            child: Center(
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SearchPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.search_outlined,
+                  color: Colors.black,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+          const PopUpMenu(),
         ],
       ),
       body: ListView(

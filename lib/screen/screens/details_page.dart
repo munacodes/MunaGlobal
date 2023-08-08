@@ -39,7 +39,8 @@ class _DetailsPageState extends State<DetailsPage> {
   bool _isTapped = false;
   String cartId = const Uuid().v4();
   final bool _hasSize = false;
-  bool _isRated = false;
+  bool _isRating = false;
+  double _isRated = 0;
 
   @override
   void initState() {
@@ -91,14 +92,14 @@ class _DetailsPageState extends State<DetailsPage> {
 
   rateUpdate() {
     setState(() {
-      _isRated = !_isRated;
+      _isRating = !_isRating;
     });
 
     // Access the document is Firebase
     DocumentReference postRef =
         FirebaseFirestore.instance.collection('Posts').doc(widget.postId);
 
-    if (_isRated) {
+    if (_isRating) {
       // if the post is now liked, add the user's email to the 'Likes' field
       postRef.update({
         'Rating': _isRated,
@@ -237,7 +238,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 RatingBar.builder(
                   maxRating: 5,
                   minRating: 0,
-                  initialRating: 4,
+                  initialRating: _isRated,
                   allowHalfRating: true,
                   itemSize: 40,
                   updateOnDrag: true,

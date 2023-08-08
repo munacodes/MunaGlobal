@@ -6,15 +6,16 @@ import 'package:muna_global/models/models_exports.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
-class SearchMessage extends StatefulWidget {
-  const SearchMessage({super.key});
+class SearchMessages extends StatefulWidget {
+  const SearchMessages({super.key});
 
   @override
-  State<SearchMessage> createState() => _SearchMessageState();
+  State<SearchMessages> createState() => _SearchMessagesState();
 }
 
-class _SearchMessageState extends State<SearchMessage> {
+class _SearchMessagesState extends State<SearchMessages> {
   TextEditingController searchController = TextEditingController();
+  final currentUser = FirebaseAuth.instance.currentUser;
   String searchName = '';
 
   clearSearch() {
@@ -37,10 +38,10 @@ class _SearchMessageState extends State<SearchMessage> {
           color: Colors.black,
         ),
       ),
-      title: TextFormField(
+      title: TextField(
         controller: searchController,
         decoration: InputDecoration(
-          hintText: "Search",
+          hintText: "Search...",
           filled: true,
           prefixIcon: const Icon(Icons.search, size: 28.0),
           suffixIcon: IconButton(
@@ -53,7 +54,6 @@ class _SearchMessageState extends State<SearchMessage> {
             searchName = value;
           });
         },
-        //  onFieldSubmitted: handleSearch,
       ),
     );
   }
@@ -62,83 +62,106 @@ class _SearchMessageState extends State<SearchMessage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildSearchField(),
-      // put stream builder in a or container column to call both users and posts
+      // put stream builder in a  container or column to call both users and their recent posts
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('Users')
-              .orderBy('userName')
-              .startAt([searchName]).endAt([searchName]).snapshots(),
+          stream: FirebaseFirestore.instance.collection('Users').snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Column(
-                children: const [
-                  Text(
-                    'Something went wrong.',
-                  ),
-                  Text(
-                    'Check your internet Connection.',
-                  ),
-                ],
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final data = snapshot.data!.docs[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.grey,
-                    backgroundImage:
-                        CachedNetworkImageProvider(data['photoUrl']),
-                  ),
-                  title: Text(data['userName']),
-                  subtitle: Text(data['userEmail']),
-                  onTap: () {
-                    // Navigator.of(context).pushReplacement(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const ChatPage(),
-                    //   ),
-                    // );
-                  },
-                );
-              },
-            );
+            return (snapshot.connectionState == ConnectionState.waiting)
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data!.docs[index];
+                      if (searchName.isEmpty) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: data['PhotoUrl'] != null
+                                ? CachedNetworkImageProvider(data['PhotoUrl'])
+                                : const AssetImage(
+                                        'assets/images/User Image.png')
+                                    as ImageProvider,
+                          ),
+                          title: Text(
+                            data['UserName'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            data['UserEmail'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {
+                            // Navigator.of(context).pop(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ChatPage(
+                            //       receiverUserID: ,
+                            //       receiverUserName: ,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        );
+                      }
+                      if (data['UserName']
+                          .toString()
+                          .toLowerCase()
+                          .startsWith(searchName.toLowerCase())) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage:
+                                CachedNetworkImageProvider(data['PhotoUrl']),
+                          ),
+                          title: Text(
+                            data['UserName'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            data['UserEmail'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {
+                            //  Navigator.of(context).pop(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ChatPage(
+                            //       receiverUserID: ,
+                            //       receiverUserName: ,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        );
+                      }
+                      return Container();
+                    },
+                  );
           }),
-    );
-  }
-}
-
-class SearchResult extends StatelessWidget {
-  final UserModel user;
-  const SearchResult({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {},
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey,
-                backgroundImage: CachedNetworkImageProvider(user.photoUrl),
-              ),
-              title: Text(
-                user.userName,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-          const Divider(height: 2.0, color: Colors.white54),
-        ],
-      ),
     );
   }
 }

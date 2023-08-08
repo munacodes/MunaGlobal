@@ -169,23 +169,6 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                           ),
                         ),
                       );
-
-                      //  SalesProduct(
-                      //   location: post['Location'],
-                      //   photoUrl: post['PhotoUrl'],
-                      //   image: post['ImageUrl'],
-                      //   title: post['Name of Product'],
-                      //   likes: List<String>.from(post['Likes'] ?? []),
-                      //   description: post['Description'],
-                      //   price: post['Price'].toDouble(),
-                      //   userId: currentUser.uid,
-                      //   postId: post.id,
-                      //   cartId: post.id,
-                      //   time: formatDate(post['Timestamp']),
-                      //   userEmail: post['UserEmail'],
-                      //   size: post['Size'],
-                      //   quantity: int.parse(post['Quantity']),
-                      // );
                     },
                   );
                 } else if (!snapshot.hasData) {
@@ -322,7 +305,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => const MessagesPage(),
                       ),
