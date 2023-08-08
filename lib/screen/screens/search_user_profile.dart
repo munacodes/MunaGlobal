@@ -104,7 +104,13 @@ class _SearchPageState extends State<SearchPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).pop(
+                              MaterialPageRoute(
+                                builder: (context) => const ProfilePage(),
+                              ),
+                            );
+                          },
                         );
                       }
                       if (data['UserName']
@@ -137,7 +143,13 @@ class _SearchPageState extends State<SearchPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).pop(
+                              MaterialPageRoute(
+                                builder: (context) => const ProfilePage(),
+                              ),
+                            );
+                          },
                         );
                       }
                       return Container();

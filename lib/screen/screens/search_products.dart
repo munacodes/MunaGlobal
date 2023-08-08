@@ -2,18 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muna_global/models/models_exports.dart';
-import 'package:muna_global/screen/message_and_chat/message_export.dart';
+import 'package:muna_global/models/user_model.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
-class SearchMessages extends StatefulWidget {
-  const SearchMessages({super.key});
+class SearchProducts extends StatefulWidget {
+  const SearchProducts({super.key});
 
   @override
-  State<SearchMessages> createState() => _SearchMessagesState();
+  State<SearchProducts> createState() => _SearchProductsState();
 }
 
-class _SearchMessagesState extends State<SearchMessages> {
+class _SearchProductsState extends State<SearchProducts> {
   TextEditingController searchController = TextEditingController();
   final currentUser = FirebaseAuth.instance.currentUser;
   String searchName = '';
@@ -27,9 +27,9 @@ class _SearchMessagesState extends State<SearchMessages> {
       backgroundColor: Colors.white,
       leading: IconButton(
         onPressed: () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).pop(
             MaterialPageRoute(
-              builder: (context) => const MessagesPage(),
+              builder: (context) => const ProfilePage(),
             ),
           );
         },
@@ -64,7 +64,7 @@ class _SearchMessagesState extends State<SearchMessages> {
       appBar: buildSearchField(),
       // put stream builder in a  container or column to call both users and their recent posts
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+          stream: FirebaseFirestore.instance.collection('Products').snapshots(),
           builder: (context, snapshot) {
             return (snapshot.connectionState == ConnectionState.waiting)
                 ? const Center(
@@ -77,15 +77,15 @@ class _SearchMessagesState extends State<SearchMessages> {
                       if (searchName.isEmpty) {
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: data['PhotoUrl'] != null
-                                ? CachedNetworkImageProvider(data['PhotoUrl'])
-                                : const AssetImage(
-                                        'assets/images/User Image.png')
-                                    as ImageProvider,
-                          ),
+                              // backgroundColor: Colors.grey,
+                              // backgroundImage: data['PhotoUrl'] != null
+                              //     ? CachedNetworkImageProvider(data['PhotoUrl'])
+                              //     : const AssetImage(
+                              //             'assets/images/User Image.png')
+                              //         as ImageProvider,
+                              ),
                           title: Text(
-                            data['UserName'],
+                            '',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -95,7 +95,7 @@ class _SearchMessagesState extends State<SearchMessages> {
                             ),
                           ),
                           subtitle: Text(
-                            data['UserEmail'],
+                            '',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -105,14 +105,11 @@ class _SearchMessagesState extends State<SearchMessages> {
                             ),
                           ),
                           onTap: () {
-                            // Navigator.of(context).pushReplacement(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ChatPage(
-                            //       receiverUserID: widget.receiverUserID!,
-                            //       receiverUserName: widget.receiverUserName!,
-                            //     ),
-                            //   ),
-                            // );
+                            Navigator.of(context).pop(
+                              MaterialPageRoute(
+                                builder: (context) => const ProfilePage(),
+                              ),
+                            );
                           },
                         );
                       }
@@ -147,14 +144,11 @@ class _SearchMessagesState extends State<SearchMessages> {
                             ),
                           ),
                           onTap: () {
-                            // Navigator.of(context).pushReplacement(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ChatPage(
-                            //       receiverUserID: widget.receiverUserID!,
-                            //       receiverUserName: widget.receiverUserName!,
-                            //     ),
-                            //   ),
-                            // );
+                            Navigator.of(context).pop(
+                              MaterialPageRoute(
+                                builder: (context) => const ProfilePage(),
+                              ),
+                            );
                           },
                         );
                       }

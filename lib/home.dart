@@ -17,11 +17,11 @@ class _HomeState extends State<Home> {
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          // user logged in
+          // user has account
           if (snapshot.hasData) {
             return const SplashScreen();
           }
-          // user is NOT logged in
+          // user does not have account
           else {
             return const WelcomePage();
           }

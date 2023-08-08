@@ -57,7 +57,7 @@ class _ExploreState extends State<Explore> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Posts')
+                  .collection('Products')
                   .orderBy('Timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -66,23 +66,23 @@ class _ExploreState extends State<Explore> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       // get the message
-                      final post = snapshot.data!.docs[index];
+                      final product = snapshot.data!.docs[index];
                       return SalesProduct(
-                        rating: post['Rating'].toDouble(),
-                        location: post['Location'],
-                        photoUrl: post['PhotoUrl'],
-                        image: post['ImageUrl'],
-                        title: post['Name of Product'],
-                        likes: List<String>.from(post['Likes'] ?? []),
-                        description: post['Description'],
-                        price: post['Price'].toDouble(),
+                        rating: product['Rating'].toDouble(),
+                        location: product['Location'],
+                        photoUrl: product['PhotoUrl'],
+                        image: product['ImageUrl'],
+                        title: product['Name of Product'],
+                        likes: List<String>.from(product['Likes'] ?? []),
+                        description: product['Description'],
+                        price: product['Price'].toDouble(),
                         userId: currentUser.uid,
-                        postId: post.id,
-                        cartId: post.id,
-                        time: formatDate(post['Timestamp']),
-                        userEmail: post['UserEmail'],
-                        size: post['Size'],
-                        quantity: int.parse(post['Quantity']),
+                        productId: product.id,
+                        cartId: product.id,
+                        time: formatDate(product['Timestamp']),
+                        userEmail: product['UserEmail'],
+                        size: product['Size'],
+                        quantity: int.parse(product['Quantity']),
                       );
                     },
                   );

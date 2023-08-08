@@ -18,7 +18,7 @@ class SalesProduct extends StatefulWidget {
   final String userEmail;
   final String time;
   final double price;
-  final String postId;
+  final String productId;
   final String size;
   final int quantity;
   final List<String> likes;
@@ -29,7 +29,7 @@ class SalesProduct extends StatefulWidget {
     super.key,
     required this.description,
     required this.time,
-    required this.postId,
+    required this.productId,
     required this.likes,
     required this.image,
     required this.price,
@@ -69,17 +69,17 @@ class _SalesProductState extends State<SalesProduct> {
     });
 
     // Access the document is Firebase
-    DocumentReference postRef =
-        FirebaseFirestore.instance.collection('Posts').doc(widget.postId);
+    DocumentReference productRef =
+        FirebaseFirestore.instance.collection('Products').doc(widget.productId);
 
     if (isLiked) {
       // if the post is now liked, add the user's email to the 'Likes' field
-      postRef.update({
+      productRef.update({
         'Likes': FieldValue.arrayUnion([currentUser!.email])
       });
     } else {
       // if the post is now unliked, remove the user's email from the 'likes' field
-      postRef.update({
+      productRef.update({
         'Likes': FieldValue.arrayRemove([currentUser!.email])
       });
     }
@@ -148,7 +148,7 @@ class _SalesProductState extends State<SalesProduct> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => DetailsPage(
-                              postId: widget.postId,
+                              productId: widget.productId,
                               rating: widget.rating,
                               title: widget.title,
                               description: widget.description,

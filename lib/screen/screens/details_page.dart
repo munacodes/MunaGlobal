@@ -16,7 +16,7 @@ class DetailsPage extends StatefulWidget {
   final String size;
   final int quantity;
   final double rating;
-  final String postId;
+  final String productId;
   const DetailsPage({
     super.key,
     required this.title,
@@ -26,7 +26,7 @@ class DetailsPage extends StatefulWidget {
     required this.size,
     required this.quantity,
     required this.rating,
-    required this.postId,
+    required this.productId,
   });
 
   @override
@@ -39,7 +39,6 @@ class _DetailsPageState extends State<DetailsPage> {
   bool _isTapped = false;
   String cartId = const Uuid().v4();
   final bool _hasSize = false;
-  bool _isRating = false;
   double _isRated = 0;
 
   @override
@@ -47,7 +46,7 @@ class _DetailsPageState extends State<DetailsPage> {
     super.initState();
     _hasSize;
     _isTapped;
-    _isRated;
+    getRatingIndex();
   }
 
   void addToCart() {
@@ -76,7 +75,7 @@ class _DetailsPageState extends State<DetailsPage> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => CartPage(
-            postId: widget.postId,
+            productId: widget.productId,
             rating: widget.rating,
             title: widget.title,
             description: widget.description,
@@ -90,26 +89,12 @@ class _DetailsPageState extends State<DetailsPage> {
     }
   }
 
-  rateUpdate() {
+  getRatingIndex() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('Products').get();
     setState(() {
-      _isRating = !_isRating;
+      _isRated = snapshot.docs.length.toDouble();
     });
-
-    // Access the document is Firebase
-    DocumentReference postRef =
-        FirebaseFirestore.instance.collection('Posts').doc(widget.postId);
-
-    if (_isRating) {
-      // if the post is now liked, add the user's email to the 'Likes' field
-      postRef.update({
-        'Rating': _isRated,
-      });
-    } else {
-      // if the post is now unliked, remove the user's email from the 'likes' field
-      postRef.update({
-        'Rating': _isRated,
-      });
-    }
   }
 
   @override
@@ -142,7 +127,7 @@ class _DetailsPageState extends State<DetailsPage> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => CartPage(
-                    postId: widget.postId,
+                    productId: widget.productId,
                     rating: widget.rating,
                     title: widget.title,
                     price: widget.price,
@@ -249,7 +234,14 @@ class _DetailsPageState extends State<DetailsPage> {
                     color: Colors.amber,
                   ),
                   onRatingUpdate: (value) {
-                    rateUpdate();
+                    setState(() {
+                      FirebaseFirestore.instance
+                          .collection('Products')
+                          .doc(widget.productId)
+                          .update({
+                        'Rating': value,
+                      });
+                    });
                   },
                 ),
                 const SizedBox(height: 10),

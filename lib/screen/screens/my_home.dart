@@ -86,130 +86,119 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     return Container(
       height: 380,
       width: double.infinity,
-      child: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('Posts')
-                  .orderBy('Timestamp', descending: true)
-                  .limit(4)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      // get the message
-                      final post = snapshot.data!.docs[index];
-                      return GestureDetector(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  image: DecorationImage(
-                                    image: CachedNetworkImageProvider(
-                                        post['ImageUrl']),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 3),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      post['Name of Product'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      post['Description'],
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 3),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '₦ ${post['Price'].toDouble()}',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text(
-                      'No Product yet',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                      ),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('Products')
+            .orderBy('Timestamp', descending: true)
+            .limit(4)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final post = snapshot.data!.docs[index];
+                return GestureDetector(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
-                      children: const [
-                        Text(
-                          'Something went wrong',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            image: DecorationImage(
+                              image:
+                                  CachedNetworkImageProvider(post['ImageUrl']),
+                            ),
                           ),
                         ),
-                        Text(
-                          'Pleast try again later',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20,
-                          ),
+                        const SizedBox(height: 3),
+                        Row(
+                          children: [
+                            Text(
+                              post['Name of Product'],
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                post['Description'],
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        Row(
+                          children: [
+                            Text(
+                              '₦ ${post['Price'].toDouble()}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  );
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
+                  ),
                 );
               },
-            ),
-          ),
-        ],
+            );
+          } else if (!snapshot.hasData) {
+            return const Center(
+              child: Text(
+                'No Product yet',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20,
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                children: const [
+                  Text(
+                    'Something went wrong',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    'Pleast try again later',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

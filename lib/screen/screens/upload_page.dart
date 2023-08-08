@@ -30,7 +30,7 @@ class _UploadPageState extends State<UploadPage> {
   File? _imageFile;
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
-  String postId = const Uuid().v4();
+  String productId = const Uuid().v4();
 
   handleChooseFromGallery() async {
     final picker = ImagePicker();
@@ -44,7 +44,7 @@ class _UploadPageState extends State<UploadPage> {
     final tempDir = await getTemporaryDirectory();
     final path = tempDir.path;
     Im.Image? file = Im.decodeImage(_imageFile!.readAsBytesSync());
-    final compressedImageFile = File('$path/img_$postId.jpg')
+    final compressedImageFile = File('$path/img_$productId.jpg')
       ..writeAsBytesSync(
         Im.encodeJpg(file!, quality: 85),
       );
@@ -56,7 +56,7 @@ class _UploadPageState extends State<UploadPage> {
   Future<String> uploadImage(file) async {
     UploadTask uploadTask = FirebaseStorage.instance
         .ref()
-        .child("users_posts/${currentUser!.email}_img_$postId.jpg")
+        .child("users_posts/${currentUser!.email}_img_$productId.jpg")
         .putFile(file);
     TaskSnapshot storageSnap = await uploadTask;
     String downloadUrl = await storageSnap.ref.getDownloadURL();
@@ -78,8 +78,8 @@ class _UploadPageState extends State<UploadPage> {
         quantityController.text.isNotEmpty) {
       // store in firebase
 
-      FirebaseFirestore.instance.collection('Posts').add({
-        "PostId": postId,
+      FirebaseFirestore.instance.collection('Products').add({
+        "ProductId": productId,
         "PhotoUrl": currentUser!.photoURL,
         "Name of Product": titleController.text,
         "UserEmail": currentUser!.email,
@@ -133,7 +133,7 @@ class _UploadPageState extends State<UploadPage> {
       setState(() {
         _imageFile = null;
         isUploading = false;
-        postId = const Uuid().v4();
+        productId = const Uuid().v4();
       });
     } else {
       displayMessage('Please Fill Details');
@@ -268,6 +268,7 @@ class _UploadPageState extends State<UploadPage> {
                     title: Container(
                       width: 250.0,
                       child: TextFormField(
+                        maxLines: 2,
                         controller: descriptionController,
                         decoration: const InputDecoration(
                           hintText: "Description...",

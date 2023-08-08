@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // all users
   final usersCollection = FirebaseFirestore.instance.collection('Users');
-  int postCount = 0;
+  int productCount = 0;
   int followerCount = 0;
   int followingCount = 0;
 
@@ -31,9 +31,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   getProfilePosts() async {
     QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('Posts').get();
+        await FirebaseFirestore.instance.collection('Products').get();
     setState(() {
-      postCount = snapshot.docs.length;
+      productCount = snapshot.docs.length;
     });
   }
 
@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          postCount.toString(),
+          productCount.toString(),
           style: const TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
@@ -231,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget gridProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('Posts')
+          .collection('Products')
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -275,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget listProfilePosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('Posts')
+          .collection('Products')
           .orderBy('Timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -408,7 +408,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      buildCountColumn("Shop items", postCount),
+                      buildCountColumn("Shop items", productCount),
                       buildCountColumn("Followers", followerCount),
                       buildCountColumn("Following", followingCount),
                     ],
