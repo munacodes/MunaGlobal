@@ -8,13 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:muna_global/dialog_box/dialog_box_exports.dart';
 import 'package:muna_global/screen/category/category_exports.dart';
+import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image/image.dart' as Im;
 import 'package:path_provider/path_provider.dart';
 
 class UploadPage extends StatefulWidget {
-  const UploadPage({super.key});
+  final String userId;
+  const UploadPage({super.key, required this.userId});
 
   @override
   State<UploadPage> createState() => _UploadPageState();
@@ -31,6 +33,43 @@ class _UploadPageState extends State<UploadPage> {
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
   String productId = const Uuid().v4();
+  String? _selectedCategory;
+  List<String> availableCategories = [];
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchAvailableCategories();
+  // }
+
+  // void fetchAvailableCategories() async {
+  //   final QuerySnapshot querySnapshot =
+  //       await FirebaseFirestore.instance.collection('Categories').get();
+  //   setState(() {
+  //     availableCategories =
+  //         querySnapshot.docs.map<String>((DocumentSnapshot document) {
+  //       return document.data['name'] as String;
+  //     }).toList();
+  //   });
+  // }
+
+  Future<String> getUsernameFromFirestore(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .get();
+      if (userSnapshot.exists) {
+        return userSnapshot['UserName'];
+      } else {
+        return 'Unknown User';
+      }
+    } catch (e) {
+      print('Error retrieving username: $e');
+      return 'Unknown User';
+    }
+  }
 
   handleChooseFromGallery() async {
     final picker = ImagePicker();
@@ -78,11 +117,15 @@ class _UploadPageState extends State<UploadPage> {
         quantityController.text.isNotEmpty) {
       // store in firebase
 
+      Future<String> userName = getUsernameFromFirestore(userId);
+
       FirebaseFirestore.instance.collection('Products').add({
+        // 'Category': _selectedCategory,
         "ProductId": productId,
         "PhotoUrl": currentUser!.photoURL,
         "Name of Product": titleController.text,
         "UserEmail": currentUser!.email,
+        "UserName": userName,
         "Description": descriptionController.text,
         "Location": locationController.text,
         "Price": double.parse(priceController.text),
@@ -108,10 +151,13 @@ class _UploadPageState extends State<UploadPage> {
 
   handleSubmit() async {
     if (descriptionController.text.isNotEmpty &&
-        titleController.text.isNotEmpty &&
-        priceController.text.isNotEmpty &&
-        locationController.text.isNotEmpty &&
-        _imageFile != null) {
+            titleController.text.isNotEmpty &&
+            priceController.text.isNotEmpty &&
+            locationController.text.isNotEmpty &&
+            _imageFile != null
+        // &&
+        // _selectedCategory != null
+        ) {
       setState(() {
         isUploading = true;
       });
@@ -132,6 +178,7 @@ class _UploadPageState extends State<UploadPage> {
       quantityController.clear();
       setState(() {
         _imageFile = null;
+        //  _selectedCategory = null;
         isUploading = false;
         productId = const Uuid().v4();
       });
@@ -297,7 +344,6 @@ class _UploadPageState extends State<UploadPage> {
                   ),
                 ),
                 const Divider(),
-
                 Card(
                   child: ListTile(
                     leading: const Icon(Icons.nature,
@@ -315,7 +361,6 @@ class _UploadPageState extends State<UploadPage> {
                   ),
                 ),
                 const Divider(),
-
                 Card(
                   child: ListTile(
                     leading: const Icon(Icons.quora_outlined,
@@ -334,24 +379,33 @@ class _UploadPageState extends State<UploadPage> {
                   ),
                 ),
                 const Divider(),
-
-                /// TODO: Use pop up to pop category
-                /// TODO: showDialog to display category list
-                /// TODO: use navigator.pop to pop back list to upload page
-                GestureDetector(
-                  onTap: () {
-                    showDialogBox();
-                  },
-                  child: const Card(
-                    child: ListTile(
-                      leading:
-                          Icon(Icons.category, color: Colors.blue, size: 35.0),
-                      title: Text('Select Category'),
-                    ),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     showDialogBox();
+                //   },
+                //   child: Card(
+                //     child: ListTile(
+                //       leading: const Icon(Icons.category,
+                //           color: Colors.blue, size: 35.0),
+                //       title: DropdownButtonFormField<String>(
+                //         value: _selectedCategory,
+                //         hint: const Text('Select a category'),
+                //         items: availableCategories.map((category) {
+                //           return DropdownMenuItem<String>(
+                //             value: category,
+                //             child: Text(category),
+                //           );
+                //         }).toList(),
+                //         onChanged: (newValue) {
+                //           setState(() {
+                //             _selectedCategory = newValue;
+                //           });
+                //         },
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 const Divider(),
-
                 Card(
                   child: ListTile(
                     leading: const Icon(Icons.pin_drop,

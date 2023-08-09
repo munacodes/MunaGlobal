@@ -14,16 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 final currentUser = FirebaseAuth.instance.currentUser;
+final String userId = FirebaseAuth.instance.currentUser!.uid;
 
 class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
 
-  final pages = const [
-    MyHomeScreen(),
-    Explore(),
-    UploadPage(),
-    CategoryPage(),
-    ProfilePage(),
+  final pages = [
+    const MyHomeScreen(),
+    const Explore(),
+    UploadPage(userId: userId),
+    const CategoryPage(),
+    const ProfilePage(),
   ];
 
   @override

@@ -147,7 +147,15 @@ class _CartPageState extends State<CartPage> {
                 return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      final cartItem = snapshot.data!.docs[index];
+                      QueryDocumentSnapshot cartItem =
+                          snapshot.data!.docs[index];
+
+                      // double total = 0;
+                      // for (var item in cartItem) {
+                      //   double price = item['Price'];
+                      //   int quantity = item['Quantity'];
+                      //   total += price * quantity;
+                      // }
                       return CartListItem(
                         title: cartItem['Name of Product'],
                         image: cartItem['ImageUrl'],

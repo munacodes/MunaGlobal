@@ -20,6 +20,55 @@ class MyHomeScreen extends StatefulWidget {
 class _MyHomeScreenState extends State<MyHomeScreen> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
+  qwwe() async {
+    StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('Products')
+          .where('Likes', isGreaterThanOrEqualTo: 'Likes')
+          .orderBy('Likes', descending: true)
+          .limit(5)
+          .snapshots(),
+      builder: (context, snapshot) {
+        return (snapshot.connectionState == ConnectionState.waiting)
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var trending = snapshot.data!.docs[index];
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    height: 150,
+                    child: Carousel(
+                      boxFit: BoxFit.fill,
+                      autoplay: true,
+                      showIndicator: false,
+                      borderRadius: true,
+                      radius: const Radius.circular(25),
+                      images: [
+                        CachedNetworkImageProvider(trending['ImageUrl']),
+                        CachedNetworkImageProvider(trending['ImageUrl']),
+                        CachedNetworkImageProvider(trending['ImageUrl']),
+                        CachedNetworkImageProvider(trending['ImageUrl']),
+                        CachedNetworkImageProvider(trending['ImageUrl']),
+
+                        // AssetImage('assets/images/Shirt 1.jpg'),
+                        // AssetImage('assets/images/Hood.png'),
+                        // AssetImage('assets/images/Man Watch 2.jpg'),
+                        // AssetImage('assets/images/Shoe 1.jpg'),
+                        // AssetImage('assets/images/Suits.jpg'),
+                      ],
+                    ),
+                  );
+                });
+      },
+    );
+  }
+
   _buildTrendingImageSlider() {
     return Container(
       decoration: BoxDecoration(
@@ -139,7 +188,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                               child: Text(
                                 post['Description'],
                                 overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
+                                maxLines: 1,
                               ),
                             ),
                           ],
@@ -416,6 +465,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  // qwwe(),
                   _buildTrendingImageSlider(),
                   const SizedBox(height: 20),
                   Row(

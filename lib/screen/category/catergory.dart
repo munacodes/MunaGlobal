@@ -11,19 +11,6 @@ class CategoryPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        // leading: IconButton(
-        //   onPressed: () {
-        //     Navigator.of(context).pop(
-        //       MaterialPageRoute(
-        //         builder: (context) => const MyHomeScreen(),
-        //       ),
-        //     );
-        //   },
-        //   icon: Icon(
-        //     Icons.arrow_back,
-        //     color: Colors.black,
-        //   ),
-        // ),
         title: const Text(
           'Category',
           style: TextStyle(color: Colors.blue, fontSize: 30),
