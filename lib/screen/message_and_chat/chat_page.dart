@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,14 @@ import 'package:muna_global/screen/screens/screens_exports.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class ChatPage extends StatefulWidget {
-  final String receiverUserName;
+  final String receiverUserEmail;
   final String receiverUserID;
-
+  final String receiverUserPhoto;
   const ChatPage({
     super.key,
-    required this.receiverUserName,
+    required this.receiverUserEmail,
     required this.receiverUserID,
+    required this.receiverUserPhoto,
   });
 
   @override
@@ -30,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
     // only send message if there is something to send
     if (messageController.text.isNotEmpty) {
       await _chatService.sendMessage(
-          widget.receiverUserName, messageController.text);
+          widget.receiverUserID, messageController.text);
 
       // clear the text controller after sending the message
       messageController.clear();
@@ -41,7 +43,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _buildMessageList() {
     return StreamBuilder(
       stream: _chatService.getMessage(
-          widget.receiverUserName, _firebaseAuth.currentUser!.uid),
+          widget.receiverUserID, _firebaseAuth.currentUser!.uid),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -81,9 +83,19 @@ class _ChatPageState extends State<ChatPage> {
                   ? MainAxisAlignment.end
                   : MainAxisAlignment.start,
           children: [
-            Text(data['senderEmail']),
+            Column(
+              children: [
+                // Text(data['senderEmail']),
+                // const SizedBox(height: 10),
+                ChatTile(
+                  message: data['message'],
+                ),
+              ],
+            ),
             const SizedBox(height: 10),
-            ChatTile(message: data['message']),
+            Text(
+              formatTime(data['timestamp']),
+            ),
           ],
         ),
       ),
@@ -103,8 +115,17 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           GestureDetector(
+            onTap: () {},
+            child: const CircleAvatar(
+              child: Icon(Icons.attach_file),
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
             onTap: sendMessage,
-            child: const Icon(Icons.send),
+            child: const CircleAvatar(
+              child: Icon(Icons.send),
+            ),
           ),
         ],
       ),
@@ -130,9 +151,41 @@ class _ChatPageState extends State<ChatPage> {
         ),
         elevation: 0.0,
         backgroundColor: Colors.white,
-        title: Text(
-          widget.receiverUserName.toString(),
-          style: const TextStyle(color: Colors.blue, fontSize: 20),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey,
+              backgroundImage: widget.receiverUserPhoto != null
+                  ? CachedNetworkImageProvider(
+                      widget.receiverUserPhoto.toString())
+                  : const AssetImage('assets/images/User Image.png')
+                      as ImageProvider,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                widget.receiverUserEmail.toString(),
+                style: const TextStyle(color: Colors.blue, fontSize: 20),
+              ),
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                Icons.phone_outlined,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                Icons.camera_alt_outlined,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
       body: SafeArea(

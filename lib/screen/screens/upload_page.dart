@@ -108,7 +108,8 @@ class _UploadPageState extends State<UploadPage> {
     required String location,
     required String description,
     required double price,
-  }) {
+    required String userId,
+  }) async {
     // only post if there is something in the textfield
     if (descriptionController.text.isNotEmpty ||
         locationController.text.isNotEmpty ||
@@ -117,7 +118,7 @@ class _UploadPageState extends State<UploadPage> {
         quantityController.text.isNotEmpty) {
       // store in firebase
 
-      Future<String> userName = getUsernameFromFirestore(userId);
+      String userName = await getUsernameFromFirestore(userId);
 
       FirebaseFirestore.instance.collection('Products').add({
         // 'Category': _selectedCategory,
@@ -169,6 +170,7 @@ class _UploadPageState extends State<UploadPage> {
         location: locationController.text,
         description: descriptionController.text,
         price: double.parse(priceController.text),
+        userId: userId,
       );
       descriptionController.clear();
       locationController.clear();

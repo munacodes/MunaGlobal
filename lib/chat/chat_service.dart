@@ -13,13 +13,16 @@ class ChatService extends ChangeNotifier {
     // get current user info
     final String currentUserId = _firebaseAuth.currentUser!.uid;
     final String currentUserEmail = _firebaseAuth.currentUser!.email.toString();
+    final String currentUserPhoto =
+        _firebaseAuth.currentUser!.photoURL.toString();
     final Timestamp timestamp = Timestamp.now();
 
     // create a new message
     Message newMessage = Message(
+      photoUrl: currentUserPhoto,
       senderId: currentUserId,
-      receiverId: receiverId,
       senderEmail: currentUserEmail,
+      receiverId: receiverId,
       message: message,
       timestamp: timestamp,
     );
@@ -32,9 +35,9 @@ class ChatService extends ChangeNotifier {
 
     // add new user message to database
     await _firestore
-        .collection('chat_rooms')
+        .collection('Messages')
         .doc(chatRoomId)
-        .collection('messages')
+        .collection('Chat Room')
         .add(newMessage.toMap());
   }
 

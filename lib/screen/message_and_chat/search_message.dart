@@ -58,6 +58,49 @@ class _SearchMessagesState extends State<SearchMessages> {
     );
   }
 
+  Widget _builderUserList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('error');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text('Loading');
+        }
+        return ListView(
+          children: snapshot.data!.docs
+              .map<Widget>((doc) => _buildUserListItem(doc))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildUserListItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
+    if (currentUser!.email != data['UserEmail']) {
+      return ListTile(
+        title: Text(data['UserEmail']),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                receiverUserPhoto: data['PhotoUrl'],
+                receiverUserEmail: data['UserEmail'],
+                receiverUserID: data['UserUid'],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,14 +148,7 @@ class _SearchMessagesState extends State<SearchMessages> {
                             ),
                           ),
                           onTap: () {
-                            // Navigator.of(context).pushReplacement(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ChatPage(
-                            //       receiverUserID: widget.receiverUserID!,
-                            //       receiverUserName: widget.receiverUserName!,
-                            //     ),
-                            //   ),
-                            // );
+                            _builderUserList();
                           },
                         );
                       }

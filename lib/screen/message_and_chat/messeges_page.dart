@@ -12,6 +12,48 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage> {
+  Widget _buildUserList() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('error');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text('Loading...');
+          }
+          return ListView(
+            children: snapshot.data!.docs
+                .map<Widget>((doc) => _buildUserListItem(doc))
+                .toList(),
+          );
+        });
+  }
+
+  Widget _buildUserListItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
+    if (currentUser!.email != data['UserEmail']) {
+      return ListTile(
+        title: Text(data['UserEmail']),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                receiverUserEmail: data['UserEmail'],
+                receiverUserID: data['UserUid'],
+                receiverUserPhoto: data['PhotoUrl'],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,22 +138,7 @@ class _MessagesPageState extends State<MessagesPage> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('Users')
-              .doc(currentUser!.uid)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final messageUser = snapshot.data!;
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
-      ),
+      body: _buildUserList(),
     );
   }
 }

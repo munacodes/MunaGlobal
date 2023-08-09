@@ -326,7 +326,8 @@ class _SalesProductState extends State<SalesProduct> {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => ChatPage(
-                                      receiverUserName: widget.userEmail,
+                                      receiverUserPhoto: widget.photoUrl,
+                                      receiverUserEmail: widget.userEmail,
                                       receiverUserID: widget.userId,
                                     ),
                                   ),

@@ -37,7 +37,7 @@ String formatTime(Timestamp timestamp) {
   String second = dataTime.second.toString();
 
   // final formatted time
-  String formattedTime = '$hour : $minute : $second';
+  String formattedTime = '$hour:$minute';
 
   return formattedTime;
 }
