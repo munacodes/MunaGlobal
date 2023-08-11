@@ -415,6 +415,7 @@ class _UploadPageState extends State<UploadPage> {
                     title: Container(
                       width: 250.0,
                       child: TextField(
+                        maxLines: 2,
                         controller: locationController,
                         decoration: const InputDecoration(
                           hintText: "Location",

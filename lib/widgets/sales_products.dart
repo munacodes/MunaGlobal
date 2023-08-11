@@ -52,12 +52,12 @@ class _SalesProductState extends State<SalesProduct> {
   // user
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
-  bool showHeart = false;
   bool isTapped = false;
 
   @override
   void initState() {
     super.initState();
+
     isLiked = widget.likes.contains(currentUser!.email);
     isTapped;
   }
@@ -160,34 +160,15 @@ class _SalesProductState extends State<SalesProduct> {
                           ),
                         );
                       },
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(widget.image),
-                              ),
-                            ),
+                      child: Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: CachedNetworkImageProvider(widget.image),
                           ),
-                          showHeart
-                              ? Animator(
-                                  duration: const Duration(milliseconds: 300),
-                                  tween: Tween(begin: 0.8, end: 1.4),
-                                  curve: Curves.elasticOut,
-                                  cycles: 0,
-                                  builder: (context, animatorState, child) =>
-                                      Transform.scale(
-                                    scale: animatorState.value,
-                                    child: const Icon(Icons.favorite,
-                                        size: 80.0, color: Colors.red),
-                                  ),
-                                )
-                              : const Text(''),
-                        ],
+                        ),
                       ),
                     ),
                   ),

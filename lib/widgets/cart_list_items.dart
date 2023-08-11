@@ -32,6 +32,7 @@ class CartListItem extends StatefulWidget {
 class _CartListItemState extends State<CartListItem> {
   final currentUser = FirebaseAuth.instance.currentUser;
   int count = 1;
+  // double total = 0;
 
   sendOrderToFirebase(String onDelivery) async {
     await FirebaseFirestore.instance.collection('Orders').add({
@@ -110,6 +111,7 @@ class _CartListItemState extends State<CartListItem> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            //   total = widget.quantity * widget.price;
             return Text(
               snapshot.data!['Quantity'].toString(),
               style: const TextStyle(
@@ -272,6 +274,15 @@ class _CartListItemState extends State<CartListItem> {
                               color: Colors.black,
                             ),
                           ),
+                          // Text(
+                          //   '₦ ${total.toDouble()}',
+                          //   overflow: TextOverflow.ellipsis,
+                          //   style: const TextStyle(
+                          //     fontWeight: FontWeight.bold,
+                          //     fontSize: 18,
+                          //     color: Colors.black,
+                          //   ),
+                          // ),
                           ElevatedButton(
                             onPressed: _buildShowDialog,
                             child: const Text('Order Now'),

@@ -96,8 +96,6 @@ class _EditProfileState extends State<EditProfile> {
 
   String? imageUrl;
   uploadToFirebase() async {
-    _userDetailUpdate();
-
     Reference storageReference = FirebaseStorage.instance
         .ref()
         .child("user_profile_pic/${currentUser!.uid}");
@@ -106,14 +104,7 @@ class _EditProfileState extends State<EditProfile> {
     imageUrl = await snapshot.ref.getDownloadURL();
     print('profile $imageUrl');
 
-    // showDialog(
-    //   context: context,
-    //   builder: (c) {
-    //     return const LoadingAlertDialog(
-    //       message: 'Registering, Please wait....',
-    //     );
-    //   },
-    // );
+    _userDetailUpdate();
   }
 
   _userDetailUpdate() {
@@ -121,7 +112,7 @@ class _EditProfileState extends State<EditProfile> {
         .collection('Users')
         .doc(currentUser!.uid)
         .update({
-      'PhotoUrl': FileImage(_imageFile!),
+      'PhotoUrl': imageUrl,
     });
   }
 
@@ -223,7 +214,7 @@ class _EditProfileState extends State<EditProfile> {
                                     radius: 80,
                                     backgroundColor: Colors.grey,
                                     backgroundImage: _imageFile != null
-                                        ? userData['PhotoUrl'] == null
+                                        ? userData['PhotoUrl'] != null
                                             ? FileImage(_imageFile!)
                                                 as ImageProvider
                                             : CachedNetworkImageProvider(

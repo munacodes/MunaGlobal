@@ -33,6 +33,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
+  double total = 0;
 
   sendOrderToFirebase(String onDelivery) async {
     await FirebaseFirestore.instance.collection('Orders').add({
@@ -150,12 +151,9 @@ class _CartPageState extends State<CartPage> {
                       QueryDocumentSnapshot cartItem =
                           snapshot.data!.docs[index];
 
-                      // double total = 0;
-                      // for (var item in cartItem) {
-                      //   double price = item['Price'];
-                      //   int quantity = item['Quantity'];
-                      //   total += price * quantity;
-                      // }
+                      total =
+                          cartItem['Price'].toDouble() * cartItem['Quantity'];
+
                       return CartListItem(
                         title: cartItem['Name of Product'],
                         image: cartItem['ImageUrl'],
@@ -215,7 +213,7 @@ class _CartPageState extends State<CartPage> {
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
-                    '₦ ${widget.price.toDouble()}',
+                    '₦ ${total.toDouble()}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 30),
                   ),

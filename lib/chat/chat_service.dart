@@ -43,7 +43,8 @@ class ChatService extends ChangeNotifier {
 
   // GET MESSAGE
   Stream<QuerySnapshot> getMessage(String userId, String otherUserId) {
-    // construct chat room id room user ids (sorted to ensure it matched the id used when sending messages)
+    // construct chat room id room user ids (sorted to ensure it matched the
+    // id used when sending messages)
     List<String> ids = [userId, otherUserId];
     ids.sort();
     String chatRoomId = ids.join("_");

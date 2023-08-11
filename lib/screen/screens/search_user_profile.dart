@@ -74,7 +74,9 @@ class _SearchPageState extends State<SearchPage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var data = snapshot.data!.docs[index];
-                      if (searchName.isEmpty) {
+                      if (searchName.isEmpty ||
+                          searchName != currentUser!.email ||
+                          currentUser!.email != data['UserName']) {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Colors.grey,
@@ -113,10 +115,11 @@ class _SearchPageState extends State<SearchPage> {
                           },
                         );
                       }
-                      if (data['UserName']
-                          .toString()
-                          .toLowerCase()
-                          .startsWith(searchName.toLowerCase())) {
+                      if (data['UserName'] !=
+                          currentUser!.email
+                              .toString()
+                              .toLowerCase()
+                              .startsWith(searchName.toLowerCase())) {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Colors.grey,
