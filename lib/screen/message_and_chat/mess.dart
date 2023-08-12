@@ -120,22 +120,25 @@ class _MessaState extends State<Messa> {
                 itemBuilder: (context, index) {
                   var messageSnapshot = snapshot.data![index].data();
                   if (currentUser!.email != messageSnapshot['UserEmail']) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.grey,
-                        backgroundImage:
-                            CachedNetworkImageProvider(messageSnapshot['']),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.grey,
+                          backgroundImage:
+                              CachedNetworkImageProvider(messageSnapshot['']),
+                        ),
+                        title: Text(
+                          messageSnapshot['senderEmail'],
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(
+                          messageSnapshot['message'],
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onTap: () {},
                       ),
-                      title: Text(
-                        messageSnapshot['senderEmail'],
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        messageSnapshot['message'],
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () {},
                     );
                   }
                 },

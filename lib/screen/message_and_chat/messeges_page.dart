@@ -34,20 +34,33 @@ class _MessagesPageState extends State<MessagesPage> {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
     if (currentUser!.email != data['UserEmail']) {
-      return ListTile(
-        title: Text(data['UserEmail']),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverUserEmail: data['UserEmail'],
-                receiverUserID: data['UserUid'],
-                receiverUserPhoto: data['PhotoUrl'],
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: ListTile(
+          leading: CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.grey,
+            backgroundImage: data['PhotoUrl'] != null
+                ? CachedNetworkImageProvider(
+                    data['PhotoUrl'],
+                  )
+                : const AssetImage('assets/images/User Image.png')
+                    as ImageProvider,
+          ),
+          title: Text(data['UserEmail']),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatPage(
+                  receiverUserEmail: data['UserEmail'],
+                  receiverUserID: data['UserUid'],
+                  receiverUserPhoto: data['PhotoUrl'],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     } else {
       return Container();
@@ -60,11 +73,7 @@ class _MessagesPageState extends State<MessagesPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pop(
-              MaterialPageRoute(
-                builder: (context) => const MyHomeScreen(),
-              ),
-            );
+            Navigator.of(context).pop();
           },
           icon: const Icon(
             Icons.arrow_back,

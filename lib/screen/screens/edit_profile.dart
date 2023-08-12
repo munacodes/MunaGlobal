@@ -196,8 +196,8 @@ class _EditProfileState extends State<EditProfile> {
               .doc(currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
-            final userData = snapshot.data!;
             if (snapshot.hasData) {
+              final userData = snapshot.data!;
               return ListView(
                 children: [
                   Center(

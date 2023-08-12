@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('Products').get();
     setState(() {
-      productCount = snapshot.docs.length;
+      // productCount = snapshot.docs.length;
     });
   }
 

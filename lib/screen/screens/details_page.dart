@@ -39,7 +39,7 @@ class _DetailsPageState extends State<DetailsPage> {
   bool _isTapped = false;
   String cartId = const Uuid().v4();
   final bool _hasSize = false;
-  double _isRated = 0;
+  double _isRated = 0.0;
 
   @override
   void initState() {
@@ -90,10 +90,14 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   getRatingIndex() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('Products').get();
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('Products')
+        .doc(widget.productId)
+        .get();
+
     setState(() {
-      _isRated = snapshot.docs.length.toDouble();
+      _isRated = double.parse(snapshot['Rating'].toString());
     });
   }
 

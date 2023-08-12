@@ -294,7 +294,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const MessagesPage(),
                       ),

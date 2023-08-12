@@ -8,6 +8,7 @@ class PopUpMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     logout() {
       FirebaseAuth.instance.signOut();
+      // navigatr to login
     }
 
     return Padding(
