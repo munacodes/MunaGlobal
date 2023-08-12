@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/auth/auth_exports.dart';
+import 'package:muna_global/screen/screens/my_home.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
 
 class Login extends StatefulWidget {
@@ -28,6 +29,11 @@ class _LoginState extends State<Login> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const MyHomeScreen(),
+        ),
       );
 
       // pop loading circle

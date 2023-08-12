@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:muna_global/auth/auth_exports.dart';
 
 class PopUpMenu extends StatelessWidget {
   const PopUpMenu({super.key});
@@ -8,7 +9,11 @@ class PopUpMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     logout() {
       FirebaseAuth.instance.signOut();
-      // navigatr to login
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const Login(),
+        ),
+      );
     }
 
     return Padding(

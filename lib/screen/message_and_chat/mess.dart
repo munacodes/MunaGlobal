@@ -101,9 +101,9 @@ class _MessaState extends State<Messa> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Messages')
-              .doc()
+              .doc(currentUser!.uid)
               .collection('Chat Room')
-              .doc()
+              .where('receiverId', isEqualTo: currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -114,33 +114,68 @@ class _MessaState extends State<Messa> {
                 ),
               );
             }
+
+            List<String> senderIds = [];
+            for (var doc in snapshot.data!.docs) {
+              String senderId = doc['senderId'];
+              if (!senderIds.contains(senderId)) {
+                senderIds.add(senderId);
+              }
+            }
+
             if (snapshot.hasData) {
               return ListView.builder(
-                itemCount: snapshot.data!.data()!.length,
+                itemCount: senderIds.length,
                 itemBuilder: (context, index) {
-                  var messageSnapshot = snapshot.data![index].data();
-                  if (currentUser!.email != messageSnapshot['UserEmail']) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.grey,
-                          backgroundImage:
-                              CachedNetworkImageProvider(messageSnapshot['']),
+                  var messageSnapshot = senderIds[index];
+
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(currentUser!.uid)
+                        .get(),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return circularProgress();
+                      }
+                      if (userSnapshot.hasError) {
+                        return ListTile(
+                          title: Text('Error: ${userSnapshot.error}'),
+                        );
+                      }
+                      if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                        return const ListTile(
+                          title: Text('User not found'),
+                        );
+                      }
+                      var userData = userSnapshot.data!;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey,
+                            backgroundImage: userData['PhotoUrl'] != null
+                                ? CachedNetworkImageProvider(
+                                    userData['PhotoUrl'].toString())
+                                : const AssetImage(
+                                        'assets/images/User Image.png')
+                                    as ImageProvider,
+                          ),
+                          title: Text(
+                            userData['senderEmail'].toString(),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            userData['message'].toString(),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          onTap: () {},
                         ),
-                        title: Text(
-                          messageSnapshot['senderEmail'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          messageSnapshot['message'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onTap: () {},
-                      ),
-                    );
-                  }
+                      );
+                    },
+                  );
                 },
               );
             }
@@ -149,5 +184,18 @@ class _MessaState extends State<Messa> {
         ),
       ),
     );
+  }
+
+  Stream<QuerySnapshot> qwert(String userId, String otherUserId) {
+    List<String> ids = [userId, otherUserId];
+    ids.sort();
+    String chatRoomId = ids.join("_");
+
+    return FirebaseFirestore.instance
+        .collection('Messages')
+        .doc(chatRoomId)
+        .collection('Chat Room')
+        .where('receiverId', isEqualTo: currentUser!.uid)
+        .snapshots();
   }
 }

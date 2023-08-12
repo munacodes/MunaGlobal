@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muna_global/format_time/format_time.dart';
 import 'package:muna_global/screen/category/catergory.dart';
+import 'package:muna_global/screen/message_and_chat/mess.dart';
 import 'package:muna_global/screen/message_and_chat/message_export.dart';
 import 'package:muna_global/screen/screens/details_page.dart';
 import 'package:muna_global/widgets/widgets_exports.dart';
@@ -296,7 +297,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const MessagesPage(),
+                        builder: (context) => const Messa(),
                       ),
                     );
                   },
