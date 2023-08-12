@@ -29,6 +29,7 @@ class _UploadPageState extends State<UploadPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController sizeController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+  TextEditingController colorController = TextEditingController();
   File? _imageFile;
   bool isUploading = false;
   User? currentUser = FirebaseAuth.instance.currentUser;
@@ -132,6 +133,7 @@ class _UploadPageState extends State<UploadPage> {
         "Price": double.parse(priceController.text),
         "Quantity": quantityController.text,
         "Size": sizeController.text,
+        "Color": colorController,
         "ImageUrl": imageUrl,
         "Timestamp": Timestamp.now(),
         "Likes": [],
@@ -147,6 +149,7 @@ class _UploadPageState extends State<UploadPage> {
       titleController.clear();
       sizeController.clear();
       quantityController.clear();
+      colorController.clear();
     });
   }
 
@@ -178,6 +181,7 @@ class _UploadPageState extends State<UploadPage> {
       titleController.clear();
       sizeController.clear();
       quantityController.clear();
+      colorController.clear();
       setState(() {
         _imageFile = null;
         //  _selectedCategory = null;
@@ -227,6 +231,7 @@ class _UploadPageState extends State<UploadPage> {
     titleController.clear();
     sizeController.clear();
     quantityController.clear();
+    colorController.clear();
     _imageFile == null;
   }
 
@@ -356,6 +361,23 @@ class _UploadPageState extends State<UploadPage> {
                         controller: sizeController,
                         decoration: const InputDecoration(
                           hintText: "Size",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Divider(),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.nature,
+                        color: Colors.blue, size: 35.0),
+                    title: Container(
+                      width: 250.0,
+                      child: TextFormField(
+                        controller: colorController,
+                        decoration: const InputDecoration(
+                          hintText: "Color",
                           border: InputBorder.none,
                         ),
                       ),

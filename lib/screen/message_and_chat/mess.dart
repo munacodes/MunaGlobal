@@ -152,26 +152,33 @@ class _MessaState extends State<Messa> {
                       var userData = userSnapshot.data!;
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.grey,
-                            backgroundImage: userData['PhotoUrl'] != null
-                                ? CachedNetworkImageProvider(
-                                    userData['PhotoUrl'].toString())
-                                : const AssetImage(
-                                        'assets/images/User Image.png')
-                                    as ImageProvider,
-                          ),
-                          title: Text(
-                            userData['senderEmail'].toString(),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
-                            userData['message'].toString(),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onTap: () {},
+                        child: Column(
+                          children: [
+                            Text(messageSnapshot),
+                            ListTile(
+                              leading: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.grey,
+                                backgroundImage: userData['PhotoUrl'] != null
+                                    ? CachedNetworkImageProvider(
+                                        userData['PhotoUrl'].toString())
+                                    : const AssetImage(
+                                            'assets/images/User Image.png')
+                                        as ImageProvider,
+                              ),
+                              title: Text(
+                                userData['senderEmail'].toString(),
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              subtitle: Text(
+                                userData['message'].toString(),
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              onTap: () {},
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -184,18 +191,5 @@ class _MessaState extends State<Messa> {
         ),
       ),
     );
-  }
-
-  Stream<QuerySnapshot> qwert(String userId, String otherUserId) {
-    List<String> ids = [userId, otherUserId];
-    ids.sort();
-    String chatRoomId = ids.join("_");
-
-    return FirebaseFirestore.instance
-        .collection('Messages')
-        .doc(chatRoomId)
-        .collection('Chat Room')
-        .where('receiverId', isEqualTo: currentUser!.uid)
-        .snapshots();
   }
 }
