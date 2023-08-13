@@ -20,6 +20,8 @@ class MyHomeScreen extends StatefulWidget {
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
   final currentUser = FirebaseAuth.instance.currentUser!;
+  int notificationValue = 0;
+  int messageValue = 0;
 
   _buildTrendingImageSlider() {
     return Container(
@@ -284,7 +286,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
           Container(
             width: 150,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
                   onPressed: () {},
@@ -306,18 +308,45 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                     color: Colors.black,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationFeed(),
+                Badge(
+                  smallSize: 10,
+                  largeSize: 22,
+                  label: Text('$notificationValue'),
+                  backgroundColor: Colors.blue,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  isLabelVisible: notificationValue >= 0,
+                  //  alignment: AlignmentDirectional.bottomEnd,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationFeed(),
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.notifications_outlined,
+                        color: Colors.black,
                       ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.notifications_outlined,
-                    color: Colors.black,
+                    ),
                   ),
+
+                  // IconButton(
+                  //   onPressed: () {
+                  //     Navigator.of(context).push(
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const NotificationFeed(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   icon: const Icon(
+                  //     Icons.notifications_outlined,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
                 ),
               ],
             ),

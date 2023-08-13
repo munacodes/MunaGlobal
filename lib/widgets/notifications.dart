@@ -46,8 +46,6 @@ class _NotificationFeedState extends State<NotificationFeed> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Users')
-              //.collection('Posts')
-              //   .orderBy('Likes', descending: true)
               .limit(10)
               .snapshots(),
           builder: (context, snapshot) {
@@ -58,8 +56,8 @@ class _NotificationFeedState extends State<NotificationFeed> {
                   final notification = snapshot.data!.docs[index];
                   return NotificationFeedItem(
                     mediaUrl: notification['PhotoUrl'],
-                    userName: notification['UserName'],
-                    time: formatTime(notification['Timestamp']),
+                    userName: notification['UserEmail'],
+                    time: formatTime(notification['TimeStamp']),
                   );
                 },
               );
